@@ -15,6 +15,7 @@ import { StageCard } from '../components/StageCard';
 import { HeroIllustration } from '../components/HeroIllustration';
 import { BloomTipCard } from '../components/BloomTipCard';
 import { JourneyStepper } from '../components/JourneyStepper';
+import { PharmacyFinder } from '../components/PharmacyFinder';
 import { ARTICLES } from '../data/articles';
 import { FEATURES } from '../config/features';
 
@@ -100,6 +101,9 @@ export const Home: React.FC = () => {
 
         </div>
       </section>
+
+      {/* Free Community Pharmacy & Period Care Finder */}
+      <PharmacyFinder />
 
       {/* 2. "Where are you in your journey?" (4 stage cards) */}
       <section id="stages" className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
