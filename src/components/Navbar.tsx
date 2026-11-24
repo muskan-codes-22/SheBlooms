@@ -103,11 +103,12 @@ export const Navbar: React.FC = () => {
           {/* Animated Arrow Badge pointing directly to the stage selector */}
           <button
             onClick={() => setStagePopoverOpen(!stagePopoverOpen)}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-petal/60 dark:bg-pink-950/60 hover:bg-petal dark:hover:bg-pink-900/60 border border-petal dark:border-pink-900/50 text-[11px] font-bold text-raspberry dark:text-pink-300 transition-all shrink-0 cursor-pointer shadow-2xs group"
+            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-full bg-petal/60 dark:bg-pink-950/60 hover:bg-petal dark:hover:bg-pink-900/60 border border-petal dark:border-pink-900/50 text-[11px] font-bold text-raspberry dark:text-pink-300 transition-all shrink-0 cursor-pointer shadow-2xs group"
             title="Click to select or change life stage"
           >
-            <span>{stage ? 'Switch stage' : 'Select stage'}</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform animate-pulse" />
+            <span className="hidden sm:inline">{stage ? 'Switch stage' : 'Select stage'}</span>
+            <span className="text-[10px] text-raspberry font-semibold sm:hidden">Stage</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform animate-pulse text-raspberry" />
           </button>
 
           {/* Stage Switcher Icon Popover */}

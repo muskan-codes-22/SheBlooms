@@ -79,7 +79,9 @@ export const Home: React.FC = () => {
                 }}
                 className="group px-6 py-3.5 rounded-2xl bg-gradient-to-r from-raspberry to-pink-500 text-white font-bold text-sm shadow-soft-pink hover:shadow-lg hover:scale-102 active:scale-98 transition-all flex items-center gap-2.5"
               >
-                <span className="text-base leading-none">🌸</span>
+                <span className="text-base leading-none">
+                  {stageInfo ? stageInfo.icon : '🌸'}
+                </span>
                 <span>{stage ? 'Change Life Stage' : 'Select Your Stage'}</span>
                 <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
                   <ArrowDown className="w-3.5 h-3.5 text-white animate-bounce" />

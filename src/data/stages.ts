@@ -1,5 +1,7 @@
+export type StageId = "puberty" | "cycle" | "menopause" | "educator";
+
 export interface StageInfo {
-  id: "puberty" | "cycle" | "menopause" | "educator";
+  id: StageId;
   name: string;
   tagline: string;
   description: string;
