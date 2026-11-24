@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Clock, ExternalLink, CheckCircle2, Sparkles } from 'lucide-react';
+import { X, Clock, ExternalLink, CheckCircle2, BookOpen } from 'lucide-react';
 import type { EducationalVideo } from '../data/videos';
 
 interface VideoModalProps {
@@ -103,7 +103,7 @@ export const VideoModal: React.FC<VideoModalProps> = ({ video, onClose }) => {
             {video.keyTakeaways && video.keyTakeaways.length > 0 && (
               <div className="space-y-2 pt-1">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-raspberry flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <BookOpen className="w-3.5 h-3.5" />
                   <span>Key Educational Takeaways</span>
                 </h3>
                 <div className="grid grid-cols-1 gap-2">

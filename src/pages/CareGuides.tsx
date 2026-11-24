@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   HeartHandshake, 
   RotateCcw, 
-  Sparkles, 
   BookOpen, 
   HelpCircle, 
   ShieldCheck, 
@@ -226,7 +225,7 @@ export const CareGuides: React.FC = () => {
             
             <div className="md:col-span-8 space-y-2">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-raspberry text-xs font-bold border border-petal">
-                <Sparkles className="w-3.5 h-3.5" />
+                <HelpCircle className="w-3.5 h-3.5" />
                 <span>Want to test what you have learned?</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-serif font-bold text-plum dark:text-pink-100">

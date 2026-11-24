@@ -4,7 +4,6 @@ import {
   Check, 
   RotateCcw, 
   AlertCircle, 
-  Sparkles, 
   CheckCircle2, 
   ArrowRight, 
   ShieldCheck, 

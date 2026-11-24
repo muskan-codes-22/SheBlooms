@@ -100,7 +100,7 @@ export const HOW_IT_MIGHT_FEEL: SymptomCardInfo[] = [
   {
     id: 'mood',
     title: 'Emotional Ups & Downs',
-    icon: '✨',
+    icon: '💭',
     whatItFeelsLike: 'Feeling tearful, easily irritated, or extra sensitive over small things.',
     simpleComfortTip: 'Remind yourself: "My feelings are real, but hormones are amplifying them right now." Share a warm hug with someone you trust.',
     whyItHappens: 'Hormones interact temporarily with brain serotonin. These waves usually pass as your bleed gets underway.'

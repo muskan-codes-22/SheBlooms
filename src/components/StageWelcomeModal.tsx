@@ -274,7 +274,7 @@ const YoungAdultWomanAnimation: React.FC = () => {
         transition={{ repeat: Infinity, duration: 3.4, delay: 0.6, ease: 'easeInOut' }}
         className="absolute bottom-1 -left-1 text-lg select-none"
       >
-        ✨
+        🌱
       </motion.span>
 
       <svg

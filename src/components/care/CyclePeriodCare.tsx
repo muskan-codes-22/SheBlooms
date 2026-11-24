@@ -4,7 +4,6 @@ import {
   Calendar, 
   Trash2, 
   Heart, 
-  Sparkles, 
   Info, 
   Clock, 
   ShieldCheck, 

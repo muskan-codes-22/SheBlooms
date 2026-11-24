@@ -13,7 +13,6 @@ import {
   Trophy, 
   Flame,
   BookOpen,
-  Sparkles,
   AlertCircle,
   Trash2,
   ChevronDown,
@@ -440,7 +439,7 @@ export const Quizzes: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4 text-rose-600 shrink-0" />
+                      <HelpCircle className="w-4 h-4 text-rose-600 shrink-0" />
                       <span>Good to know! Here is the science:</span>
                     </>
                   )}

@@ -99,7 +99,7 @@ export const PRODUCTS_COMPARISON: ProductComparison[] = [
   {
     id: 'tampons',
     name: 'Sanitary Tampons',
-    icon: '✨',
+    icon: '🩹',
     wearTime: 'Change every 4 to 8 hours (never exceed 8 hours)',
     costRange: '₹150 to ₹350 per box',
     ecoRating: 'Single-use; applicators create plastic waste',
