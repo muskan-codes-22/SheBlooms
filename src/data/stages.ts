@@ -100,10 +100,7 @@ export const STAGES: Record<string, StageInfo> = {
       "warning-signs-doctor",
       "consent-and-boundaries",
     ],
-    recommendedVideoIds: [
-      "af-356SbCkY",
-      "raPPvnTtIdA",
-    ],
+    recommendedVideoIds: ["af-356SbCkY", "raPPvnTtIdA"],
     recommendedQuizId: "menopause-know-how",
     greeting: "Welcome! Embrace your next chapter with clarity and calm",
   },
@@ -131,7 +128,7 @@ export const STAGES: Record<string, StageInfo> = {
       "ayzN5f3qN8g",
       "kmWbOC8Fbb0",
     ],
-    recommendedQuizId: "myth-or-fact",
+    recommendedQuizId: "support-someone-else",
     greeting:
       "Welcome, educator! Thank you for fostering a safe, stigma-free space",
   },

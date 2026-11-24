@@ -13,6 +13,7 @@ interface AppContextType {
   markArticleRead: (articleId: string) => void;
   toggleChecklistItem: (itemId: string) => void;
   recordQuizResult: (result: Omit<QuizResult, 'date'>) => void;
+  clearQuizResults: () => void;
   incrementQuestionsAsked: () => void;
   resetAllData: () => void;
 }
@@ -93,6 +94,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setProgress(updated);
   };
 
+  const clearQuizResults = () => {
+    const updated = saveUserProgress({ quizResults: [] });
+    setProgress(updated);
+  };
+
   const incrementQuestionsAsked = () => {
     const count = progress.questionsAskedCount + 1;
     const updated = saveUserProgress({ questionsAskedCount: count });
@@ -118,6 +124,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         markArticleRead,
         toggleChecklistItem,
         recordQuizResult,
+        clearQuizResults,
         incrementQuestionsAsked,
         resetAllData,
       }}
