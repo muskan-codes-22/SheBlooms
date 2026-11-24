@@ -80,8 +80,8 @@ export const StageWelcomeModal: React.FC = () => {
           {/* Dynamic Content by Stage */}
           {welcomingStage === 'puberty' && (
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-petal/60 dark:bg-pink-950/60 text-raspberry text-xs font-bold mb-2">
-                <span>🌸 First Period / Puberty</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-petal/60 dark:bg-pink-950/60 text-raspberry text-xs font-bold mb-2">
+                <span>🌷 First Period / Puberty</span>
               </div>
               <h3 className="font-serif font-bold text-2xl text-plum dark:text-pink-100 mb-2">
                 Welcome, young bloom!
@@ -94,8 +94,8 @@ export const StageWelcomeModal: React.FC = () => {
 
           {welcomingStage === 'cycle' && (
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lavender/60 dark:bg-plum/60 text-violet-dark dark:text-pink-200 text-xs font-bold mb-2">
-                <span>🌿 Cycle & Period Care</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-lavender/60 dark:bg-plum/60 text-violet-dark dark:text-pink-200 text-xs font-bold mb-2">
+                <span>🪷 Cycle & Period Care</span>
               </div>
               <h3 className="font-serif font-bold text-2xl text-plum dark:text-pink-100 mb-2">
                 Tune into your rhythm!
@@ -108,8 +108,8 @@ export const StageWelcomeModal: React.FC = () => {
 
           {welcomingStage === 'menopause' && (
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100/70 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 text-xs font-bold mb-2">
-                <span>🌾 Perimenopause & Menopause</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-amber-100/70 dark:bg-amber-950/60 text-amber-800 dark:text-amber-200 text-xs font-bold mb-2">
+                <span>🦋 Perimenopause & Menopause</span>
               </div>
               <h3 className="font-serif font-bold text-2xl text-plum dark:text-pink-100 mb-2">
                 Embrace your next chapter!
@@ -122,8 +122,8 @@ export const StageWelcomeModal: React.FC = () => {
 
           {welcomingStage === 'educator' && (
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-100/70 dark:bg-violet-950/60 text-violet-800 dark:text-violet-200 text-xs font-bold mb-2">
-                <span>💫 Educators & Caregivers</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-violet-100/70 dark:bg-violet-950/60 text-violet-800 dark:text-violet-200 text-xs font-bold mb-2">
+                <span>🌟 Educators & Caregivers</span>
               </div>
               <h3 className="font-serif font-bold text-2xl text-plum dark:text-pink-100 mb-2">
                 Welcome, guide & mentor!

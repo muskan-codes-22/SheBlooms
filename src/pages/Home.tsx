@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   ArrowRight, 
+  ArrowDown,
   ShieldCheck, 
   BookOpen, 
   MessageSquare, 
@@ -42,13 +43,13 @@ export const Home: React.FC = () => {
           >
             {/* Trust Badge & Stage Greeting */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2.5">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-petal/50 dark:bg-pink-950/60 border border-petal dark:border-pink-900/50 text-xs font-bold text-raspberry">
-                <ShieldCheck className="w-3.5 h-3.5 text-raspberry" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-petal/50 border border-petal text-xs font-bold text-raspberry shadow-2xs">
+                <span className="text-sm">🛡️</span>
                 <span>Privacy-Conscious Menstrual Health Education</span>
               </div>
               {heroGreeting && (
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-lavender/60 dark:bg-plum/50 border border-lavender text-xs font-bold text-violet-dark dark:text-pink-200">
-                  <span>{stageInfo?.icon}</span>
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-lavender/60 border border-lavender text-xs font-bold text-violet-dark shadow-2xs">
+                  <span className="text-sm">{stageInfo?.icon}</span>
                   <span>{heroGreeting}</span>
                 </div>
               )}
@@ -72,15 +73,22 @@ export const Home: React.FC = () => {
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-1">
               <a
                 href="#stages"
-                className="px-6 py-3 rounded-xl bg-raspberry text-white font-bold text-sm shadow-soft-pink hover:bg-raspberry-dark transition-all flex items-center gap-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('stages')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="group px-6 py-3.5 rounded-2xl bg-gradient-to-r from-raspberry to-pink-500 text-white font-bold text-sm shadow-soft-pink hover:shadow-lg hover:scale-102 active:scale-98 transition-all flex items-center gap-2.5"
               >
-                <span>Explore Guides</span>
-                <ArrowRight className="w-4 h-4" />
+                <span className="text-base leading-none">🌸</span>
+                <span>{stage ? 'Change Life Stage' : 'Select Your Stage'}</span>
+                <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                  <ArrowDown className="w-3.5 h-3.5 text-white animate-bounce" />
+                </span>
               </a>
 
               <Link
                 to="/ask"
-                className="px-6 py-3 rounded-xl glass-card hover:bg-white text-plum dark:text-pink-100 font-bold text-sm border border-petal hover:border-raspberry transition-all flex items-center gap-2"
+                className="px-6 py-3.5 rounded-2xl glass-card hover:bg-white dark:hover:bg-plum-night text-plum dark:text-pink-100 font-bold text-sm border border-petal hover:border-raspberry transition-all flex items-center gap-2"
               >
                 <span>Ask SheBloom</span>
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -118,7 +126,7 @@ export const Home: React.FC = () => {
       <PharmacyFinder />
 
       {/* 2. "Where are you in your journey?" (4 stage cards) */}
-      <section id="stages" className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="stages" className="scroll-mt-20 py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Selected Stage Banner (if any) */}
         {stageInfo && (
@@ -141,6 +149,10 @@ export const Home: React.FC = () => {
         )}
 
         <div className="text-center max-w-xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-petal/50 dark:bg-pink-950/60 border border-petal text-xs font-bold text-raspberry mb-3">
+            <span className="text-sm">👇</span>
+            <span>Choose Your Life Stage</span>
+          </div>
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-plum dark:text-pink-100">
             Where are you in your journey?
           </h2>

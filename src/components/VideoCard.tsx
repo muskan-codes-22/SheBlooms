@@ -5,13 +5,14 @@ import type { EducationalVideo } from '../data/videos';
 interface VideoCardProps {
   video: EducationalVideo;
   onSelect: (video: EducationalVideo) => void;
+  className?: string;
 }
 
-export const VideoCard: React.FC<VideoCardProps> = ({ video, onSelect }) => {
+export const VideoCard: React.FC<VideoCardProps> = ({ video, onSelect, className = '' }) => {
   return (
     <div
       onClick={() => onSelect(video)}
-      className="group cursor-pointer rounded-2xl glass-card border border-petal/80 hover:border-raspberry hover:shadow-soft-pink transition-all overflow-hidden flex flex-col justify-between"
+      className={`group cursor-pointer rounded-2xl glass-card border border-petal/80 hover:border-raspberry hover:shadow-soft-pink transition-all overflow-hidden flex flex-col justify-between ${className}`}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {

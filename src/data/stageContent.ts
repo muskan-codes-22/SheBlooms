@@ -48,7 +48,7 @@ export const STAGE_CONTENT: Record<'puberty' | 'cycle' | 'menopause' | 'educator
   puberty: {
     id: 'puberty',
     name: 'First Period / Puberty',
-    greeting: 'Welcome, young bloom! There are no silly questions here 🌸',
+    greeting: 'Welcome, young bloom! There are no silly questions here',
     heroSubline:
       'Gentle, reassuring guidance on what your first period feels like, how to prepare an emergency school pouch, and understanding bodily changes without fear.',
     starterQuestions: [
@@ -73,7 +73,7 @@ export const STAGE_CONTENT: Record<'puberty' | 'cycle' | 'menopause' | 'educator
   cycle: {
     id: 'cycle',
     name: 'Cycle & Period Care',
-    greeting: 'Welcome, bloom! Tune in to your rhythm and body wisdom 🌿',
+    greeting: 'Welcome, bloom! Tune in to your rhythm and body wisdom',
     heroSubline:
       'Track your monthly rhythm, soothe period cramps with evidence-backed self-care, navigate PMS with calm strategies, and pick the products that fit your routine.',
     starterQuestions: [
@@ -98,7 +98,7 @@ export const STAGE_CONTENT: Record<'puberty' | 'cycle' | 'menopause' | 'educator
   menopause: {
     id: 'menopause',
     name: 'Perimenopause & Menopause',
-    greeting: 'Welcome! Embrace your next chapter with clarity and calm 🌾',
+    greeting: 'Welcome! Embrace your next chapter with clarity and calm',
     heroSubline:
       'Compassionate, evidence-informed guidance on perimenopause signs, hot flush comfort, sleep strategies, and embracing midlife transitions with confidence.',
     starterQuestions: [
@@ -123,7 +123,7 @@ export const STAGE_CONTENT: Record<'puberty' | 'cycle' | 'menopause' | 'educator
   educator: {
     id: 'educator',
     name: 'Educators & Caregivers',
-    greeting: 'Welcome, educator! Thank you for fostering a safe, stigma-free space 💫',
+    greeting: 'Welcome, educator! Thank you for fostering a safe, stigma-free space',
     heroSubline:
       'Age-appropriate conversation frameworks, lesson insights, and myth-busting resources to guide daughters, sisters, and students with empathy.',
     starterQuestions: [

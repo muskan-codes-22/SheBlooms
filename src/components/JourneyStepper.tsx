@@ -55,8 +55,8 @@ const STEPS: Step[] = [
     label: 'EMPOWER',
     sub: 'Body Literacy & Calm',
     icon: Award,
-    actionText: 'See Impact',
-    linkTo: '/impact',
+    actionText: 'Latest Articles',
+    linkTo: '/articles',
     description: 'Build lifelong confidence, make informed healthcare choices, and pass stigma-free knowledge on to family and peers.'
   }
 ];

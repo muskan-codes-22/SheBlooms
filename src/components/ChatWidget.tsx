@@ -113,7 +113,16 @@ export const ChatWidget: React.FC = () => {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    setMessages(prev => [...prev, userMsg]);
+    const assistantMsgId = `assistant-${Date.now()}`;
+    const streamingMsg: AssistantMessage = {
+      id: assistantMsgId,
+      sender: 'assistant',
+      text: '',
+      isStreaming: true,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setMessages(prev => [...prev, userMsg, streamingMsg]);
     setInput('');
     incrementQuestionsAsked();
 
@@ -121,12 +130,20 @@ export const ChatWidget: React.FC = () => {
       const response = await askSheBloom({
         query: textToSend,
         stage: stage || undefined,
-        onStepChange: (step) => setCurrentStep(step)
+        onStepChange: (step) => setCurrentStep(step),
+        onPartialText: (partial) => {
+          setMessages(prev => prev.map(m => m.id === assistantMsgId ? { ...m, text: partial, isStreaming: true } : m));
+        }
       });
-      setMessages(prev => [...prev, response]);
+      setMessages(prev => prev.map(m => m.id === assistantMsgId ? { ...response, id: assistantMsgId, isStreaming: false } : m));
     } catch (err) {
       console.error(err);
       setCurrentStep('idle');
+      setMessages(prev => prev.map(m => m.id === assistantMsgId ? {
+        ...m,
+        isStreaming: false,
+        text: 'I am right here with you, but I had a little connection hiccup. Please ask again in a moment!'
+      } : m));
     }
   };
 
@@ -176,8 +193,8 @@ export const ChatWidget: React.FC = () => {
             transition={{ type: 'spring', damping: 25, stiffness: 320 }}
             className={`fixed z-50 rounded-2xl glass-card border border-petal dark:border-pink-900/40 shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${
               isExpanded
-                ? 'inset-4 sm:inset-10 max-w-4xl mx-auto'
-                : 'bottom-6 right-4 sm:right-6 w-[92vw] sm:w-[400px] h-[540px] max-h-[80vh]'
+                ? 'inset-3 sm:inset-6 max-w-4xl mx-auto'
+                : 'bottom-6 right-4 sm:right-6 w-[94vw] sm:w-[460px] h-[620px] max-h-[85vh]'
             }`}
           >
             {/* Header */}
@@ -264,7 +281,23 @@ export const ChatWidget: React.FC = () => {
                       )}
 
                       {/* Bot Answer Rendering */}
-                      {msg.structured ? (
+                      {msg.isStreaming ? (
+                        <div>
+                          {msg.text ? (
+                            <div className="whitespace-pre-wrap leading-relaxed text-plum/90 dark:text-pink-100">
+                              {msg.text}
+                              <span className="inline-block w-1.5 h-3.5 ml-1 bg-raspberry animate-pulse align-middle" />
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2 py-1 text-xs text-orchid dark:text-pink-300">
+                              <span className="w-2 h-2 rounded-full bg-raspberry animate-bounce" />
+                              <span className="w-2 h-2 rounded-full bg-raspberry animate-bounce [animation-delay:0.2s]" />
+                              <span className="w-2 h-2 rounded-full bg-raspberry animate-bounce [animation-delay:0.4s]" />
+                              <span className="italic ml-1 font-medium">SheBloom is writing your answer…</span>
+                            </div>
+                          )}
+                        </div>
+                      ) : msg.structured ? (
                         <div className="space-y-2">
                           <p className="font-semibold text-raspberry dark:text-pink-300">
                             {msg.structured.opener}
@@ -272,13 +305,13 @@ export const ChatWidget: React.FC = () => {
                           <p className="text-plum/90 dark:text-pink-100">
                             {msg.structured.explanation}
                           </p>
-                          {msg.structured.tips.length > 0 && (
+                          {msg.structured.tips.filter(t => t && t.trim().length > 0).length > 0 && (
                             <div className="mt-2 pt-2 border-t border-petal/40 space-y-1.5">
                               <span className="text-[11px] font-bold uppercase tracking-wider text-orchid dark:text-pink-300">
                                 Practical Suggestions:
                               </span>
                               <ul className="list-disc pl-4 space-y-1 text-xs">
-                                {msg.structured.tips.map((tip, idx) => (
+                                {msg.structured.tips.filter(t => t && t.trim().length > 0).map((tip, idx) => (
                                   <li key={idx}>{tip}</li>
                                 ))}
                               </ul>
@@ -304,6 +337,19 @@ export const ChatWidget: React.FC = () => {
                             <span>Read guide</span>
                             <ArrowRight className="w-3 h-3" />
                           </Link>
+                        </div>
+                      )}
+
+                      {/* AI Powered Badge */}
+                      {msg.isAiGenerated && (
+                        <div className="mt-2.5 pt-2 border-t border-petal/40 flex items-center justify-between text-[11px]">
+                          <span className="text-violet font-semibold flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-violet" />
+                            <span>SheBloom AI</span>
+                          </span>
+                          <span className="text-[10px] text-orchid font-medium">
+                            Friendly & Understanding
+                          </span>
                         </div>
                       )}
                     </div>

@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Clock, ArrowRight, PlayCircle } from 'lucide-react';
+import { Search, Clock, ArrowRight, PlayCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ARTICLES } from '../data/articles';
 import { EDUCATIONAL_VIDEOS, type EducationalVideo } from '../data/videos';
 import { VideoCard } from '../components/VideoCard';
@@ -16,6 +16,24 @@ export const Learn: React.FC = () => {
   const [showAllStages, setShowAllStages] = useState(false);
   const [visibleCount, setVisibleCount] = useState<number>(FEATURES.articlesPageSize);
   const [selectedVideo, setSelectedVideo] = useState<EducationalVideo | null>(null);
+  const videoScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkVideoScroll = () => {
+    if (videoScrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = videoScrollRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+    }
+  };
+
+  const scrollVideos = (direction: 'left' | 'right') => {
+    if (videoScrollRef.current) {
+      const scrollAmount = direction === 'left' ? -290 : 290;
+      videoScrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   const personalized = Boolean(stage && !showAllStages);
 
@@ -68,6 +86,31 @@ export const Learn: React.FC = () => {
   const visibleArticles = useMemo(() => {
     return filteredArticles.slice(0, visibleCount);
   }, [filteredArticles, visibleCount]);
+
+  // Curated and filtered videos by stage
+  const filteredVideos = useMemo(() => {
+    let list = EDUCATIONAL_VIDEOS;
+    if (personalized && stage) {
+      const stageMatches = list.filter(v => v.targetStages?.includes(stage));
+      if (stageMatches.length > 0) {
+        list = stageMatches;
+      }
+    }
+
+    if (personalized && stageInfo?.recommendedVideoIds) {
+      const recIds = stageInfo.recommendedVideoIds;
+      list = [...list].sort((a, b) => {
+        const idxA = recIds.indexOf(a.id);
+        const idxB = recIds.indexOf(b.id);
+        if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+        if (idxA !== -1) return -1;
+        if (idxB !== -1) return 1;
+        return 0;
+      });
+    }
+
+    return list;
+  }, [personalized, stage, stageInfo]);
 
   return (
     <div className="min-h-screen pb-20">
@@ -188,17 +231,55 @@ export const Learn: React.FC = () => {
                 Watch & Learn
               </h2>
             </div>
-            <span className="text-xs text-orchid dark:text-pink-300 hidden sm:inline">
-              4 bite-sized animated guides
-            </span>
+
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-orchid dark:text-pink-300 hidden sm:inline">
+                {filteredVideos.length} {stageInfo && personalized ? `video lessons for ${stageInfo.name}` : 'bite-sized video lessons'}
+              </span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => scrollVideos('left')}
+                  disabled={!canScrollLeft}
+                  aria-label="Previous video"
+                  className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${
+                    canScrollLeft
+                      ? 'bg-white/80 dark:bg-plum-deep hover:bg-raspberry hover:text-white border-petal/80 text-plum dark:text-pink-100 shadow-xs'
+                      : 'opacity-30 cursor-not-allowed border-transparent text-plum/40 dark:text-pink-300/40'
+                  }`}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollVideos('right')}
+                  disabled={!canScrollRight}
+                  aria-label="Next video"
+                  className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${
+                    canScrollRight
+                      ? 'bg-white/80 dark:bg-plum-deep hover:bg-raspberry hover:text-white border-petal/80 text-plum dark:text-pink-100 shadow-xs'
+                      : 'opacity-30 cursor-not-allowed border-transparent text-plum/40 dark:text-pink-300/40'
+                  }`}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {EDUCATIONAL_VIDEOS.map((video) => (
+          {/* Smooth swipeable horizontal carousel with preserved card size */}
+          <div
+            ref={videoScrollRef}
+            onScroll={checkVideoScroll}
+            className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 no-scrollbar -mx-1"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {filteredVideos.map((video) => (
               <VideoCard
                 key={video.id}
                 video={video}
                 onSelect={(v) => setSelectedVideo(v)}
+                className="w-[260px] sm:w-[275px] shrink-0 snap-start"
               />
             ))}
           </div>

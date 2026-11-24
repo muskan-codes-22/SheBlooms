@@ -98,7 +98,16 @@ export const AskAssistant: React.FC = () => {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
-    setMessages(prev => [...prev, userMsg]);
+    const assistantMsgId = `assistant-${Date.now()}`;
+    const streamingMsg: AssistantMessage = {
+      id: assistantMsgId,
+      sender: 'assistant',
+      text: '',
+      isStreaming: true,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setMessages(prev => [...prev, userMsg, streamingMsg]);
     setInput('');
     incrementQuestionsAsked();
 
@@ -106,12 +115,20 @@ export const AskAssistant: React.FC = () => {
       const response = await askSheBloom({
         query: textToSend,
         stage: stage || undefined,
-        onStepChange: (step) => setCurrentStep(step)
+        onStepChange: (step) => setCurrentStep(step),
+        onPartialText: (partial) => {
+          setMessages(prev => prev.map(m => m.id === assistantMsgId ? { ...m, text: partial, isStreaming: true } : m));
+        }
       });
-      setMessages(prev => [...prev, response]);
+      setMessages(prev => prev.map(m => m.id === assistantMsgId ? { ...response, id: assistantMsgId, isStreaming: false } : m));
     } catch (err) {
       console.error(err);
       setCurrentStep('idle');
+      setMessages(prev => prev.map(m => m.id === assistantMsgId ? {
+        ...m,
+        isStreaming: false,
+        text: 'I am right here with you, but I had a little connection hiccup. Please ask again in a moment!'
+      } : m));
     }
   };
 
@@ -139,21 +156,21 @@ export const AskAssistant: React.FC = () => {
         </p>
       </section>
 
-      {/* Main Chat Interface */}
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl glass-card border border-petal dark:border-pink-900/50 shadow-soft-purple overflow-hidden flex flex-col h-[580px] max-h-[75vh]">
+      {/* Main Chat Interface - Spacious & Comfortable */}
+      <section className="max-w-5xl xl:max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="rounded-2xl glass-card border border-petal dark:border-pink-900/50 shadow-soft-purple overflow-hidden flex flex-col h-[760px] sm:h-[820px] max-h-[88vh]">
           
           {/* Chat Window Top Bar */}
-          <div className="p-3.5 bg-gradient-to-r from-raspberry to-orchid text-white flex items-center justify-between shadow-sm">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xl">🌸</span>
+          <div className="px-5 py-4 bg-gradient-to-r from-raspberry to-orchid text-white flex items-center justify-between shadow-sm">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🌸</span>
               <div>
-                <div className="flex items-center gap-2 font-bold text-xs sm:text-sm">
+                <div className="flex items-center gap-2 font-bold text-sm sm:text-base">
                   <span>SheBloom Assistant</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
                 </div>
-                <div className="text-[10px] text-pink-100 flex items-center gap-1">
-                  <ShieldCheck className="w-3 h-3" />
+                <div className="text-xs text-pink-100 flex items-center gap-1 mt-0.5">
+                  <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Private · On-device</span>
                 </div>
               </div>
@@ -161,16 +178,16 @@ export const AskAssistant: React.FC = () => {
 
             <button
               onClick={clearChat}
-              className="px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 text-[11px] font-semibold text-white transition-colors flex items-center gap-1"
+              className="px-3 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-xs font-semibold text-white transition-colors flex items-center gap-1.5"
               title="Clear Session History"
             >
-              <Trash2 className="w-3 h-3" />
+              <Trash2 className="w-3.5 h-3.5" />
               <span>Clear</span>
             </button>
           </div>
 
           {/* Messages Scroll Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-blush/20 dark:bg-plum-night/50">
+          <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-5 bg-blush/20 dark:bg-plum-night/50">
             {messages.map((msg, index) => {
               const isBot = msg.sender === 'assistant';
               return (
@@ -179,47 +196,63 @@ export const AskAssistant: React.FC = () => {
                   className={`flex flex-col ${isBot ? 'items-start' : 'items-end'}`}
                 >
                   <div
-                    className={`max-w-[88%] rounded-xl p-3.5 text-xs sm:text-sm leading-relaxed shadow-xs ${
+                    className={`max-w-[92%] sm:max-w-[85%] rounded-2xl p-4 sm:p-5 text-sm sm:text-[15px] leading-relaxed shadow-xs ${
                       isBot
-                        ? 'bg-white dark:bg-plum-deep text-plum dark:text-pink-100 border border-petal dark:border-pink-900/40 rounded-tl-sm'
-                        : 'bg-raspberry text-white rounded-tr-sm'
+                        ? 'bg-white dark:bg-plum-deep text-plum dark:text-pink-100 border border-petal dark:border-pink-900/40 rounded-tl-xs'
+                        : 'bg-raspberry text-white rounded-tr-xs'
                     }`}
                   >
                     {/* Doctor Callout Alert */}
                     {msg.structured?.doctorAlert && (
-                      <div className="mb-2.5 p-2.5 rounded-lg bg-coral/15 border border-coral/40 text-coral-dark dark:text-coral-light flex items-start gap-2">
-                        <AlertTriangle className="w-3.5 h-3.5 text-coral shrink-0 mt-0.5" />
-                        <div className="text-[11px] font-semibold leading-snug">
+                      <div className="mb-3 p-3 rounded-xl bg-coral/15 border border-coral/40 text-coral-dark dark:text-coral-light flex items-start gap-2.5">
+                        <AlertTriangle className="w-4 h-4 text-coral shrink-0 mt-0.5" />
+                        <div className="text-xs sm:text-sm font-semibold leading-snug">
                           {msg.structured.doctorAlert}
                         </div>
                       </div>
                     )}
 
-                    {/* Bot Content */}
-                    {msg.structured ? (
-                      <div className="space-y-2">
-                        <p className="font-bold text-raspberry dark:text-pink-300">
+                    {/* Bot Content: When streaming line-by-line vs final formatted card */}
+                    {msg.isStreaming ? (
+                      <div>
+                        {msg.text ? (
+                          <div className="whitespace-pre-wrap leading-relaxed text-plum/90 dark:text-pink-100 text-sm sm:text-[15px]">
+                            {msg.text}
+                            <span className="inline-block w-2 h-4 ml-1 bg-raspberry animate-pulse align-middle" />
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2.5 py-1.5 text-xs sm:text-sm text-orchid dark:text-pink-300">
+                            <span className="w-2.5 h-2.5 rounded-full bg-raspberry animate-bounce" />
+                            <span className="w-2.5 h-2.5 rounded-full bg-raspberry animate-bounce [animation-delay:0.2s]" />
+                            <span className="w-2.5 h-2.5 rounded-full bg-raspberry animate-bounce [animation-delay:0.4s]" />
+                            <span className="italic ml-1 font-medium">SheBloom is writing your answer…</span>
+                          </div>
+                        )}
+                      </div>
+                    ) : msg.structured ? (
+                      <div className="space-y-3">
+                        <p className="font-bold text-raspberry dark:text-pink-300 text-sm sm:text-base">
                           {msg.structured.opener}
                         </p>
-                        <p className="text-plum/90 dark:text-pink-100">
+                        <p className="text-plum/90 dark:text-pink-100 whitespace-pre-line leading-relaxed">
                           {msg.structured.explanation}
                         </p>
 
-                        {msg.structured.tips.length > 0 && (
-                          <div className="mt-2 pt-2 border-t border-petal/50 space-y-1">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-orchid dark:text-pink-300">
+                        {msg.structured.tips.filter(t => t && t.trim().length > 0).length > 0 && (
+                          <div className="mt-3 pt-3 border-t border-petal/50 space-y-1.5">
+                            <span className="text-xs font-bold uppercase tracking-wider text-orchid dark:text-pink-300">
                               Gentle suggestions:
                             </span>
-                            <ul className="list-disc pl-4 space-y-1 text-xs text-plum/85 dark:text-pink-100/90">
-                              {msg.structured.tips.map((tip, idx) => (
-                                <li key={idx}>{tip}</li>
+                            <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-plum/85 dark:text-pink-100/90">
+                              {msg.structured.tips.filter(t => t && t.trim().length > 0).map((tip, idx) => (
+                                <li key={idx} className="leading-relaxed">{tip}</li>
                               ))}
                             </ul>
                           </div>
                         )}
                       </div>
                     ) : (
-                      <p>{msg.text}</p>
+                      <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
                     )}
 
                     {/* Source Article Badge */}
@@ -238,7 +271,35 @@ export const AskAssistant: React.FC = () => {
                         </Link>
                       </div>
                     )}
+
+                    {/* AI Powered Badge */}
+                    {msg.isAiGenerated && (
+                      <div className="mt-2.5 pt-2 border-t border-petal/50 flex items-center justify-between text-xs">
+                        <span className="text-violet font-semibold flex items-center gap-1 text-[11px]">
+                          <CheckCircle2 className="w-3 h-3 text-violet" />
+                          <span>SheBloom AI</span>
+                        </span>
+                        <span className="text-[10px] text-orchid font-medium">
+                          Friendly & Understanding
+                        </span>
+                      </div>
+                    )}
                   </div>
+
+                  {/* Follow-up Question Chips on AI Response */}
+                  {index > 0 && isBot && msg.followUps && msg.followUps.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-2 max-w-[90%]">
+                      {msg.followUps.map((q, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleSend(q)}
+                          className="text-[11px] px-2.5 py-1 rounded-md bg-white hover:bg-petal/40 border border-petal text-plum/90 transition-colors text-left shadow-2xs"
+                        >
+                          💬 {q}
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Suggestion Chips: Shown only once on the welcome message (exactly 4 stage chips) */}
                   {index === 0 && messages.length === 1 && (
@@ -265,25 +326,25 @@ export const AskAssistant: React.FC = () => {
           </div>
 
           {/* Bottom Input Area */}
-          <div className="p-3 bg-white dark:bg-plum-deep border-t border-petal/60 dark:border-pink-900/40">
+          <div className="p-4 sm:p-5 bg-white dark:bg-plum-deep border-t border-petal/60 dark:border-pink-900/40">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSend();
               }}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2.5 sm:gap-3"
             >
               <button
                 type="button"
                 onClick={toggleListening}
-                className={`p-2 rounded-xl transition-all ${
+                className={`p-2.5 sm:p-3 rounded-xl transition-all ${
                   isListening
                     ? 'bg-rose-500 text-white animate-pulse'
                     : 'text-plum/50 hover:text-raspberry dark:text-pink-300 hover:bg-petal/30'
                 }`}
                 title="Voice input"
               >
-                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                {isListening ? <MicOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Mic className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
 
               <input
@@ -291,21 +352,21 @@ export const AskAssistant: React.FC = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask any question about periods, cramps, puberty..."
-                className="flex-1 px-3.5 py-2 rounded-xl bg-blush/60 dark:bg-plum text-xs sm:text-sm text-plum dark:text-pink-100 border border-petal focus:outline-none focus:border-raspberry transition-colors placeholder:text-plum/40 dark:placeholder:text-pink-300/40"
+                className="flex-1 px-4 py-2.5 sm:py-3 rounded-xl bg-blush/60 dark:bg-plum text-sm sm:text-base text-plum dark:text-pink-100 border border-petal focus:outline-none focus:border-raspberry transition-colors placeholder:text-plum/40 dark:placeholder:text-pink-300/40"
               />
 
               <button
                 type="submit"
                 disabled={!input.trim() || currentStep !== 'idle'}
-                className="px-4 py-2 rounded-xl bg-raspberry text-white font-bold text-xs disabled:opacity-40 hover:bg-raspberry-dark transition-all shadow-xs flex items-center gap-1.5"
+                className="px-5 py-2.5 sm:py-3 rounded-xl bg-raspberry text-white font-bold text-xs sm:text-sm disabled:opacity-40 hover:bg-raspberry-dark transition-all shadow-xs flex items-center gap-2 shrink-0"
               >
                 <span>Send</span>
-                <Send className="w-3.5 h-3.5" />
+                <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </form>
 
             {/* Clean one-line disclaimer under input */}
-            <p className="text-[10px] text-center text-plum/50 dark:text-pink-300/50 mt-1.5">
+            <p className="text-[11px] text-center text-plum/50 dark:text-pink-300/50 mt-2">
               🔒 SheBloom provides educational guidance, not medical diagnosis or treatment.
             </p>
           </div>

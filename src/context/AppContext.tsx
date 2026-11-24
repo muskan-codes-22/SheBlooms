@@ -14,8 +14,6 @@ interface AppContextType {
   toggleChecklistItem: (itemId: string) => void;
   recordQuizResult: (result: Omit<QuizResult, 'date'>) => void;
   incrementQuestionsAsked: () => void;
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
   resetAllData: () => void;
 }
 
@@ -24,20 +22,12 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [progress, setProgress] = useState<UserProgress>(loadUserProgress);
   const [welcomingStage, setWelcomingStage] = useState<'puberty' | 'cycle' | 'menopause' | 'educator' | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('sheblooms_dark') === 'true';
-  });
 
-  // Sync dark mode class to html element
+  // Ensure dark mode class is permanently removed
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('sheblooms_dark', 'true');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('sheblooms_dark', 'false');
-    }
-  }, [isDarkMode]);
+    document.documentElement.classList.remove('dark');
+    localStorage.removeItem('sheblooms_dark');
+  }, []);
 
   const stage = progress.stage;
   const stageInfo = stage ? STAGES[stage] : null;
@@ -109,10 +99,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setProgress(updated);
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(prev => !prev);
-  };
-
   const resetAllData = () => {
     clearAllUserData();
     setProgress(loadUserProgress());
@@ -133,8 +119,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         toggleChecklistItem,
         recordQuizResult,
         incrementQuestionsAsked,
-        isDarkMode,
-        toggleDarkMode,
         resetAllData,
       }}
     >

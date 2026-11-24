@@ -91,7 +91,7 @@ export const QA_DATABASE: QAEntry[] = [
     keywords: ['first period', 'menarche', 'signs', 'puberty', 'when will i get', 'starter', 'pehli baar'],
     question: 'What are the signs that my first period is coming?',
     answer: {
-      opener: 'Welcome, young bloom! Your body is growing in healthy and natural ways 🌱',
+      opener: 'Welcome, young bloom! Your body is growing in healthy and natural ways 🌷',
       explanation: 'Most girls get their first period (menarche) between ages 9 and 15 (Class 6 to 10). It usually starts about 1 to 2 years after breast buds begin growing.',
       tips: [
         'You may notice clear or whitish fluid (discharge) on your underwear for a few months before.',

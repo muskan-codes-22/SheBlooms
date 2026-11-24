@@ -17,6 +17,7 @@ import { CyclePage } from './pages/CyclePage';
 import { AskAssistant } from './pages/AskAssistant';
 import { CareGuides } from './pages/CareGuides';
 import { Quizzes } from './pages/Quizzes';
+import { LatestArticles } from './pages/LatestArticles';
 import { Impact } from './pages/Impact';
 import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
@@ -76,7 +77,8 @@ export function AppContent() {
               <Route path="/ask" element={<AskAssistant />} />
               <Route path="/care" element={<CareGuides />} />
               <Route path="/quiz" element={<Quizzes />} />
-              <Route path="/impact" element={<Impact />} />
+              <Route path="/articles" element={<LatestArticles />} />
+              <Route path="/impact" element={<Navigate to="/articles" replace />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="*" element={<Navigate to="/" replace />} />

@@ -848,7 +848,7 @@ export const CareGuides: React.FC = () => {
                 href="#pregnancy-guide"
                 className="px-3.5 py-1.5 rounded-full bg-white/70 hover:bg-white dark:bg-plum-deep/80 text-plum dark:text-pink-100 text-xs font-bold border border-petal transition-colors flex items-center gap-1.5 shadow-2xs"
               >
-                <span>🌱</span>
+                <span>🌷</span>
                 <span>Conception Myths & Facts</span>
               </a>
             </>

@@ -102,3 +102,12 @@
 .dark ::-webkit-scrollbar-thumb {
   background: #5E385D;
 }
+
+/* Hide scrollbar for smooth swipeable carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
