@@ -17,9 +17,13 @@ import { BloomTipCard } from '../components/BloomTipCard';
 import { JourneyStepper } from '../components/JourneyStepper';
 import { ARTICLES } from '../data/articles';
 import { FEATURES } from '../config/features';
+import { getStageContent, DEFAULT_STAGE_CONTENT } from '../data/stageContent';
 
 export const Home: React.FC = () => {
   const { stage, setStage, stageInfo } = useApp();
+  const stageContent = getStageContent(stage);
+  const heroGreeting = stageInfo ? (stageContent?.greeting || stageInfo.greeting) : null;
+  const heroSubline = stageContent ? stageContent.heroSubline : DEFAULT_STAGE_CONTENT.heroSubline;
 
   return (
     <div className="min-h-screen">
@@ -35,10 +39,18 @@ export const Home: React.FC = () => {
             transition={{ duration: 0.5 }}
             className="lg:col-span-7 space-y-6 text-center lg:text-left"
           >
-            {/* Trust Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-petal/50 dark:bg-pink-950/60 border border-petal dark:border-pink-900/50 text-xs font-bold text-raspberry">
-              <ShieldCheck className="w-3.5 h-3.5 text-raspberry" />
-              <span>Privacy-Conscious Menstrual Health Education</span>
+            {/* Trust Badge & Stage Greeting */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2.5">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-petal/50 dark:bg-pink-950/60 border border-petal dark:border-pink-900/50 text-xs font-bold text-raspberry">
+                <ShieldCheck className="w-3.5 h-3.5 text-raspberry" />
+                <span>Privacy-Conscious Menstrual Health Education</span>
+              </div>
+              {heroGreeting && (
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-lavender/60 dark:bg-plum/50 border border-lavender text-xs font-bold text-violet-dark dark:text-pink-200">
+                  <span>{stageInfo?.icon}</span>
+                  <span>{heroGreeting}</span>
+                </div>
+              )}
             </div>
 
             {/* Main Headline */}
@@ -50,9 +62,9 @@ export const Home: React.FC = () => {
               </span>
             </h1>
 
-            {/* Supporting Subtitle */}
+            {/* Supporting Subtitle (Stage Personalized) */}
             <p className="text-base sm:text-lg text-plum/80 dark:text-pink-100/80 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
-              Reliable, stigma-free guidance across every life stage — from your first period to menopause. No account required, zero judgment, and based on public health guidance.
+              {heroSubline}
             </p>
 
             {/* CTA Buttons */}

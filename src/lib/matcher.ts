@@ -1,4 +1,5 @@
 import { QA_DATABASE, QAEntry } from '../data/qa';
+import { ARTICLES } from '../data/articles';
 import { checkSafety, SafetyCheckResult } from './safety';
 
 export interface MatcherResponse {
@@ -62,8 +63,13 @@ export function findBestMatch(userQuery: string, currentStage?: string): Matcher
     }
 
     // Boost if matching current stage
-    if (currentStage && entry.stage === currentStage) {
-      score += 1.5;
+    if (currentStage) {
+      const entryStages = entry.stage
+        ? [entry.stage]
+        : (ARTICLES.find(a => a.id === entry.sourceArticleId)?.targetStages || []);
+      if (entryStages.includes(currentStage as any)) {
+        score += 1.5;
+      }
     }
 
     if (score > bestScore) {

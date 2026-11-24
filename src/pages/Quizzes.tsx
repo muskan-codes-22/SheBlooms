@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
@@ -17,7 +17,7 @@ import { QUIZZES, Quiz, QuizQuestion } from '../data/quizzes';
 import { useApp } from '../context/AppContext';
 
 export const Quizzes: React.FC = () => {
-  const { progress, recordQuizResult } = useApp();
+  const { progress, recordQuizResult, stageInfo } = useApp();
   const [activeQuiz, setActiveQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -29,8 +29,18 @@ export const Quizzes: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [missedQuestions, setMissedQuestions] = useState<QuizQuestion[]>([]);
 
-  // Only show published quizzes (Myth or Fact, Cycle Basics, First Period Ready)
-  const publishedQuizzes = QUIZZES.filter(q => q.published !== false);
+  // Show published quizzes, sorted with stageInfo.recommendedQuizId first
+  const publishedQuizzes = useMemo(() => {
+    const list = QUIZZES.filter(q => q.published !== false);
+    if (stageInfo?.recommendedQuizId) {
+      list.sort((a, b) => {
+        if (a.id === stageInfo.recommendedQuizId) return -1;
+        if (b.id === stageInfo.recommendedQuizId) return 1;
+        return 0;
+      });
+    }
+    return list;
+  }, [stageInfo]);
 
   const startQuiz = (quiz: Quiz) => {
     setActiveQuiz(quiz);
@@ -308,11 +318,12 @@ export const Quizzes: React.FC = () => {
           </motion.div>
         )}
 
-        {/* 3 Quizzes Library (Icon + Title + "8 questions" + 1 button) */}
+        {/* Published Quizzes Library (Icon + Title + "8 questions" + 1 button) */}
         {!activeQuiz && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {publishedQuizzes.map(quiz => {
               const previousResult = progress.quizResults.find(r => r.quizId === quiz.id);
+              const isRecommended = stageInfo?.recommendedQuizId === quiz.id;
 
               return (
                 <div
@@ -320,7 +331,14 @@ export const Quizzes: React.FC = () => {
                   className="rounded-2xl glass-card p-5 border border-petal/80 hover:border-raspberry hover:shadow-soft-pink transition-all flex flex-col justify-between"
                 >
                   <div>
-                    <div className="text-3xl mb-3">{quiz.icon}</div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-3xl">{quiz.icon}</div>
+                      {isRecommended && (
+                        <span className="px-2.5 py-0.5 rounded-md bg-raspberry text-white font-bold text-[10px] shadow-xs">
+                          Recommended for you
+                        </span>
+                      )}
+                    </div>
                     
                     <h3 className="font-serif font-bold text-base sm:text-lg text-plum dark:text-pink-100 mb-1 leading-snug">
                       {quiz.title}

@@ -198,6 +198,30 @@ export const ArticleView: React.FC = () => {
           </section>
         )}
 
+        {/* Interactive Visual Guide Link Callout */}
+        {['first-period-expect', 'what-is-a-period', 'first-period-kit-guide'].includes(article.id) && (
+          <section className="my-8 p-5 rounded-2xl bg-gradient-to-r from-petal/60 to-lavender/50 dark:from-plum-deep/80 dark:to-pink-950/60 border border-petal flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">🌸</span>
+              <div>
+                <h4 className="font-serif font-bold text-sm sm:text-base text-plum dark:text-pink-100">
+                  Wondering what blood and spotting look like on a pad?
+                </h4>
+                <p className="text-xs text-orchid dark:text-pink-300">
+                  Check out our real visual guide showing spotting, color shades, and flow levels.
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/care#visual-guide"
+              className="px-4 py-2 rounded-xl bg-raspberry text-white font-bold text-xs shadow-soft-pink hover:bg-raspberry-dark transition-all flex items-center justify-center gap-1.5 shrink-0"
+            >
+              <span>View Visual Guide</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </section>
+        )}
+
         {/* When to See a Doctor Callout (Coral) */}
         {article.whenToSeeDoctor && (
           <section className="my-8 p-6 rounded-3xl bg-coral/10 dark:bg-coral/20 border-2 border-coral/30 text-coral-dark dark:text-coral-light space-y-2 shadow-xs">

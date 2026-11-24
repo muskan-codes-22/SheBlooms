@@ -26,7 +26,7 @@ export const QUIZZES: Quiz[] = [
   {
     id: 'myth-or-fact',
     title: 'Myth or Fact? Period Truths',
-    subtitle: 'Swipe or tap to bust ancient taboos and uncover menstrual science',
+    subtitle: 'Tap to clear old myths and learn simple science about your body',
     badgeTag: '🌟 Stigma Buster',
     icon: '💡',
     color: '#D6457F',
@@ -35,90 +35,130 @@ export const QUIZZES: Quiz[] = [
     questions: [
       {
         id: 'mf-1',
-        question: 'Myth or Fact: Exercising during your period is harmful to your uterus.',
+        question: 'Myth or Fact: Exercising or walking during your period harms your body.',
         type: 'true-false',
         options: ['Myth', 'Fact'],
         correctIndex: 0,
         isMyth: true,
-        explanation: 'Myth! Gentle to moderate exercise actually releases endorphins, which act as natural painkillers to ease cramps and lift mood.',
+        explanation: 'Myth! Gentle walks and light yoga release natural feel-good chemicals that ease cramps.',
         relatedArticleId: 'period-myths-busted'
       },
       {
         id: 'mf-2',
-        question: 'Myth or Fact: A tampon can get lost inside your body.',
+        question: 'Myth or Fact: A tampon or menstrual cup can get lost inside your body.',
         type: 'true-false',
         options: ['Myth', 'Fact'],
         correctIndex: 0,
         isMyth: true,
-        explanation: 'Myth! The vagina ends at the cervix, whose opening is tiny as a pinhead. Nothing like a tampon can pass through into the abdomen.',
+        explanation: 'Myth! The vagina ends at the cervix. Its opening is tiny as a pinhead. Nothing gets lost.',
         relatedArticleId: 'period-myths-busted'
       },
       {
         id: 'mf-3',
-        question: 'Myth or Fact: Taking a warm shower or bath helps soothe period cramps.',
+        question: 'Myth or Fact: A warm bath or a hot water bag soothes period pain.',
         type: 'true-false',
         options: ['Myth', 'Fact'],
         correctIndex: 1,
         isMyth: false,
-        explanation: 'Fact! Warm water relaxes contracted pelvic muscles and promotes healthy blood flow, offering soothing natural relief.',
+        explanation: 'Fact! Gentle warmth relaxes your lower tummy muscles and improves blood flow.',
         relatedArticleId: 'food-movement-cramps'
       },
       {
         id: 'mf-4',
-        question: 'Myth or Fact: Touching pickles or sour food during your period makes them spoil.',
+        question: 'Myth or Fact: Touching pickles (achar) during your period will spoil them.',
         type: 'true-false',
         options: ['Myth', 'Fact'],
         correctIndex: 0,
         isMyth: true,
-        explanation: 'Myth! This is an ancient superstitious taboo without any scientific basis. Menstruation has no effect on food or plants.',
+        explanation: 'Myth! Clean hands never spoil food or achar. This is an old myth with no science.',
         relatedArticleId: 'period-myths-busted'
       },
       {
         id: 'mf-5',
-        question: 'Myth or Fact: You can safely swim during your period with a tampon or menstrual cup.',
+        question: 'Myth or Fact: You can safely swim or play sports during your period.',
         type: 'true-false',
         options: ['Myth', 'Fact'],
         correctIndex: 1,
         isMyth: false,
-        explanation: 'Fact! Tampons and menstrual cups capture flow internally, allowing you to swim and dive freely without leak concerns.',
+        explanation: 'Fact! With a pad, tampon, or cup, you can run, play, and swim freely.',
         relatedArticleId: 'period-myths-busted'
       },
       {
         id: 'mf-6',
-        question: 'Myth or Fact: Severe, debilitating period pain that causes fainting is just normal "womanhood".',
+        question: 'Myth or Fact: Severe period pain that makes you faint is normal.',
         type: 'true-false',
         options: ['Myth', 'Fact'],
         correctIndex: 0,
         isMyth: true,
-        explanation: 'Myth! Severe, incapacitating cramps are NOT normal and may indicate conditions like endometriosis or fibroids that deserve medical care.',
+        explanation: 'Myth! Mild pain is common. Severe pain that stops daily school or work needs a doctor.',
         relatedArticleId: 'period-pain-normal'
       },
       {
         id: 'mf-7',
-        question: 'Myth or Fact: The average total blood lost across an entire period is only about 2 to 4 tablespoons.',
+        question: 'Myth or Fact: You lose only about 2 to 4 small spoons of blood during a period.',
         type: 'true-false',
         options: ['Myth', 'Fact'],
         correctIndex: 1,
         isMyth: false,
-        explanation: 'Fact! Although it appears like more when mixed with cervical mucus and fluids on a pad, 30–60 ml (2–4 tablespoons) is the typical loss.',
+        explanation: 'Fact! It looks like more on a pad. Total blood loss is just 30 to 60 ml.',
         relatedArticleId: 'what-is-a-period'
       },
       {
         id: 'mf-8',
-        question: 'Myth or Fact: Douching is necessary to keep your intimate area clean and scented.',
+        question: 'Myth or Fact: Washing inside your intimate parts with harsh soap is necessary.',
         type: 'true-false',
         options: ['Myth', 'Fact'],
         correctIndex: 0,
         isMyth: true,
-        explanation: 'Myth! The vagina is self-cleaning. Douching washes away good Lactobacillus bacteria and increases infection risks significantly.',
+        explanation: 'Myth! The vagina cleans itself naturally. Wash only the outside with clean, plain water.',
         relatedArticleId: 'hygiene-dos-donts'
+      },
+      {
+        id: 'mf-9',
+        question: 'Myth or Fact: Daily birth control pills cause permanent infertility after you stop.',
+        type: 'true-false',
+        options: ['Myth', 'Fact'],
+        correctIndex: 0,
+        isMyth: true,
+        explanation: 'Myth! Your natural fertility returns soon after you stop taking contraceptive pills.',
+        relatedArticleId: 'contraception-and-pills'
+      },
+      {
+        id: 'mf-10',
+        question: 'Myth or Fact: Consent in a relationship can be stopped or paused at any moment.',
+        type: 'true-false',
+        options: ['Myth', 'Fact'],
+        correctIndex: 1,
+        isMyth: false,
+        explanation: 'Fact! You always have the right to change your mind and pause or stop intimacy.',
+        relatedArticleId: 'consent-and-boundaries'
+      },
+      {
+        id: 'mf-11',
+        question: 'Myth or Fact: You can still become pregnant during perimenopause if periods skip months.',
+        type: 'true-false',
+        options: ['Myth', 'Fact'],
+        correctIndex: 1,
+        isMyth: false,
+        explanation: 'Fact! An ovary can still release an egg until 12 full months without bleeding pass.',
+        relatedArticleId: 'pregnancy-and-ovulation'
+      },
+      {
+        id: 'mf-12',
+        question: 'Myth or Fact: Emergency contraceptive pills cause an abortion of an established pregnancy.',
+        type: 'true-false',
+        options: ['Myth', 'Fact'],
+        correctIndex: 0,
+        isMyth: true,
+        explanation: 'Myth! Emergency pills only delay ovulation. They cannot harm or end an implanted pregnancy.',
+        relatedArticleId: 'contraception-and-pills'
       }
     ]
   },
   {
     id: 'cycle-basics',
     title: 'Cycle Basics & Phases',
-    subtitle: 'Test your understanding of the 4 hormonal seasons and monthly rhythm',
+    subtitle: 'Test what you know about the 4 hormonal seasons and monthly rhythm',
     badgeTag: '🌙 Rhythm Master',
     icon: '🌓',
     color: '#8B4F7E',
@@ -130,46 +170,46 @@ export const QUIZZES: Quiz[] = [
         question: 'What day is counted as "Day 1" of your menstrual cycle?',
         type: 'multiple-choice',
         options: [
-          'The first day of active period bleeding',
-          'The day your bleeding completely stops',
-          'The middle of the month',
-          'The day you experience ovulation pain'
+          'The first day of real period bleeding',
+          'The day your bleeding fully stops',
+          'The exact middle of the month',
+          'The day you get stomach cramps'
         ],
         correctIndex: 0,
-        explanation: 'Day 1 of your cycle is always the very first day of full, active menstrual bleeding.',
+        explanation: 'Day 1 is always the very first day of red menstrual bleeding.',
         relatedArticleId: 'cycle-in-4-phases'
       },
       {
         id: 'cb-2',
-        question: 'What is the clinically accepted normal cycle range for healthy adults?',
+        question: 'What is the normal menstrual cycle length for most adults?',
         type: 'multiple-choice',
         options: [
-          'Exactly 28 days only',
           '21 to 35 days',
-          '10 to 20 days',
-          '40 to 60 days'
+          'Exactly 28 days only',
+          '10 to 14 days',
+          '45 to 60 days'
         ],
-        correctIndex: 1,
-        explanation: 'A healthy adult cycle ranges from 21 to 35 days. For teenagers, up to 45 days is common.',
+        correctIndex: 0,
+        explanation: 'A healthy adult cycle lasts between 21 and 35 days. Cycles vary from person to person.',
         relatedArticleId: 'what-is-a-period'
       },
       {
         id: 'cb-3',
-        question: 'During which phase of the cycle does the ovary release a mature egg cell?',
+        question: 'In which phase does an ovary release a mature egg cell?',
         type: 'multiple-choice',
         options: [
-          'Menstrual phase',
-          'Follicular phase',
           'Ovulation phase',
-          'Luteal phase'
+          'Menstrual bleed phase',
+          'Late winter phase',
+          'Luteal wind-down phase'
         ],
-        correctIndex: 2,
-        explanation: 'Ovulation occurs midway through the cycle (around day 14 in a 28-day cycle) when an egg is released from the ovarian follicle.',
+        correctIndex: 0,
+        explanation: 'Ovulation happens roughly in the middle of your cycle when an egg is released.',
         relatedArticleId: 'cycle-in-4-phases'
       },
       {
         id: 'cb-4',
-        question: 'Which hormone rises after ovulation to prepare the uterine lining and warms the body?',
+        question: 'Which hormone rises after ovulation to prepare the womb cushion?',
         type: 'multiple-choice',
         options: [
           'Progesterone',
@@ -178,63 +218,63 @@ export const QUIZZES: Quiz[] = [
           'Melatonin'
         ],
         correctIndex: 0,
-        explanation: 'Progesterone is produced by the corpus luteum after ovulation, stabilizing the lining and slightly raising basal temperature.',
+        explanation: 'Progesterone rises after ovulation. It makes the womb lining soft, thick, and warm.',
         relatedArticleId: 'cycle-in-4-phases'
       },
       {
         id: 'cb-5',
-        question: 'Why do emotional shifts or PMS symptoms commonly occur in the late Luteal phase?',
+        question: 'Why do mood swings or food cravings often happen a few days before periods?',
         type: 'multiple-choice',
         options: [
-          'Sudden drop in both estrogen and progesterone',
-          'Excessive intake of sugar',
-          'Lack of physical walking',
-          'A decrease in iron levels'
+          'Estrogen and progesterone drop quickly',
+          'You ate too much spicy food',
+          'You walked too much during the day',
+          'Your body ran out of water'
         ],
         correctIndex: 0,
-        explanation: 'When pregnancy doesn’t occur, the rapid drop in estrogen and progesterone impacts serotonin receptors in the brain.',
+        explanation: 'If pregnancy does not happen, hormones drop fast. This natural dip triggers PMS moods.',
         relatedArticleId: 'understanding-pms'
       },
       {
         id: 'cb-6',
-        question: 'What is the cushion lining of the uterus called that is shed during menstruation?',
+        question: 'What is the soft inner lining of the womb that sheds during your period?',
         type: 'multiple-choice',
         options: [
-          'Endometrium',
-          'Epidermis',
-          'Myelin',
-          'Peritoneum'
+          'Endometrium (womb cushion)',
+          'Epidermis (outer skin)',
+          'Cartilage',
+          'Tendon'
         ],
         correctIndex: 0,
-        explanation: 'The endometrium is the mucosal inner lining of the uterus built up each month.',
+        explanation: 'The endometrium is the soft inner cushion built each month. It sheds as period blood.',
         relatedArticleId: 'what-is-a-period'
       },
       {
         id: 'cb-7',
-        question: 'What natural chemical triggers uterine contractions to help shed the lining?',
+        question: 'What natural body chemicals cause the womb to contract and cause cramps?',
         type: 'multiple-choice',
         options: [
-          'Prostaglandins',
-          'Cortisol',
+          'Prostaglandins (womb-squeezing chemicals)',
+          'Cortisol (stress alert)',
           'Histamine',
-          'Oxytocin'
+          'Hemoglobin'
         ],
         correctIndex: 0,
-        explanation: 'Prostaglandins stimulate uterine smooth muscles to contract, which causes normal mild menstrual cramping.',
+        explanation: 'Prostaglandins are natural chemicals. They help your womb squeeze to shed its lining.',
         relatedArticleId: 'period-pain-normal'
       },
       {
         id: 'cb-8',
-        question: 'How long does active period bleeding typically last in healthy cycles?',
+        question: 'How many days does normal period bleeding usually last?',
         type: 'multiple-choice',
         options: [
           '2 to 7 days',
-          '10 to 14 days',
-          'Only 12 hours',
-          'Over 3 weeks'
+          '15 to 20 days',
+          'Only 6 hours',
+          'More than 1 month'
         ],
         correctIndex: 0,
-        explanation: 'A normal period lasts between 2 and 7 days, with days 1 and 2 usually being the heaviest.',
+        explanation: 'Bleeding usually lasts between 2 and 7 days. Days 1 and 2 are often heaviest.',
         relatedArticleId: 'what-is-a-period'
       }
     ]
@@ -242,7 +282,7 @@ export const QUIZZES: Quiz[] = [
   {
     id: 'hygiene-smarts',
     title: 'Hygiene & Self-Care Smarts',
-    subtitle: 'Master intimate wellness, changing habits, and gentle comfort care',
+    subtitle: 'Learn clean daily habits, pad changing, and caring for your body',
     badgeTag: '🫧 Hygiene Guru',
     icon: '🫧',
     color: '#9B7FD1',
@@ -251,114 +291,114 @@ export const QUIZZES: Quiz[] = [
     questions: [
       {
         id: 'hs-1',
-        question: 'How often should a sanitary pad typically be changed during daytime wear?',
+        question: 'How often should you change a sanitary pad during the day?',
         type: 'multiple-choice',
         options: [
           'Every 4 to 6 hours',
-          'Only once a day',
-          'Every 12 to 14 hours',
-          'Only when completely overflowing'
+          'Only once at bedtime',
+          'Every 12 hours',
+          'Only when it is completely overflowing'
         ],
         correctIndex: 0,
-        explanation: 'Changing pads every 4 to 6 hours prevents moisture accumulation, skin maceration, and bacteria growth.',
+        explanation: 'Change pads every 4 to 6 hours. This keeps skin fresh and stops bacterial growth.',
         relatedArticleId: 'hygiene-dos-donts'
       },
       {
         id: 'hs-2',
-        question: 'What is the maximum recommended time to leave a single tampon inside?',
+        question: 'What is the longest time a single tampon should stay inside?',
         type: 'multiple-choice',
         options: [
           '8 hours maximum',
           '24 hours',
           '16 hours',
-          'As long as it doesn’t leak'
+          '2 full days'
         ],
         correctIndex: 0,
-        explanation: 'Never exceed 8 hours with a single tampon to minimize the risk of rare but serious Toxic Shock Syndrome (TSS).',
+        explanation: 'Never leave a tampon in for more than 8 hours. Changing it prevents rare infections.',
         relatedArticleId: 'first-period-kit-guide'
       },
       {
         id: 'hs-3',
-        question: 'When washing your intimate area, what is the safest clinical recommendation?',
+        question: 'What is the cleanest way to wash your intimate area?',
         type: 'multiple-choice',
         options: [
-          'Wash only the outer vulva with warm water',
-          'Douche inside the vagina with antibacterial scented soap',
-          'Use perfumed body sprays on the intimate area',
-          'Use bleach or vinegar rinses'
+          'Wash only the outside vulva with clean water',
+          'Wash inside the vagina with perfumed chemical soap',
+          'Spray strong deodorant on intimate areas',
+          'Use vinegar or bleach water'
         ],
         correctIndex: 0,
-        explanation: 'The internal vagina is self-cleaning. Only wash the outside vulva with warm water or a gentle, fragrance-free cleanser.',
+        explanation: 'Wash only the outside with clean water. The inside cleans itself naturally.',
         relatedArticleId: 'hygiene-dos-donts'
       },
       {
         id: 'hs-4',
-        question: 'Which mineral helps relax smooth muscles and soothe period cramps?',
+        question: 'Which kitchen foods help relax tummy muscles and ease cramps?',
         type: 'multiple-choice',
         options: [
-          'Magnesium (found in seeds and dark chocolate)',
-          'Sodium (table salt)',
-          'Refined white sugar',
-          'Caffeine'
+          'Warm ajwain water, banana, and roasted seeds',
+          'Heavy cold ice cream and soda',
+          'Deep-fried greasy street snacks',
+          'Raw refined white sugar'
         ],
         correctIndex: 0,
-        explanation: 'Magnesium relaxes uterine smooth muscles and has been shown to reduce cramp intensity.',
+        explanation: 'Warm ajwain water, jeera water, bananas, and seeds contain magnesium that soothes cramps.',
         relatedArticleId: 'food-movement-cramps'
       },
       {
         id: 'hs-5',
-        question: 'What direction should you always wipe after using the restroom?',
+        question: 'In which direction should you always wipe in the toilet?',
         type: 'multiple-choice',
         options: [
-          'Front to back (away from the urethra and vagina)',
+          'Front to back (away from the urine and vaginal opening)',
           'Back to front',
-          'In circular motions',
+          'In round circles',
           'Direction does not matter'
         ],
         correctIndex: 0,
-        explanation: 'Wiping front to back prevents bacteria from the anus from entering the urinary tract or vagina.',
+        explanation: 'Always wipe front to back. This keeps bowel bacteria away from your urinary tract.',
         relatedArticleId: 'hygiene-dos-donts'
       },
       {
         id: 'hs-6',
-        question: 'How should a silicone menstrual cup be sanitized between menstrual cycles?',
+        question: 'How should you wash and sanitize reusable cloth pads?',
         type: 'multiple-choice',
         options: [
-          'Boiled in clean water for 3 to 5 minutes',
-          'Soaked in bleach',
-          'Sprayed with perfume',
-          'Wiped with dry tissue only'
+          'Wash with soap and water, and dry fully in bright direct sunlight',
+          'Hide them damp under other clothes to dry in secret',
+          'Rinse with plain cold tea only',
+          'Never wash them at all'
         ],
         correctIndex: 0,
-        explanation: 'Boiling the medical-grade silicone cup in clean water for 3-5 minutes completely sterilizes it for your next cycle.',
+        explanation: 'Wash well with soap. Sunlight acts as a natural sanitizer to kill germs safely.',
         relatedArticleId: 'first-period-kit-guide'
       },
       {
         id: 'hs-7',
-        question: 'Which fabric is most recommended for healthy intimate underwear?',
+        question: 'Which underwear fabric is healthiest for your intimate skin?',
         type: 'multiple-choice',
         options: [
           'Breathable 100% cotton',
-          'Synthetic polyester or nylon',
-          'Non-breathable vinyl',
-          'Heavy wool'
+          'Tight synthetic nylon or plastic',
+          'Rough synthetic polyester',
+          'Heavy non-breathable vinyl'
         ],
         correctIndex: 0,
-        explanation: 'Breathable cotton allows air circulation and prevents humidity traps where yeast can overgrow.',
+        explanation: 'Cotton underwear allows air flow. It prevents sweat traps and fungal rashes.',
         relatedArticleId: 'hygiene-dos-donts'
       },
       {
         id: 'hs-8',
-        question: 'Why is heat therapy (like a hot water bottle) so effective for menstrual cramps?',
+        question: 'Why does a hot water bag (garam paani ki thaili) relieve period cramps?',
         type: 'multiple-choice',
         options: [
-          'It dilates blood vessels and relaxes uterine spasms similarly to mild painkillers',
-          'It freezes the nerve endings completely',
-          'It alters hormone levels permanently',
-          'It stops the bleeding immediately'
+          'Warmth opens blood vessels and relaxes tight womb muscles',
+          'It freezes all stomach nerves',
+          'It changes your blood type',
+          'It stops period bleeding permanently'
         ],
         correctIndex: 0,
-        explanation: 'Local heat increases blood flow and relaxes myometrial muscle fibers, easing painful spasms.',
+        explanation: 'Gentle warmth relaxes tight muscle fibers in your womb. It eases spasms naturally.',
         relatedArticleId: 'food-movement-cramps'
       }
     ]
@@ -366,7 +406,7 @@ export const QUIZZES: Quiz[] = [
   {
     id: 'first-period-ready',
     title: 'First Period Ready Checklist',
-    subtitle: 'Confidence boosters, body clues, and readiness for menarche',
+    subtitle: 'Build confidence, know your body clues, and feel prepared for your first period',
     badgeTag: '🌱 Bud Champion',
     icon: '🌱',
     color: '#D6457F',
@@ -375,104 +415,104 @@ export const QUIZZES: Quiz[] = [
     questions: [
       {
         id: 'fpr-1',
-        question: 'What is the medical term for a person’s very first menstrual period?',
+        question: 'What is the doctor term for a girl’s very first menstrual period?',
         type: 'multiple-choice',
-        options: ['Menarche', 'Menopause', 'Ovulation', 'Amenorrhea'],
+        options: ['Menarche (first period)', 'Menopause', 'Ovulation', 'Digestion'],
         correctIndex: 0,
-        explanation: 'Menarche (pronounced men-AR-kee) is the scientific term for the first menstrual period in puberty.',
+        explanation: 'Menarche means your very first period. It is a healthy sign that your body is growing.',
         relatedArticleId: 'first-period-expect'
       },
       {
         id: 'fpr-2',
-        question: 'Between what typical ages does a first period most commonly arrive?',
+        question: 'Around what ages do most girls get their first period?',
         type: 'multiple-choice',
-        options: ['Ages 9 to 15', 'Ages 3 to 6', 'Ages 25 to 30', 'Ages 45 to 50'],
+        options: ['Between 9 and 15 years old', 'Between 3 and 6 years old', 'Between 25 and 30 years old', 'After age 45'],
         correctIndex: 0,
-        explanation: 'Most girls get their first period between 9 and 15 years old, with the average age being around 12.',
+        explanation: 'Most girls get their first period between ages 9 and 15. The average age is around 12.',
         relatedArticleId: 'first-period-expect'
       },
       {
         id: 'fpr-3',
-        question: 'What does first period fluid frequently look like on your underwear?',
+        question: 'What does first period fluid usually look like on underwear?',
         type: 'multiple-choice',
         options: [
-          'Light brownish smears or pinkish spots',
-          'Bright blue liquid like in old TV commercials',
-          'A giant gush of blood all at once',
-          'Black tar'
+          'Light brownish spots or pinkish stains',
+          'Bright blue liquid like on TV ads',
+          'A giant waterfall of dark blood',
+          'Thick green glue'
         ],
         correctIndex: 0,
-        explanation: 'First periods usually begin with modest brownish spots or pinkish stains, not a sudden flood.',
+        explanation: 'First periods usually start with light brownish spots or pink marks, not a sudden flood.',
         relatedArticleId: 'first-period-expect'
       },
       {
         id: 'fpr-4',
-        question: 'Is it normal for periods to be somewhat irregular during the first 1 to 2 years?',
+        question: 'Is it normal for periods to be irregular in the first 1 to 2 years?',
         type: 'multiple-choice',
         options: [
-          'Yes, completely normal as hormones calibrate',
-          'No, it must be exactly 28 days immediately',
-          'No, irregularity always indicates an emergency',
-          'Only if you have an illness'
+          'Yes, totally normal while your body hormones learn their rhythm',
+          'No, every period must arrive every 28 days immediately',
+          'No, irregular periods always mean danger',
+          'Only if you have a fever'
         ],
         correctIndex: 0,
-        explanation: 'The brain-ovary hormone axis takes 1 to 3 years to establish regular monthly ovulatory cycles.',
+        explanation: 'In the first 1 to 3 years, cycles naturally vary. Your body is finding its rhythm.',
         relatedArticleId: 'what-is-a-period'
       },
       {
         id: 'fpr-5',
-        question: 'What is clear or whitish vaginal discharge before your first period?',
+        question: 'What is clear or whitish discharge on your underwear before your first period?',
         type: 'multiple-choice',
         options: [
-          'A healthy sign that estrogen is maturing reproductive organs',
-          'A sign of an infection that needs immediate surgery',
-          'Dirty tissue that shouldn’t be there',
-          'Sweat from exercise'
+          'A healthy sign that puberty hormones are getting your body ready',
+          'Dirty dirt that needs harsh chemical wash',
+          'A serious medical emergency',
+          'Sweat from sitting down'
         ],
         correctIndex: 0,
-        explanation: 'Clear or whitish discharge is a normal biological clue that puberty hormones are active and menarche is approaching.',
+        explanation: 'Clear or white discharge is normal. It shows puberty hormones are maturing your body.',
         relatedArticleId: 'first-period-expect'
       },
       {
         id: 'fpr-6',
-        question: 'What is the most convenient item to keep in your school backpack for period preparedness?',
+        question: 'What is best to pack in your school bag pouch so you are always ready?',
         type: 'multiple-choice',
         options: [
-          'A small cute pouch with 2 pads and spare underwear',
-          'A heavy medical textbook',
-          'A full-size heating pad with cord',
-          'Nothing, you must always stay home'
+          'A small pouch with 2 pads, paper wrapper, and spare underwear',
+          'A heavy electric heater cord',
+          'A giant medical kit with needles',
+          'Nothing, you must stay home if your period starts'
         ],
         correctIndex: 0,
-        explanation: 'A discreet little pouch with pads and spare undies gives you complete confidence wherever you are.',
+        explanation: 'A small pouch with 2 pads, paper for wrapping, and clean underwear gives full peace of mind.',
         relatedArticleId: 'first-period-kit-guide'
       },
       {
         id: 'fpr-7',
-        question: 'Can you go to school, participate in gym class, and hang out with friends on your period?',
+        question: 'Can you go to school, play sports, and meet friends during your period?',
         type: 'multiple-choice',
         options: [
-          'Yes! You can do all your normal activities comfortably',
-          'No, you must stay in bed in the dark for 7 days',
-          'No, you cannot be near other people',
-          'Only if you are excused by a hospital'
+          'Yes! You can do all your regular daily activities with confidence',
+          'No, you must lie locked in bed in the dark for 7 days',
+          'No, you cannot sit near anyone in class',
+          'Only if you carry a hospital doctor certificate'
         ],
         correctIndex: 0,
-        explanation: 'Having your period is a regular part of life. With proper products, you can do everything you love!',
+        explanation: 'Having your period is natural. With a clean pad or cloth, you can learn, run, and play.',
         relatedArticleId: 'period-myths-busted'
       },
       {
         id: 'fpr-8',
-        question: 'Who is a good person to talk to if you think your period has arrived?',
+        question: 'Who can you speak with comfortably if your first period arrives?',
         type: 'multiple-choice',
         options: [
-          'A parent, school nurse, older sister, teacher, or trusted adult',
-          'Keep it a dark secret forever',
-          'Only internet strangers',
-          'Nobody, it is forbidden to mention it'
+          'Your mom, didi, teacher, school nurse, or ASHA didi',
+          'Keep it a dark shameful secret forever',
+          'Only unknown people online',
+          'Nobody at all'
         ],
         correctIndex: 0,
-        explanation: 'Sharing with a trusted mom, dad, nurse, or guardian will help you get pads and reassurance right away.',
+        explanation: 'Tell a trusted mom, elder sister, teacher, or ASHA didi. They will gladly help you.',
         relatedArticleId: 'talking-to-daughter-students'
       }
     ]
@@ -480,121 +520,120 @@ export const QUIZZES: Quiz[] = [
   {
     id: 'menopause-know-how',
     title: 'Menopause Know-How',
-    subtitle: 'Empowering knowledge for perimenopause, hormonal wisdom, and midlife wellness',
+    subtitle: 'Clear knowledge for perimenopause, hot flushes, and midlife health',
     badgeTag: '🌾 Golden Bloom',
     icon: '🍂',
     color: '#EDB650',
     category: 'Perimenopause & Menopause',
-    published: false,
+    published: true,
     questions: [
       {
         id: 'mn-1',
-        question: 'What clinical milestone marks the official arrival of menopause?',
+        question: 'When is a woman clinically considered to have reached menopause?',
         type: 'multiple-choice',
         options: [
-          '12 consecutive months without any menstrual bleeding',
-          'The first time you experience a hot flush',
-          'When your cycle skips one month',
-          'On your 50th birthday exactly'
+          'After 12 full months in a row without any period bleeding',
+          'The first day she feels a hot flush',
+          'When her period skips just one month',
+          'On her 50th birthday exactly'
         ],
         correctIndex: 0,
-        explanation: 'Menopause is clinically diagnosed retrospectively after 12 full consecutive months without a period.',
+        explanation: 'Menopause is confirmed after 12 full months with zero period bleeding.',
         relatedArticleId: 'menopause-hot-flushes'
       },
       {
         id: 'mn-2',
-        question: 'What is the phase called that leads up to menopause, often lasting several years?',
+        question: 'What is the natural multi-year transition stage leading up to menopause called?',
         type: 'multiple-choice',
-        options: ['Perimenopause', 'Menarche', 'Amenorrhea', 'Dysmenorrhea'],
+        options: ['Perimenopause', 'Menarche', 'Dysmenorrhea', 'Gestation'],
         correctIndex: 0,
-        explanation: 'Perimenopause is the natural transition period where hormone levels fluctuate before cessation.',
+        explanation: 'Perimenopause is the natural phase before menopause when hormone levels shift.',
         relatedArticleId: 'perimenopause-early-signs'
       },
       {
         id: 'mn-3',
-        question: 'What is the most critical rule regarding vaginal bleeding AFTER menopause is reached?',
+        question: 'What is an important rule if vaginal bleeding happens AFTER menopause is reached?',
         type: 'multiple-choice',
         options: [
-          'ANY postmenopausal bleeding requires prompt gynecological evaluation',
+          'Any bleeding after menopause needs a doctor or gynaecologist check-up',
           'It is completely normal and can be ignored',
-          'It means your youth has returned',
-          'Drink warm milk and wait 6 months'
+          'It means your youthful cycle has returned permanently',
+          'Drink warm milk and wait a year'
         ],
         correctIndex: 0,
-        explanation: 'Any bleeding after 12 months of menopause is a red flag that must be assessed by a doctor to rule out uterine changes.',
+        explanation: 'Any bleeding after menopause is not normal. See a doctor or gynaecologist right away.',
         relatedArticleId: 'warning-signs-doctor'
       },
       {
         id: 'mn-4',
-        question: 'Why do hot flushes occur in perimenopause and menopause?',
+        question: 'Why do sudden hot flushes or warmth waves happen during perimenopause?',
         type: 'multiple-choice',
         options: [
-          'Lower estrogen levels make the brain’s thermostat (hypothalamus) extra sensitive to temperature',
+          'Lower estrogen makes the brain temperature center extra sensitive',
           'The stomach is burning food too fast',
           'Blood pressure drops to zero',
-          'It is caused by drinking cold water'
+          'Drinking plain water makes the body overheat'
         ],
         correctIndex: 0,
-        explanation: 'Decreased estrogen narrows the thermoneutral zone in the brain’s hypothalamus, triggering rapid vasodilation.',
+        explanation: 'Lower estrogen affects your brain thermostat. It triggers sudden sweating and heat waves.',
         relatedArticleId: 'menopause-hot-flushes'
       },
       {
         id: 'mn-5',
-        question: 'Can a person become pregnant during perimenopause?',
+        question: 'Can a woman become pregnant during perimenopause?',
         type: 'multiple-choice',
         options: [
-          'Yes, pregnancy is still possible until menopause (12 months without periods) is reached',
-          'No, fertility stops completely at age 40',
-          'No, irregular cycles mean zero eggs remain',
-          'Only during winter'
+          'Yes, pregnancy is still possible until 12 months with no periods pass',
+          'No, all chances stop completely on your 40th birthday',
+          'No, irregular periods mean zero eggs ever release',
+          'Only during cold winter months'
         ],
         correctIndex: 0,
-        explanation: 'Because ovulation can still occur intermittently during perimenopause, contraception is advised until 12 months post-period.',
+        explanation: 'An ovary can still release an egg occasionally during perimenopause until full menopause.',
         relatedArticleId: 'perimenopause-early-signs'
       },
       {
         id: 'mn-6',
-        question: 'Which type of exercise is especially vital during and after menopause to protect bone density?',
+        question: 'Which daily exercise helps protect strong bones during and after menopause?',
         type: 'multiple-choice',
         options: [
-          'Weight-bearing & resistance training',
-          'Sitting still in bed',
-          'Only competitive sprinting',
+          'Regular brisk walking and light weight-bearing exercise',
+          'Lying completely still on a bed all day',
+          'Heavy Olympic sprinting only',
           'None, bones cannot be protected'
         ],
         correctIndex: 0,
-        explanation: 'Weight-bearing exercise (walking, light weights, resistance bands) stimulates bone remodeling and helps prevent osteoporosis.',
+        explanation: 'Daily brisk walking and light weights keep bones strong and prevent fractures.',
         relatedArticleId: 'menopause-hot-flushes'
       },
       {
         id: 'mn-7',
-        question: 'What lifestyle tweak can help reduce the frequency of night sweats and hot flushes?',
+        question: 'Which bedroom habit helps reduce hot flushes and night sweats for better sleep?',
         type: 'multiple-choice',
         options: [
-          'Sleeping in a cool room (65°F / 18°C) with breathable cotton layers',
-          'Drinking hot spiced coffee right before bed',
-          'Turning the room heater on high',
-          'Drinking heavy red wine before sleep'
+          'Sleeping in a cool room (about 18°C to 20°C) with breathable cotton bedding',
+          'Drinking hot spicy tea right before sleeping',
+          'Putting heavy blankets and running a room heater on high',
+          'Eating greasy fried snacks at midnight'
         ],
         correctIndex: 0,
-        explanation: 'A cool sleep environment and avoiding triggers like spicy food, alcohol, and caffeine reduce nighttime vasomotor symptoms.',
+        explanation: 'A cool, ventilated bedroom and light cotton clothes help prevent nighttime heat waves.',
         relatedArticleId: 'menopause-hot-flushes'
       },
       {
         id: 'mn-8',
-        question: 'What vitamins/minerals work together to preserve bone strength after menopause?',
+        question: 'Which nutrients work together to protect bone strength after menopause?',
         type: 'multiple-choice',
         options: [
-          'Calcium and Vitamin D3',
-          'Vitamin C and sugar',
-          'Sodium and iron only',
-          'Potassium and caffeine'
+          'Calcium (milk, curd, ragi, til) and Vitamin D from sunlight',
+          'Refined white sugar and sweet soda',
+          'Table salt and caffeine',
+          'Deep fried oil only'
         ],
         correctIndex: 0,
-        explanation: 'Vitamin D3 enables the intestine to absorb calcium efficiently, supporting bone matrix density.',
+        explanation: 'Calcium from milk, curd, ragi, and til plus daily morning sunlight keeps bones dense.',
         relatedArticleId: 'menopause-hot-flushes'
       }
     ]
   }
 ];
-

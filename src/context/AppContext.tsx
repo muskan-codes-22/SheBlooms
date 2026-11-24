@@ -6,6 +6,8 @@ interface AppContextType {
   stage: 'puberty' | 'cycle' | 'menopause' | 'educator' | null;
   stageInfo: StageInfo | null;
   setStage: (stage: 'puberty' | 'cycle' | 'menopause' | 'educator' | null) => void;
+  welcomingStage: 'puberty' | 'cycle' | 'menopause' | 'educator' | null;
+  setWelcomingStage: (stage: 'puberty' | 'cycle' | 'menopause' | 'educator' | null) => void;
   progress: UserProgress;
   toggleSaveTip: (tipId: string) => void;
   markArticleRead: (articleId: string) => void;
@@ -21,6 +23,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [progress, setProgress] = useState<UserProgress>(loadUserProgress);
+  const [welcomingStage, setWelcomingStage] = useState<'puberty' | 'cycle' | 'menopause' | 'educator' | null>(null);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('sheblooms_dark') === 'true';
   });
@@ -42,6 +45,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const setStage = (newStage: 'puberty' | 'cycle' | 'menopause' | 'educator' | null) => {
     const updated = saveUserProgress({ stage: newStage });
     setProgress(updated);
+    if (newStage) {
+      setWelcomingStage(newStage);
+    }
   };
 
   const toggleSaveTip = (tipId: string) => {
@@ -110,6 +116,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const resetAllData = () => {
     clearAllUserData();
     setProgress(loadUserProgress());
+    setWelcomingStage(null);
   };
 
   return (
@@ -118,6 +125,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         stage,
         stageInfo,
         setStage,
+        welcomingStage,
+        setWelcomingStage,
         progress,
         toggleSaveTip,
         markArticleRead,

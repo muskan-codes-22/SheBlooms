@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { askSheBloom, AssistantMessage, ProgressStep } from '../lib/aiService';
 import { useApp } from '../context/AppContext';
+import { getStageContent, DEFAULT_STAGE_CONTENT } from '../data/stageContent';
 
 export const AskAssistant: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -20,6 +21,10 @@ export const AskAssistant: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<ProgressStep>('idle');
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Derive stage-specific 4 starter suggestion chips
+  const stageContent = getStageContent(stage);
+  const starterQuestions = stageContent ? stageContent.starterQuestions : DEFAULT_STAGE_CONTENT.starterQuestions;
 
   // Clean one-line welcome message as requested
   const [messages, setMessages] = useState<AssistantMessage[]>([
@@ -31,13 +36,7 @@ export const AskAssistant: React.FC = () => {
     }
   ]);
 
-  // Exactly 4 starter suggestion chips
-  const STARTER_QUESTIONS = [
-    'Is period pain normal?',
-    'What is a normal cycle length?',
-    'How do I use a tampon safely?',
-    'What are early signs of my first period?'
-  ];
+
 
   // Handle URL query ?q=
   useEffect(() => {
@@ -241,10 +240,10 @@ export const AskAssistant: React.FC = () => {
                     )}
                   </div>
 
-                  {/* Suggestion Chips: Shown only once on the welcome message (exactly 4 chips) */}
+                  {/* Suggestion Chips: Shown only once on the welcome message (exactly 4 stage chips) */}
                   {index === 0 && messages.length === 1 && (
                     <div className="flex flex-wrap gap-1.5 mt-3 max-w-[90%]">
-                      {STARTER_QUESTIONS.map((q, idx) => (
+                      {starterQuestions.map((q, idx) => (
                         <button
                           key={idx}
                           onClick={() => handleSend(q)}

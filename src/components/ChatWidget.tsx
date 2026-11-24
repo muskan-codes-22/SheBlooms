@@ -15,10 +15,13 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import { askSheBloom, AssistantMessage, ProgressStep } from '../lib/aiService';
 import { useApp } from '../context/AppContext';
+import { getStageContent, DEFAULT_STAGE_CONTENT } from '../data/stageContent';
 
 export const ChatWidget: React.FC = () => {
   const location = useLocation();
   const { stage, incrementQuestionsAsked } = useApp();
+  const stageContent = getStageContent(stage);
+  const starterQuestions = stageContent ? stageContent.starterQuestions : DEFAULT_STAGE_CONTENT.starterQuestions;
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [input, setInput] = useState('');
@@ -236,7 +239,7 @@ export const ChatWidget: React.FC = () => {
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-blush/30 dark:bg-plum-night/60">
-              {messages.map(msg => {
+              {messages.map((msg, index) => {
                 const isBot = msg.sender === 'assistant';
                 return (
                   <div
@@ -305,8 +308,23 @@ export const ChatWidget: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Follow-up question chips */}
-                    {isBot && msg.followUps && msg.followUps.length > 0 && (
+                    {/* Stage starter question chips: only on initial welcome message (hides after first message) */}
+                    {index === 0 && messages.length === 1 && (
+                      <div className="flex flex-wrap gap-1.5 mt-2 max-w-[90%]">
+                        {starterQuestions.map((q, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleSend(q)}
+                            className="text-[11px] px-2.5 py-1 rounded-lg bg-lavender/60 dark:bg-plum-deep hover:bg-petal/60 border border-violet/20 text-orchid dark:text-pink-200 transition-colors text-left"
+                          >
+                            💬 {q}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Follow-up question chips on subsequent bot responses */}
+                    {index > 0 && isBot && msg.followUps && msg.followUps.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2 max-w-[90%]">
                         {msg.followUps.map((q, idx) => (
                           <button

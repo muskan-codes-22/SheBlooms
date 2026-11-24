@@ -21,6 +21,7 @@ export const Footer: React.FC = () => {
 
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-semibold text-plum/80 dark:text-pink-200">
             <Link to="/learn" className="hover:text-raspberry transition-colors">Learn</Link>
+            <Link to="/cycle" className="hover:text-raspberry transition-colors">Cycle Wheel</Link>
             <Link to="/ask" className="hover:text-raspberry transition-colors">Ask SheBloom</Link>
             <Link to="/quiz" className="hover:text-raspberry transition-colors">Quizzes</Link>
             <Link to="/privacy" className="hover:text-raspberry transition-colors">Privacy</Link>

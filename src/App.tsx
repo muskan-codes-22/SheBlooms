@@ -7,6 +7,7 @@ import { Splash } from './components/Splash';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { ChatWidget } from './components/ChatWidget';
+import { StageWelcomeModal } from './components/StageWelcomeModal';
 
 // Pages
 import { Home } from './pages/Home';
@@ -51,6 +52,9 @@ export function AppContent() {
 
       {/* Top Navigation */}
       <Navbar />
+
+      {/* Stage Welcoming Character Animation Modal */}
+      <StageWelcomeModal />
 
       <ScrollToTop />
 

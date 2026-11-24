@@ -17,18 +17,18 @@ export interface QAEntry {
 export const QA_DATABASE: QAEntry[] = [
   {
     id: 'pain-normal',
-    keywords: ['pain', 'cramps', 'hurts', 'cramping', 'ache', 'dysmenorrhea'],
+    keywords: ['pain', 'cramps', 'hurts', 'cramping', 'ache', 'dysmenorrhea', 'pet dard'],
     question: 'Is period pain normal?',
     answer: {
-      opener: 'Hello bloom! 🌸 It is very common to feel mild cramping, especially during the first day or two of bleeding.',
-      explanation: 'Mild cramps happen because your body produces natural substances called prostaglandins that help your uterus gently contract to shed its lining. However, excruciating or disabling pain that makes you throw up or miss school/work is NOT normal.',
+      opener: 'Hello bloom! 🌸 It is very common to feel mild cramping, especially on day 1 or 2 of your period.',
+      explanation: 'Mild cramps happen when natural body chemicals called prostaglandins make the womb squeeze gently to shed its lining. But severe pain that makes you vomit or miss school or work is NOT normal.',
       tips: [
-        'Place a warm water bottle or heating pad over your lower abdomen.',
-        'Sip warm chamomile or fresh ginger tea to naturally calm uterine muscle contractions.',
-        'Try gentle pelvic stretches like Child’s Pose (Balasana).',
-        'Over-the-counter anti-inflammatories like ibuprofen can help when taken with food.'
+        'Place a hot water bag (garam paani ki thaili) or a warm cloth over your lower belly.',
+        'Sip warm ginger (adrak) tea or ajwain water to soothe tummy spasms naturally.',
+        'Try gentle body stretches like Child’s Pose (Balasana) or lie down with knees bent.',
+        'If pain continues, ask a doctor or pharmacist for safe pain relief (like paracetamol).'
       ],
-      doctorAlert: 'If your pain is severe, keeps worsening, causes fainting or nausea, or does not improve with basic pain relievers, please speak with a doctor or gynecologist.'
+      doctorAlert: 'Is your pain severe or causing vomiting or fainting? Please see a doctor or gynaecologist at your nearest primary health centre (PHC).'
     },
     category: 'medical',
     sourceArticleId: 'period-pain-normal',
@@ -36,15 +36,15 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'cycle-length',
-    keywords: ['cycle', 'length', 'days', 'normal cycle', 'how long', 'frequency'],
+    keywords: ['cycle', 'length', 'days', 'normal cycle', 'how long', 'frequency', 'gap'],
     question: 'What is a normal cycle length?',
     answer: {
       opener: 'Great question! Every body has its own unique monthly rhythm 🌿',
-      explanation: 'A typical menstrual cycle lasts between 21 and 35 days in adults, counted from Day 1 of bleeding to Day 1 of your next period. For teenagers during the first 2 to 3 years after menarche, cycles can naturally range anywhere from 21 to 45 days.',
+      explanation: 'A normal menstrual cycle lasts between 21 and 35 days in healthy adults. You count from Day 1 of bleeding to Day 1 of your next period. For teenagers in the first 2 to 3 years, gaps up to 45 days are normal.',
       tips: [
-        'Track your Day 1 in a calendar or private note to discover your personal rhythm.',
+        'Mark your Day 1 on a calendar or diary to know your rhythm.',
         'Bleeding itself usually lasts between 2 to 7 days.',
-        'Stress, changes in sleep, travel, or exams can temporarily delay your period by a few days.'
+        'School exam stress, travel, or illness can temporarily delay your period by a few days.'
       ]
     },
     category: 'basics',
@@ -56,13 +56,13 @@ export const QA_DATABASE: QAEntry[] = [
     keywords: ['tampon', 'how to use tampon', 'insert tampon', 'applicator', 'tampons swim'],
     question: 'How do I use a tampon safely?',
     answer: {
-      opener: 'Using a tampon can feel a little intimidating the first time, but you\'ve got this! 🌸',
-      explanation: 'Tampons are small cylinders of absorbent cotton inserted into the vagina to absorb menstrual fluid before it exits. The vagina angles naturally towards your lower back, not straight up.',
+      opener: 'Using a tampon can feel new at first, but with a little practice it is simple! 🌸',
+      explanation: 'A tampon is a small cotton plug inserted into the vagina to soak period fluid inside. The canal angles gently towards your lower back, not straight up.',
       tips: [
-        'Always wash your hands thoroughly with soap before and after handling a tampon.',
-        'Get into a comfortable position — either sitting on the toilet with knees wide or standing with one foot on the toilet rim.',
-        'Gently insert the applicator pointing towards your lower spine until your fingers touch your skin, then push the plunger in.',
-        'Always change your tampon every 4 to 8 hours — never leave one in for longer than 8 hours to prevent Toxic Shock Syndrome (TSS).'
+        'Always wash your hands thoroughly with soap and clean water first.',
+        'Squat comfortably or sit on the toilet with knees wide apart.',
+        'Gently slide the tampon towards your lower spine until it sits comfortably inside.',
+        'Always change your tampon every 4 to 8 hours. Never leave it in longer than 8 hours.'
       ]
     },
     category: 'hygiene',
@@ -74,12 +74,12 @@ export const QA_DATABASE: QAEntry[] = [
     keywords: ['lost', 'stuck', 'tampon lost', 'can tampon get lost', 'inside body'],
     question: 'Can a tampon get lost inside my body?',
     answer: {
-      opener: 'Here is total peace of mind: it is anatomically impossible for a tampon to get lost inside you! 💖',
-      explanation: 'Your vagina is a closed muscular tube that ends at your cervix (the tiny neck of your uterus). The opening in the cervix is pinhead-small — only fluids and microscopic sperm can pass through, never a tampon.',
+      opener: 'Here is complete peace of mind: it is anatomically impossible for a tampon to get lost inside you! 💖',
+      explanation: 'Your vagina is a closed canal about 7 to 10 cm deep. It ends at your cervix, which has a tiny pinhead opening. Nothing like a tampon can pass through into your stomach.',
       tips: [
-        'If a string feels out of reach, take a slow deep breath to relax your pelvic muscles.',
-        'Squat down and gently insert two clean fingers to reach the base of the tampon.',
-        'If you still cannot remove it, a doctor or clinic nurse can easily and painlessly assist you.'
+        'If the removal string feels hard to find, take a slow deep breath to relax your muscles.',
+        'Squat down and gently use two clean fingers to reach the base of the tampon.',
+        'If you still cannot remove it, visit a female doctor or ASHA didi who can remove it painlessly in a minute.'
       ]
     },
     category: 'myths',
@@ -88,16 +88,16 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'first-period-signs',
-    keywords: ['first period', 'menarche', 'signs', 'puberty', 'when will i get', 'starter'],
+    keywords: ['first period', 'menarche', 'signs', 'puberty', 'when will i get', 'starter', 'pehli baar'],
     question: 'What are the signs that my first period is coming?',
     answer: {
-      opener: 'Welcome, young bloom! Your body is growing in wonderful ways 🌱',
-      explanation: 'Most girls experience menarche between ages 9 and 15, usually about 1.5 to 2 years after breast buds first develop. Your body will give gentle clues beforehand.',
+      opener: 'Welcome, young bloom! Your body is growing in healthy and natural ways 🌱',
+      explanation: 'Most girls get their first period (menarche) between ages 9 and 15 (Class 6 to 10). It usually starts about 1 to 2 years after breast buds begin growing.',
       tips: [
-        'You may notice clear, whitish, or pale discharge in your underwear for several months prior.',
-        'Growth of soft pubic hair and underarm hair is a common earlier milestone.',
-        'A sudden growth spurt often happens shortly before your first period.',
-        'Keep a small pouch in your school bag with a pad and spare undies so you feel completely prepared.'
+        'You may notice clear or whitish fluid (discharge) on your underwear for a few months before.',
+        'Soft hair starts growing under your arms and around your private area.',
+        'A sudden growth in height often happens shortly before your first period.',
+        'Keep 2 pads and spare underwear in a pouch in your school bag so you feel confident.'
       ]
     },
     category: 'basics',
@@ -109,15 +109,15 @@ export const QA_DATABASE: QAEntry[] = [
     keywords: ['perimenopause', 'menopause', 'hot flush', 'flashes', 'night sweats', '40s'],
     question: 'What is perimenopause and what are the early signs?',
     answer: {
-      opener: 'Warm greetings! Navigating your 40s comes with natural hormonal calibration 🌾',
-      explanation: 'Perimenopause is the transition phase leading to menopause, typically beginning in your early-to-mid 40s. Estrogen and progesterone fluctuate rather than drop abruptly.',
+      opener: 'Warm greetings! Navigating your 40s comes with natural body wisdom 🌾',
+      explanation: 'Perimenopause is the natural bridge leading to menopause. It usually begins in your early-to-mid 40s as hormones naturally rise and fall irregularly.',
       tips: [
-        'Changes in cycle length (shorter or longer gaps between periods) is the most common early sign.',
-        'Occasional night warmth or hot flushes during temperature changes.',
-        'Mild brain fog, temporary sleep awakenings, or fluctuating moods.',
-        'Remember that pregnancy is still biologically possible during perimenopause.'
+        'Changing gaps between periods (early, late, lighter, or heavier) is the most common early sign.',
+        'Occasional sudden heat waves (hot flushes) on your face or neck, especially at night.',
+        'Light sleep, mild forgetfulness, or mood shifts.',
+        'Remember: pregnancy is still biologically possible during perimenopause.'
       ],
-      doctorAlert: 'Any sudden heavy bleeding, or bleeding after 12 full months without a period, should always be checked by your gynecologist.'
+      doctorAlert: 'Any sudden very heavy bleeding, or bleeding after 12 full months without a period, must be checked by a gynaecologist.'
     },
     category: 'basics',
     sourceArticleId: 'perimenopause-early-signs',
@@ -128,15 +128,15 @@ export const QA_DATABASE: QAEntry[] = [
     keywords: ['heavy', 'bleeding', 'clots', 'soaking', 'flooding', 'too much blood', 'menorrhagia'],
     question: 'How do I know if my period is too heavy?',
     answer: {
-      opener: 'Thank you for asking this vital health question 🩺',
-      explanation: 'While period flow varies from day to day (usually heaviest on days 1 and 2), bleeding should never overwhelm your ability to go about your day safely.',
+      opener: 'Thank you for asking this important health question 🩺',
+      explanation: 'Period flow is usually heavier on days 1 and 2. But bleeding should never stop you from working or make you feel weak and breathless.',
       tips: [
-        'Soaking through one or more regular pads or tampons every hour for 2+ consecutive hours is considered heavy.',
-        'Passing blood clots larger than a coin (about 2.5 cm or an Indian 1-rupee/quarter coin) is a signal.',
-        'Waking up multiple times at night to change protection or bleeding through clothes.',
-        'Feeling dizzy, lightheaded, abnormally fatigued, or short of breath.'
+        'Soaking 1 or more regular pads completely every hour for 2 hours in a row is too heavy.',
+        'Passing blood clots bigger than an Indian ₹5 coin (about 2.5 cm) is an important sign.',
+        'Waking up multiple times at night to change pads, or bleeding through clothing.',
+        'Feeling dizzy, abnormally tired, pale, or breathless.'
       ],
-      doctorAlert: 'If you are soaking a pad every hour or passing large clots, please visit a doctor or healthcare clinic. Treatments like tranexamic acid, iron support, or hormonal care make a huge difference!'
+      doctorAlert: 'If you are soaking a pad every hour or passing large clots, visit a primary health centre (PHC) or doctor. Treatments like iron support and medical tablets provide quick relief!'
     },
     category: 'medical',
     sourceArticleId: 'warning-signs-doctor',
@@ -144,18 +144,18 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'discharge-normal',
-    keywords: ['discharge', 'white', 'clear', 'fluid', 'wet', 'cervical mucus'],
+    keywords: ['discharge', 'white', 'clear', 'fluid', 'wet', 'cervical mucus', 'safed paani'],
     question: 'Is vaginal discharge normal?',
     answer: {
-      opener: 'Yes, absolutely! Vaginal discharge is your body’s magnificent self-cleaning system 🫧',
-      explanation: 'The cervix and vaginal walls constantly produce a natural fluid that carries away old cells and bacteria, keeping your reproductive tract clean, acidic, and healthy.',
+      opener: 'Yes, absolutely! Natural discharge is your body’s self-cleaning fluid 🫧',
+      explanation: 'The cervix and vaginal walls constantly produce clear or whitish fluid. It carries away old cells and keeps your intimate area healthy and clean.',
       tips: [
-        'Normal discharge is typically clear, milky white, or pale cream, with little to no scent.',
-        'During ovulation (mid-cycle), discharge becomes slippery, stretchy, and clear like raw egg whites.',
-        'Before or after your period, it may look thicker or slightly brownish.',
-        'Wash only the external vulva with warm water — avoid douching!'
+        'Normal fluid is clear, milky white, or pale cream, with no foul smell.',
+        'Midway through your cycle (ovulation), fluid becomes stretchy and clear like raw egg whites.',
+        'Before or after your period, it can look thicker or light brownish.',
+        'Wash only the outside area (vulva) with clean water during your bath.'
       ],
-      doctorAlert: 'Contact a doctor if discharge is clumpy like cottage cheese, greenish-yellow, smells fishy, or causes burning/itching.'
+      doctorAlert: 'See a doctor or visit a PHC if discharge is thick and clumpy like curd (chenna), greenish-yellow, smells bad, or causes burning or itching.'
     },
     category: 'hygiene',
     sourceArticleId: 'hygiene-dos-donts',
@@ -163,15 +163,16 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'swimming-exercise',
-    keywords: ['swim', 'swimming', 'exercise', 'gym', 'workout', 'sports', 'run'],
-    question: 'Can I exercise and swim during my period?',
+    keywords: ['swim', 'swimming', 'exercise', 'gym', 'workout', 'sports', 'run', 'yoga'],
+    question: 'Can I exercise and walk during my period?',
     answer: {
-      opener: 'Yes, absolutely! Movement can actually be your greatest ally 🏊‍♀️',
-      explanation: 'There is zero medical reason to stop exercising or swimming. In fact, moderate exercise releases endorphins — your body’s natural painkillers that reduce cramp intensity and uplift mood.',
+      opener: 'Yes, absolutely! Gentle movement is safe and helps reduce pain 🏃‍♀️',
+      explanation: 'There is no medical reason to stay in bed unless you feel tired. Light exercise releases natural body chemicals that ease cramps and lift your mood.',
       tips: [
-        'For swimming: Use an internal product (tampon or menstrual cup) or leak-proof swim period underwear.',
-        'Water pressure gently slows outward flow while submerged, but once you exit, gravity resumes, so internal protection is best.',
-        'For workouts: Choose what feels good! Gentle yoga, walking, and swimming are wonderful on heavier days; you can resume weight training when energy rebounds.'
+        'For walking and daily chores: A standard sanitary pad or clean cloth is comfortable.',
+        'For swimming: Use a menstrual cup or tampon so fluid stays secure inside.',
+        'For yoga: Poses like Child’s Pose (Balasana) or gentle stretches relax lower back stiffness.',
+        'Rest if you feel low on energy on heavier days.'
       ]
     },
     category: 'myths',
@@ -183,15 +184,15 @@ export const QA_DATABASE: QAEntry[] = [
     keywords: ['missed', 'late', 'skipped', 'no period', 'amenorrhea', 'delayed'],
     question: 'Why is my period late or missed?',
     answer: {
-      opener: 'A late period can feel worrisome, but our cycles are sensitive to life changes 🌸',
-      explanation: 'Occasional cycle delays happen because ovulation was delayed. The menstrual cycle is directed by the brain (hypothalamus), which responds sensitively to stress, travel, illness, and nutrition.',
+      opener: 'A delayed period can feel worrying, but cycles are sensitive to everyday life changes 🌸',
+      explanation: 'Occasional delays happen because ovulation was delayed. The brain center that guides hormones reacts quickly to exam stress, travel, illness, or diet changes.',
       tips: [
-        'High stress or exam pressure is a very frequent cause of temporary ovulation delays.',
-        'Sudden weight changes, intense athletic training, or illness (like a fever/flu) can shift your cycle.',
-        'If you are sexually active, taking an over-the-counter home pregnancy test is a prudent first step.',
-        'In teenagers, the hormonal axis takes 2 to 3 years to become fully regular.'
+        'High stress, fever, or school exam pressure is a very common cause of temporary delay.',
+        'Significant weight loss, poor diet, or weakness can also pause periods.',
+        'If you are married or sexually active, taking a simple home urine pregnancy test is a good first step.',
+        'For teenagers, irregular cycles are normal for the first 2 to 3 years.'
       ],
-      doctorAlert: 'If you have missed periods for 3 consecutive months (and you are not pregnant), consult a healthcare provider to check thyroid hormones, PCOS, or prolactin.'
+      doctorAlert: 'Has your period stopped for 3 months in a row (if not pregnant)? Visit a doctor or gynaecologist to check for thyroid imbalance or PCOS.'
     },
     category: 'medical',
     sourceArticleId: 'warning-signs-doctor',
@@ -199,34 +200,34 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'pms-mood-swings',
-    keywords: ['pms', 'mood', 'crying', 'angry', 'irritated', 'sad', 'pmdd'],
-    question: 'Why do I get so emotional or irritated before my period?',
+    keywords: ['pms', 'mood', 'crying', 'angry', 'irritated', 'sad', 'pmdd', 'chidhchidhapan'],
+    question: 'Why do I get irritated or emotional before my period?',
     answer: {
       opener: 'You are not imagining it, and you are definitely not alone 💭',
-      explanation: 'In the week before bleeding (the late luteal phase), estrogen and progesterone drop rapidly. This drop directly influences serotonin, a neurotransmitter that regulates calm and happiness.',
+      explanation: 'In the week before your period, estrogen and progesterone drop rapidly. This drop affects serotonin in the brain, which manages happiness and calmness.',
       tips: [
-        'Notice your calendar: when you recognize emotional waves as hormonal shifts, it reduces self-criticism.',
-        'Keep caffeine and excessive sugary treats moderate, as they can amplify anxiety and energy crashes.',
-        'Carve out restorative downtime — an early bedtime, a warm bath, or an honest chat with a close friend.',
-        'If mood swings feel unbearable or include deep despair, look into PMDD with a caring doctor.'
+        'Track your days: knowing your pre-period week helps you understand sudden mood shifts.',
+        'Eat balanced meals with dal, sabzi, and whole grains to keep blood sugar stable.',
+        'Drink warm water, cut down on excess salty snacks, and get 8 hours of sleep.',
+        'If pre-period sadness is very severe, consult a doctor or counselor for PMDD support.'
       ]
     },
     category: 'basics',
     sourceArticleId: 'understanding-pms',
-    followUps: ['What is the difference between PMS and PMDD?', 'Which supplements support mood?', 'Why do I crave chocolate before periods?']
+    followUps: ['What is the difference between PMS and PMDD?', 'Which foods help with mood?', 'Why do I crave sweets before periods?']
   },
   {
     id: 'menstrual-cup-how',
     keywords: ['cup', 'menstrual cup', 'silicone', 'fold', 'insert cup', 'sanitize'],
-    question: 'How does a menstrual cup work and how do I insert it?',
+    question: 'How does a menstrual cup work and how do I use it?',
     answer: {
-      opener: 'Menstrual cups are an eco-friendly, comfortable choice loved by millions 🌿',
-      explanation: 'A menstrual cup is a flexible bell made of medical-grade silicone that collects menstrual fluid instead of absorbing it. It creates a gentle suction seal against the vaginal walls.',
+      opener: 'Menstrual cups are an eco-friendly and affordable choice that lasts for years 🌿',
+      explanation: 'A menstrual cup is a soft, flexible bell made of medical-grade silicone. It sits inside the vagina to collect period fluid rather than soak it.',
       tips: [
-        'Sanitize: Boil the cup in hot water for 3 to 5 minutes before your cycle begins.',
-        'Fold: Use the "C-fold" or "Punch-down fold" to make the cup rim as small as a tampon.',
-        'Insert: Relax, separate your labia, and slide the folded cup back towards your tailbone. Let it pop open.',
-        'Empty: Gently pinch the base to release the suction seal before sliding it out. Wash and reinsert!'
+        'Boil: Before each monthly cycle, boil the cup in clean water for 3 to 5 minutes.',
+        'Fold: Fold the rim flat and bend in half (C-fold) so it becomes as small as a finger.',
+        'Insert: Relax, squat down, and gently slide the folded cup in towards your lower back. It pops open.',
+        'Empty: After 8 to 12 hours, pinch the base to release suction, empty into the toilet, rinse with water, and reinsert.'
       ]
     },
     category: 'hygiene',
@@ -238,13 +239,13 @@ export const QA_DATABASE: QAEntry[] = [
     keywords: ['hot flush', 'hot flashes', 'sweat', 'night sweat', 'cooling', 'menopause cooling'],
     question: 'What can I do to cool down during hot flushes?',
     answer: {
-      opener: 'Hot flushes can be startling, but there are proven ways to stay cool and comfortable 🍵',
-      explanation: 'During perimenopause and menopause, lower estrogen narrows your brain\'s thermo-neutral zone, causing sudden heat waves, flushed skin, and sweating.',
+      opener: 'Hot flushes can be uncomfortable, but simple everyday habits bring quick relief 🍵',
+      explanation: 'During perimenopause and menopause, lower estrogen tricks the brain into thinking the body is too hot. This causes sudden warmth, sweating, and redness.',
       tips: [
-        'Dress in breathable layers of cotton, linen, or bamboo so you can adjust easily.',
-        'Keep ice water nearby and sip it slowly the moment you feel a warmth wave starting.',
-        'Lower bedroom temperature to 65°F (18°C) and use layered bedsheets instead of heavy duvets.',
-        'Common triggers: spicy foods, red wine, caffeine, and hot showers before bed.'
+        'Wear loose, breathable cotton clothes so air circulates freely.',
+        'Keep a bottle of cool water near your bed and sip it slowly when warmth starts.',
+        'Keep bedroom temperature around 18°C to 20°C and use light cotton sheets.',
+        'Avoid very oily spicy dinners, strong coffee, or tea close to bedtime.'
       ]
     },
     category: 'hygiene',
@@ -256,13 +257,13 @@ export const QA_DATABASE: QAEntry[] = [
     keywords: ['talk to daughter', 'teach students', 'educator', 'parent', 'period talk', 'first talk'],
     question: 'How can I comfortably talk to my daughter or students about periods?',
     answer: {
-      opener: 'Thank you for stepping up to guide the next generation with warmth and openness 🤝',
-      explanation: 'Children absorb attitudes before words. Presenting menstruation as a healthy, normal milestone rather than a secret taboo creates life-long confidence.',
+      opener: 'Thank you for guiding young bloomers with kindness and openness 🤝',
+      explanation: 'Children learn attitudes before words. Presenting menstruation as a healthy, normal body milestone removes fear and shame for life.',
       tips: [
-        'Use accurate anatomical terms: uterus, vagina, vulva, menstruation.',
-        'Start around age 8 to 10 with short, positive conversations rather than one intimidating marathon talk.',
-        'Show real pads and explain how they stick to underwear; demystifying the supplies eliminates anxiety.',
-        'Educate boys as well — normalizing periods in schools drastically reduces teasing.'
+        'Use simple, accurate words: womb, period, sanitary pad.',
+        'Start early around Class 4 or 5 (ages 8 to 10) with short, natural conversations.',
+        'Show real pads and explain how they stick to underwear; seeing supplies eliminates worry.',
+        'Teach boys as well — normalizing periods in schools stops teasing and awkwardness.'
       ]
     },
     category: 'myths',
@@ -271,34 +272,34 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'food-for-cramps',
-    keywords: ['food', 'diet', 'nutrition', 'eat', 'chocolate', 'tea', 'cramp relief food'],
-    question: 'What foods and drinks help reduce menstrual cramps?',
+    keywords: ['food', 'diet', 'nutrition', 'eat', 'tea', 'cramp relief food', 'khana'],
+    question: 'What Indian foods and drinks help reduce menstrual cramps?',
     answer: {
-      opener: 'Nourishing your body with anti-inflammatory foods makes a wonderful difference 🥑',
-      explanation: 'Certain nutrients naturally relax smooth uterine muscles and block inflammatory prostaglandin pathways.',
+      opener: 'Simple foods and warm drinks from your kitchen make a wonderful difference 🫖',
+      explanation: 'Certain everyday Indian foods naturally relax womb muscles and lower inflammation.',
       tips: [
-        'Magnesium rich: Pumpkin seeds, spinach, bananas, and dark chocolate (70%+) help relax muscles.',
-        'Herbal teas: Warm ginger tea, peppermint tea, and chamomile tea ease cramping and calm digestion.',
-        'Omega-3 fatty acids: Walnuts, chia seeds, flaxseeds, and salmon reduce systemic inflammation.',
-        'Drink lots of warm water to reduce fluid retention and bloating.'
+        'Iron and green foods: Spinach (palak), methi, chana, rajma, sprouts, and a small piece of jaggery (gud).',
+        'Warm sips: Fresh ginger (adrak) tea, ajwain water, or saunf water calm stomach spasms.',
+        'Bedtime comfort: A warm cup of haldi doodh (turmeric milk) helps soothe body ache and improves sleep.',
+        'Drink plenty of warm water, nimbu pani, or coconut water (nariyal pani) to ease bloating.'
       ]
     },
     category: 'hygiene',
     sourceArticleId: 'food-movement-cramps',
-    followUps: ['Should I avoid caffeine on my period?', 'Why do I crave sugar before bleeding?', 'Can magnesium prevent cramps?']
+    followUps: ['Should I avoid cold water on my period?', 'Why do I crave sweets before bleeding?', 'Can jaggery help with period cramps?']
   },
   {
     id: 'blood-color',
     keywords: ['color', 'brown blood', 'black blood', 'pink blood', 'dark blood', 'clots color'],
     question: 'Why is my period blood brown, dark, or pink?',
     answer: {
-      opener: 'Color changes are completely normal throughout your period! 🎨',
-      explanation: 'Period blood changes color as it reacts with oxygen in the air (a natural process called oxidation).',
+      opener: 'Color changes are completely normal across your period days! 🎨',
+      explanation: 'Period blood changes color when it touches oxygen in the air (a natural process called oxidation).',
       tips: [
-        'Bright Red: Fresh, active blood moving quickly out of the uterus (typical on days 1–3).',
-        'Dark Red or Brown: Blood that took a little longer to leave the uterus and had time to oxidize (normal on light days).',
-        'Pinkish: Blood diluted with natural cervical fluid (often at the very start or end of your period).',
-        'Small Clots: Natural clotting proteins help manage flow; jelly-like clots smaller than a coin are normal.'
+        'Bright Red: Fresh blood moving quickly out of the womb (typical on days 1 to 3).',
+        'Dark Brown: Blood that moved slowly and touched air (common on light days or at the start/end).',
+        'Pinkish: Blood mixed with natural cervical fluid (normal at the start or finish).',
+        'Small Clots: Natural jelly-like clots smaller than a ₹5 coin are completely normal.'
       ]
     },
     category: 'basics',
@@ -307,28 +308,118 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'hygiene-washing',
-    keywords: ['wash', 'soap', 'clean', 'smell', 'odor', 'douche', 'hygiene'],
+    keywords: ['wash', 'soap', 'clean', 'smell', 'odor', 'douche', 'hygiene', 'safai'],
     question: 'How should I clean my intimate area during my period?',
     answer: {
-      opener: 'Gentle simplicity is the golden rule of intimate hygiene 🫧',
-      explanation: 'The vagina (inside canal) is completely self-cleaning. You only ever need to clean the vulva (the outside skin and folds).',
+      opener: 'Gentle simplicity is the best rule for intimate hygiene 🫧',
+      explanation: 'The vagina (inside passage) cleans itself naturally. You only ever need to wash the vulva (the outside skin and folds).',
       tips: [
-        'Use plain warm water to wash the vulva. If using soap, use an unscented, mild, gentle cleanser on the outer skin only.',
-        'Never douche or spray perfumes inside or on your vulva; this destroys protective acid-producing bacteria.',
-        'Always wipe gently from front to back after using the restroom.',
-        'Change pads every 4 to 6 hours to prevent bacterial buildup and keep skin dry.'
+        'Use plain clean warm water to wash the outside area during your daily bath.',
+        'Never wash inside the vagina or use perfumed soaps, talcum powder, or chemical washes.',
+        'Always wash or wipe gently from front to back after using the toilet.',
+        'Change pads every 4 to 6 hours to stay dry, comfortable, and rash-free.'
       ]
     },
     category: 'hygiene',
     sourceArticleId: 'hygiene-dos-donts',
     followUps: ['Why does my period have an odor?', 'What underwear material is healthiest?', 'Can scented pads cause irritation?']
+  },
+  {
+    id: 'contraceptive-pills-how',
+    keywords: ['pill', 'birth control', 'oral contraceptive', 'contraceptive pills', 'mala d', 'chhaya', 'garbhnirodhak'],
+    question: 'How do birth control pills work and how are they taken?',
+    answer: {
+      opener: 'Contraceptive pills are a common, scientifically proven way to plan pregnancy 💊',
+      explanation: 'Daily pills stop your ovaries from releasing an egg each month (ovulation). They also thicken cervical mucus so sperm cannot enter the womb.',
+      tips: [
+        'Take 1 pill at the exact same hour every day, such as bedtime or after dinner.',
+        'Always consult a doctor or visit a Primary Health Centre (PHC) before starting.',
+        'If you miss a pill, take it as soon as you remember and check the packet leaflet.',
+        'Pills do not protect against STIs — pair with condoms for complete protection.'
+      ]
+    },
+    category: 'medical',
+    sourceArticleId: 'contraception-and-pills',
+    followUps: ['What happens if I miss a birth control pill?', 'Do contraceptive pills cause weight gain?', 'Can pills help reduce heavy period flow?']
+  },
+  {
+    id: 'emergency-pill-guide',
+    keywords: ['emergency pill', 'morning after', 'i-pill', '72 hours', 'unprotected', 'e-pill'],
+    question: 'What is an emergency contraceptive pill and when should it be used?',
+    answer: {
+      opener: 'Emergency pills are an occasional safety net, not regular birth control ⚡',
+      explanation: 'An emergency contraceptive pill delays egg release when taken within 72 hours of unprotected intercourse or a broken condom.',
+      tips: [
+        'Take it as soon as possible — it works best within the first 12 to 24 hours.',
+        'It does NOT cause abortion and cannot end an established pregnancy.',
+        'It does not replace regular daily contraception or protect against STIs.',
+        'If your next period is delayed by more than 7 days, take a home pregnancy test.'
+      ]
+    },
+    category: 'medical',
+    sourceArticleId: 'contraception-and-pills',
+    followUps: ['How often can you take an emergency pill?', 'Does the morning after pill delay your period?', 'Where can I get emergency pills in India?']
+  },
+  {
+    id: 'consent-boundaries-how',
+    keywords: ['consent', 'boundary', 'boundaries', 'say no', 'relationship respect', 'autonomy', 'touch'],
+    question: 'What does consent mean and how do I set personal boundaries?',
+    answer: {
+      opener: 'Your body belongs entirely to you, and your comfort always comes first 🤝',
+      explanation: 'Consent means both people freely, clearly, and happily agree. You have the full right to say "No" to any touch or request that feels wrong.',
+      tips: [
+        'Consent must be freely given: pressure, threats, or guilt are never consent.',
+        'You can change your mind and pause or stop at any second without apology.',
+        'Digital boundaries count: never feel pressured to send private photos or chats.',
+        'Both partners must agree on birth control together before any intimacy.'
+      ]
+    },
+    category: 'basics',
+    sourceArticleId: 'consent-and-boundaries',
+    followUps: ['How do I say no politely but firmly?', 'What is reproductive consent?', 'Who can I talk to if someone violates my boundaries?']
+  },
+  {
+    id: 'pregnancy-early-signs',
+    keywords: ['pregnant', 'pregnancy signs', 'missed period pregnancy', 'conception', 'pregnancy test', 'pregnant symptoms'],
+    question: 'What are the earliest signs of pregnancy?',
+    answer: {
+      opener: 'Every woman’s body gives subtle early clues when conception happens 🤰',
+      explanation: 'The clearest early sign is a missed menstrual period. Other hormonal changes often follow within a few weeks.',
+      tips: [
+        'Tender, swollen breasts or dark areolas.',
+        'Morning sickness, nausea, or sudden strong food dislikes.',
+        'Feeling unusually exhausted or needing frequent naps.',
+        'Testing: Take a home urine test with first morning urine on the day after your missed period.'
+      ]
+    },
+    category: 'basics',
+    sourceArticleId: 'pregnancy-and-ovulation',
+    followUps: ['How early can a pregnancy test show positive?', 'Can you bleed while pregnant?', 'What is the fertile window?']
+  },
+  {
+    id: 'perimenopause-pregnancy-risk',
+    keywords: ['pregnant perimenopause', 'can i get pregnant at 45', 'menopause pregnancy', 'late pregnancy'],
+    question: 'Can I get pregnant during perimenopause?',
+    answer: {
+      opener: 'Yes, pregnancy is still biologically possible during perimenopause! 🌾',
+      explanation: 'Even when periods skip months or become irregular in your 40s, an ovary can still release an egg occasionally.',
+      tips: [
+        'Continue using contraception until full menopause is officially confirmed.',
+        'Menopause means 12 continuous months in a row with zero period bleeding.',
+        'Low-dose pills, Copper-T, or condoms are common, safe options in midlife.',
+        'Any bleeding that occurs AFTER 12 months of menopause requires an immediate doctor visit.'
+      ]
+    },
+    category: 'medical',
+    sourceArticleId: 'pregnancy-and-ovulation',
+    followUps: ['What birth control is safest in perimenopause?', 'What causes postmenopausal bleeding?', 'How long does perimenopause last?']
   }
 ];
 
 export const RED_FLAG_TRIGGERS = [
   'fainted', 'fainting', 'blacked out', 'unconscious',
   'severe bleeding', 'soaking pad every hour', 'soaked through clothes',
-  'huge blood clot', 'large clot', 'clot bigger than golf ball',
+  'huge blood clot', 'large clot', 'clot bigger than coin',
   'bleeding after menopause', 'postmenopausal bleeding',
   'pregnant and bleeding', 'miscarriage', 'severe fever with tampon',
   'vomiting from cramps', 'unbearable pain', 'chest pain'
@@ -338,4 +429,3 @@ export const CRISIS_TRIGGERS = [
   'kill myself', 'suicide', 'self harm', 'hurt myself', 'want to die',
   'hopeless', 'end my life', 'cut myself'
 ];
-

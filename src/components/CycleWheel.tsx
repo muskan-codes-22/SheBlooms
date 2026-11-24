@@ -28,8 +28,8 @@ const PHASES: PhaseDetail[] = [
     hormones: 'Estrogen & Progesterone at baseline lowest levels',
     bodyChanges: 'The uterus gently sheds its endometrial cushion lining as menstrual fluid.',
     energyMood: 'Quiet, introspective, lower physical stamina. Deep desire for warmth and cocooning.',
-    nutritionTips: 'Iron-rich foods (spinach, lentils, dark chocolate), bone broths, warm ginger tea, and hydrating fruits.',
-    selfCareAdvice: 'Gentle stretching, restorative child’s pose, hot water bottles, and permission to say no to heavy social plans.',
+    nutritionTips: 'Iron-rich foods (palak, methi, dal, chana, jaggery/gud), warm ginger (adrak) tea, and seasonal fruits.',
+    selfCareAdvice: 'Gentle stretching, resting, hot water bag (garam paani ki thaili) on your belly, and light rest.',
     icon: '🩸'
   },
   {
@@ -42,8 +42,8 @@ const PHASES: PhaseDetail[] = [
     hormones: 'FSH stimulates follicle growth; Estrogen steadily ascends',
     bodyChanges: 'A new egg matures in the ovary; the uterine lining begins rebuilding with fresh blood vessels.',
     energyMood: 'Renewed vitality, creative sparks, curiosity, mental clarity, and sociable optimism.',
-    nutritionTips: 'Fermented foods (kimchi, kefir), sprouted salads, fresh greens, lean proteins, and citrus.',
-    selfCareAdvice: 'Start new creative projects, schedule brainstorming sessions, and enjoy cardio, cycling or dance classes.',
+    nutritionTips: 'Fermented foods (curd, chaas, idli), sprouted moong, green leafy vegetables, dal, and citrus fruits like nimbu or amla.',
+    selfCareAdvice: 'Start new creative tasks, enjoy walking, light yoga, dance, or outdoor activities.',
     icon: '🌱'
   },
   {
@@ -56,7 +56,7 @@ const PHASES: PhaseDetail[] = [
     hormones: 'Luteinizing Hormone (LH) surge triggers egg release; Estrogen peaks',
     bodyChanges: 'The mature follicle ruptures, releasing an egg into the fallopian tube. Cervical fluid becomes stretchy like raw egg whites.',
     energyMood: 'Peak confidence, magnetic charisma, elevated libido, and high social stamina.',
-    nutritionTips: 'Fiber-rich foods to help the liver metabolize peak estrogen (berries, quinoa, broccoli, chia seeds).',
+    nutritionTips: 'Fiber-rich foods to help process estrogen (seasonal greens, cucumbers, carrots, flaxseeds/alsi, and dal).',
     selfCareAdvice: 'Public speaking, big meetings, connection with friends, high-intensity workouts or strength training.',
     icon: '☀️'
   },
@@ -68,10 +68,10 @@ const PHASES: PhaseDetail[] = [
     color: '#8B4F7E',
     bgGradient: 'from-fuchsia-100 to-purple-50',
     hormones: 'Progesterone takes center stage; drops if fertilization doesn’t occur',
-    bodyChanges: 'Metabolism increases slightly (+100–300 kcal/day). Body temperature rises by ~0.5°F.',
+    bodyChanges: 'Metabolism increases slightly (+100–300 kcal/day). Body temperature rises slightly by ~0.3°C to 0.5°C.',
     energyMood: 'Detail-oriented, organizing impulse early on; later on, mood softens and PMS cravings may arise.',
-    nutritionTips: 'Magnesium-rich foods (roasted pumpkin seeds, bananas, dark chocolate), sweet potatoes, and herbal teas.',
-    selfCareAdvice: 'Declutter your space, finish checklists, reduce excess caffeine, and take epsom salt warm baths.',
+    nutritionTips: 'Magnesium-rich foods (roasted pumpkin or sunflower seeds, bananas, small piece of dark chocolate), sweet potatoes (shakarkandi), and ajwain or jeera water.',
+    selfCareAdvice: 'Declutter your room, finish tasks, reduce excess caffeine, and use a warm water bag for belly comfort.',
     icon: '🍂'
   }
 ];
@@ -94,8 +94,8 @@ export const CycleWheel: React.FC = () => {
     const nextDate = new Date(base.getTime() + cycleLength * 24 * 60 * 60 * 1000);
     const ovulationDate = new Date(nextDate.getTime() - 14 * 24 * 60 * 60 * 1000);
     return {
-      nextDate: nextDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      ovulationDate: ovulationDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      nextDate: nextDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+      ovulationDate: ovulationDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
       daysUntil: Math.ceil((nextDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
     };
   };
