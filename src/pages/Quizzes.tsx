@@ -661,16 +661,11 @@ export const Quizzes: React.FC = () => {
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <div className="text-3xl">{quiz.icon}</div>
-                        <div className="flex items-center gap-1.5">
-                          {isRecommended && (
-                            <span className="px-2 py-0.5 rounded-md bg-raspberry text-white font-bold text-[10px] shadow-xs">
-                              Recommended
-                            </span>
-                          )}
-                          <span className="px-2 py-0.5 rounded-md bg-lavender/60 text-plum font-semibold text-[10px]">
-                            {quiz.ageTier === 'all' ? 'All ages' : `Ages ${quiz.ageTier}`}
+                        {isRecommended && (
+                          <span className="px-2.5 py-0.5 rounded-md bg-raspberry text-white font-bold text-[10px] shadow-xs">
+                            Recommended for you
                           </span>
-                        </div>
+                        )}
                       </div>
                       
                       <h3 className="font-serif font-bold text-base sm:text-lg text-plum dark:text-pink-100 mb-1 leading-snug">
