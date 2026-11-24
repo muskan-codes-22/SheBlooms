@@ -1,8 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Clock, ArrowRight } from 'lucide-react';
+import { Search, Clock, ArrowRight, PlayCircle } from 'lucide-react';
 import { ARTICLES } from '../data/articles';
+import { EDUCATIONAL_VIDEOS, type EducationalVideo } from '../data/videos';
+import { VideoCard } from '../components/VideoCard';
+import { VideoModal } from '../components/VideoModal';
 import { FEATURES } from '../config/features';
 import { useApp } from '../context/AppContext';
 
@@ -12,6 +15,7 @@ export const Learn: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showAllStages, setShowAllStages] = useState(false);
   const [visibleCount, setVisibleCount] = useState<number>(FEATURES.articlesPageSize);
+  const [selectedVideo, setSelectedVideo] = useState<EducationalVideo | null>(null);
 
   const personalized = Boolean(stage && !showAllStages);
 
@@ -171,6 +175,43 @@ export const Learn: React.FC = () => {
         </div>
       </section>
 
+      {/* Watch & Learn Video Hub (Option A) */}
+      {selectedCategory === 'all' && !searchQuery.trim() && (
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2 text-raspberry font-bold text-xs uppercase tracking-wider">
+                <PlayCircle className="w-4 h-4" />
+                <span>Video Lessons</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-plum dark:text-pink-100 mt-0.5">
+                Watch & Learn
+              </h2>
+            </div>
+            <span className="text-xs text-orchid dark:text-pink-300 hidden sm:inline">
+              4 bite-sized animated guides
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {EDUCATIONAL_VIDEOS.map((video) => (
+              <VideoCard
+                key={video.id}
+                video={video}
+                onSelect={(v) => setSelectedVideo(v)}
+              />
+            ))}
+          </div>
+
+          <div className="mt-10 mb-2 flex items-center gap-3">
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-plum dark:text-pink-100">
+              Reading Guides
+            </h2>
+            <div className="h-px flex-1 bg-petal/60 dark:bg-pink-950/60" />
+          </div>
+        </section>
+      )}
+
       {/* Minimal Article Grid (Max 3 per row) */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {filteredArticles.length === 0 ? (
@@ -265,6 +306,12 @@ export const Learn: React.FC = () => {
           </div>
         )}
       </section>
+
+      {/* Video Modal Popup */}
+      <VideoModal
+        video={selectedVideo}
+        onClose={() => setSelectedVideo(null)}
+      />
 
     </div>
   );
