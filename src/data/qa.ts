@@ -1,3 +1,5 @@
+import { UserIntent } from '../lib/intent';
+
 export interface QAEntry {
   id: string;
   keywords: string[];
@@ -9,6 +11,7 @@ export interface QAEntry {
     doctorAlert?: string;
   };
   category: 'basics' | 'myths' | 'hygiene' | 'medical';
+  intent?: UserIntent;
   stage?: 'puberty' | 'cycle' | 'menopause' | 'educator';
   allowedStages?: ('puberty' | 'cycle' | 'menopause' | 'educator')[];
   minAgeTier?: 'all' | '13+' | 'adult';
@@ -21,11 +24,50 @@ export interface QAEntry {
 
 export const QA_DATABASE: QAEntry[] = [
   {
+    id: 'period-short-duration',
+    keywords: [
+      'only last 2 days',
+      'only lasts 2 days',
+      'period only 2 days',
+      '2 days',
+      'two days',
+      'period 2 days',
+      'period lasted 2 days',
+      'short period',
+      'period so short',
+      'bleeding only 2 days',
+      'period lasts two days',
+      'period only last 2 days'
+    ],
+    question: 'Is it normal for my period to only last 2 days?',
+    answer: {
+      opener: 'A period lasting 2 days can be completely normal depending on your individual cycle 🌸',
+      explanation: 'Normal menstrual bleeding typically ranges anywhere between 2 and 7 days. If your period lasts 2 days with steady flow on Day 1 and Day 2 before tapering off, this can be your body’s healthy natural baseline.\n\nFor young bloomers in the first 2 to 3 years after starting periods, hormone levels are still calibrating, which often leads to shorter or lighter cycles. Shorter bleeds can also happen due to birth control, stress, changes in nutrition, or light flow patterns.',
+      tips: [
+        'Track your flow: Record how many days you bleed across 3 to 4 months to learn if 2 days is your consistent personal pattern.',
+        'Flow vs. spotting: Notice whether you had real menstrual flow (requiring pads) or just light pink/brown spotting.',
+        'When to check with a doctor: If your periods used to last 5–6 days and suddenly dropped to 2 days without reason, or if periods are skipping months, a gentle consult with a doctor can give you clarity.'
+      ]
+    },
+    category: 'basics',
+    stage: 'puberty',
+    allowedStages: ['puberty', 'cycle', 'menopause', 'educator'],
+    minAgeTier: 'all',
+    sourceArticleId: 'what-is-a-period',
+    sourceReference: 'ACOG Menstrual Health Guidelines in Adolescents',
+    lastReviewed: '2026-11-25',
+    safetyClassification: 'general-educational',
+    followUps: [
+      'What is a normal cycle length?',
+      'What is the difference between spotting and a period?',
+      'Why does period flow change from month to month?'
+    ]
+  },
+  {
     id: 'why-periods-exist',
     keywords: [
       'why do i have to go through periods',
       'why do i have to get periods',
-      'why periods',
       'why do girls get periods',
       'why do women get periods',
       'why do we get periods',
@@ -34,21 +76,22 @@ export const QA_DATABASE: QAEntry[] = [
       'why do i have periods',
       'why menstruate',
       'why only girls bleed',
-      'why does my body do this'
+      'why does my body do this',
+      'why do we have periods'
     ],
     question: 'Why do I have to get periods, and why does my body do this?',
     answer: {
-      opener: 'It really can feel so frustrating, and honestly? Your feelings are 100% valid 🌸',
-      explanation: 'Having to bleed every single month, wear pads, and deal with cramps or fatigue really can feel like such a hassle. You are not being dramatic at all—almost everyone who menstruates feels annoyed or overwhelmed by it at times!\n\nHere is what is actually going on inside: Every month, your uterus quietly prepares a soft, cozy cushion of blood and tissue. It does this naturally in case you ever decide to grow a baby in the future. When your body sees that there is no baby right now, it gently lets that soft cushion go so everything stays fresh and healthy inside. That gentle clearing out is what we experience as a period.\n\nSo while it feels super messy and inconvenient on the outside, it is actually your body’s silent superpower of renewing and caring for itself.',
+      opener: 'Periods happen because your uterus prepares a soft lining each month and clears it out when no pregnancy occurs 🌸',
+      explanation: 'Every month, reproductive hormones signal your uterus to build a soft, nutrient-rich lining of blood and tissue. If an egg released during ovulation is not fertilized, hormone levels shift, signaling your uterus to gently shed this lining. This clearing out is what we experience as menstrual bleeding.\n\nWhile bleeding can feel messy and inconvenient, it is a healthy sign that your endocrine and reproductive systems are communicating properly.',
       tips: [
-        'Wear your softest, coziest clothes: Pick loose track pants, soft cotton underwear, and pads that feel gentle against your skin.',
-        'Soothe the ache with gentle warmth: A warm water bottle (garam paani ki thaili) or heating pad across your lower tummy relaxes muscles and melts away the tension.',
-        'Give yourself permission to slow down: You don\'t have to be at 100% energy right now. Resting, reading, listening to music, or taking a nap is healthy self-care.',
-        'Enjoy a soothing comfort treat: A warm cup of herbal tea, turmeric milk with jaggery, or a piece of dark chocolate can feel so comforting.',
-        'What part of having your period is feeling the most irritating or difficult for you right now? Is it cramps, feeling low on energy, worrying about leaks at school, or just how annoying it feels? Tell me, and we can find simple ways to make it much easier for you 💖'
+        'Wear comfortable, breathable cotton underwear and pads that feel gentle against your skin.',
+        'Soothe mild cramps with a warm water bottle (garam paani ki thaili) or heating pad across your lower tummy.',
+        'Give yourself permission to slow down: resting, reading, or taking a short nap helps when energy dips.',
+        'Stay hydrated with warm water or herbal tea and eat nourishing, balanced meals.'
       ]
     },
     category: 'basics',
+    intent: 'definition_or_science',
     stage: 'puberty',
     allowedStages: ['puberty', 'cycle', 'menopause', 'educator'],
     minAgeTier: 'all',
@@ -79,19 +122,19 @@ export const QA_DATABASE: QAEntry[] = [
       'sick of periods',
       'why do i have to suffer every month'
     ],
-    question: 'Why are periods so irritating, and how can I feel more comfortable?',
+    question: 'Why are periods so uncomfortable, and how can I feel more comfortable?',
     answer: {
-      opener: 'It really can feel so frustrating, and honestly? Your feelings are 100% valid 🌸',
-      explanation: 'Having to bleed every single month, wear pads, deal with cramps, and feel bloated or tired really can be such a hassle. You\'re not being dramatic at all—almost everyone who menstruates feels annoyed, exhausted, or overwhelmed by it at times!\n\nHere is what is actually going on inside: Every month, your uterus quietly prepares a soft, cozy cushion of blood and tissue. It does this naturally in case you ever decide to grow a baby in the future. When your body sees that there is no baby to nurture right now, it gently lets that soft cushion go so everything stays fresh and healthy inside. That gentle clearing out is what we experience as a period.\n\nSo while it feels super messy and inconvenient on the outside, it is actually your body’s silent superpower of renewing and caring for itself.',
+      opener: 'Period discomfort is very common and mainly caused by natural hormone shifts and muscle contractions 🌸',
+      explanation: 'Menstrual discomfort happens when body chemicals called prostaglandins cause the uterine muscles to contract to shed the lining. These contractions can cause cramping in your lower belly or back, while shifting hormones can leave you feeling bloated or drained.\n\nSimple practical comfort habits like warmth, gentle stretching, and comfortable clothing can make a big difference in how you feel.',
       tips: [
-        'Wear your softest, coziest clothes: Pick loose track pants, soft cotton underwear, and pads that feel gentle against your skin.',
-        'Soothe the ache with gentle warmth: A warm water bottle (garam paani ki thaili) or heating pad across your lower tummy relaxes muscles and melts away the tension.',
-        'Give yourself permission to slow down: You don\'t have to be at 100% energy right now. Resting, reading, listening to music, or taking a nap is healthy self-care.',
-        'Enjoy a soothing comfort treat: A warm cup of herbal tea, turmeric milk with jaggery, or a piece of dark chocolate can feel so comforting.',
-        'What part of having your period is feeling the most irritating or difficult for you right now? Is it cramps, feeling low on energy, worrying about leaks at school, or just how annoying it feels? Tell me, and we can find simple ways to make it much easier for you 💖'
+        'Apply soothing warmth: A warm water bottle (garam paani ki thaili) relaxes uterine muscles and melts tension.',
+        'Wear loose clothes: Pick soft track pants or loose cotton pyjamas that do not put pressure on your stomach.',
+        'Stay nourished: Warm turmeric milk with jaggery, ginger tea, or light dal-rice can feel very soothing.',
+        'When to seek help: If cramps or pain are severe enough that you cannot attend class or keep food down, consult a doctor or trusted adult for proper medical relief.'
       ]
     },
     category: 'basics',
+    intent: 'symptom_check',
     stage: 'puberty',
     allowedStages: ['puberty', 'cycle', 'menopause', 'educator'],
     minAgeTier: 'all',
@@ -102,8 +145,85 @@ export const QA_DATABASE: QAEntry[] = [
     followUps: [
       'How can I make cramps less painful?',
       'Tips for managing periods at school',
-      'Why do I feel so tired during my period?',
-      'What comfort foods help during periods?'
+      'What Indian foods help with cramps?'
+    ]
+  },
+  {
+    id: 'how-to-use-pad',
+    keywords: [
+      'how do i use a pad',
+      'how to use a pad',
+      'how to wear a pad',
+      'how to put on a pad',
+      'use a sanitary pad',
+      'how to stick pad',
+      'steps to use pad',
+      'first time using a pad',
+      'pad change time'
+    ],
+    question: 'How do I use a sanitary pad?',
+    answer: {
+      opener: 'Using a sanitary pad is simple once you know the 4 basic steps 🌸',
+      explanation: 'A sanitary pad is an absorbent pad that sticks directly onto the inside of your underwear to catch menstrual flow. Always wash your hands with soap before and after handling a pad, and remember to change your pad every 4 to 6 hours to stay fresh and prevent skin irritation.',
+      tips: [
+        'Unwrap the pad: Remove the outer wrapper and peel off the long paper backing covering the sticky strip.',
+        'Stick it to your underwear: Place the sticky side down in the center of your underwear crotch, so the wider end points toward your back.',
+        'Secure the wings (if present): Wrap the adhesive side wings around the underside of your underwear to keep the pad firmly in place.',
+        'Change every 4 to 6 hours: Roll up your used pad in newspaper or its wrapper and toss it in a dustbin—never flush a pad down the toilet!'
+      ]
+    },
+    category: 'hygiene',
+    intent: 'how_to',
+    stage: 'puberty',
+    allowedStages: ['puberty', 'cycle', 'educator'],
+    minAgeTier: 'all',
+    sourceArticleId: 'products-guide',
+    sourceReference: 'UNICEF Menstrual Hygiene Management Guidelines',
+    lastReviewed: '2026-11-25',
+    safetyClassification: 'general-educational',
+    followUps: [
+      'How often should I change my sanitary pad?',
+      'How do I dispose of a used pad?',
+      'What goes in a school period kit?'
+    ]
+  },
+  {
+    id: 'ovulation-window-signs',
+    keywords: [
+      'ovulation window',
+      'recognize ovulation',
+      'signs of ovulation',
+      'when do i ovulate',
+      'how to know if ovulating',
+      'fertile window',
+      'ovulation signs',
+      'cervical mucus',
+      'recognize my ovulation window'
+    ],
+    question: 'How do I recognize my ovulation window and what are the signs?',
+    answer: {
+      opener: 'Ovulation typically happens about 12 to 16 days before your next period begins 🌸',
+      explanation: 'Ovulation is the point in your cycle when one of your ovaries releases a mature egg. In a typical 28-day cycle, ovulation usually occurs around Day 14. Your fertile window includes the 5 days before ovulation plus the day of ovulation itself.\n\nYou can recognize this window by watching for natural body signals: cervical fluid that becomes clear, slippery, and stretchy (like raw egg whites), a subtle rise in resting body temperature, or light lower-belly twinges on one side (mittelschmerz).',
+      tips: [
+        'Check discharge texture: Clear, stretchy, slippery discharge is the body’s natural sign of peak fertility.',
+        'Count from your next period: Ovulation usually happens about 14 days before the first day of your next bleed.',
+        'Track physical cues: Mild breast tenderness, increased energy, or light pelvic twinges can signal ovulation.',
+        'Adolescent note: In the first 2 to 3 years of periods, some cycles are anovulatory (no egg released), which is why teen cycles fluctuate between 21 and 45 days.'
+      ]
+    },
+    category: 'basics',
+    intent: 'definition_or_science',
+    stage: 'cycle',
+    allowedStages: ['puberty', 'cycle', 'educator'],
+    minAgeTier: 'all',
+    sourceArticleId: 'pregnancy-and-ovulation',
+    sourceReference: 'ACOG Clinical Reference: Menstrual Cycle Physiology and Ovulation',
+    lastReviewed: '2026-11-25',
+    safetyClassification: 'general-educational',
+    followUps: [
+      'What is a normal cycle length?',
+      'Is vaginal discharge normal?',
+      'Why do periods skip months in teens?'
     ]
   },
   {

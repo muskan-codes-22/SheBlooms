@@ -535,7 +535,7 @@ export function detectSensitiveHealthTopic(query: string): SensitiveHealthTopicT
     return 'EMOTIONAL_BODY_SHAME';
   }
 
-  // 6. Vulnerable period frustration, annoyance, or "why do I have to have periods?"
+  // 6. Vulnerable period frustration, annoyance, or explicit emotional venting about periods
   // Exclude queries that clearly ask about physical genital itching or infection
   const hasInfectionKeywords = q.includes('burn') || q.includes('itch') || q.includes('smell') || q.includes('odor') || q.includes('yeast') || q.includes('uti');
   if (!hasInfectionKeywords) {
@@ -547,21 +547,7 @@ export function detectSensitiveHealthTopic(query: string): SensitiveHealthTopicT
       q.includes('hate my period') ||
       q.includes('hate periods') ||
       q.includes('hate having periods') ||
-      q.includes('why do i have to go through periods') ||
-      q.includes('why do i have to go through this') ||
-      q.includes('why do i have to get periods') ||
-      q.includes('why do i have to have periods') ||
-      q.includes('why do we have to get periods') ||
-      q.includes('why do we get periods') ||
-      q.includes('why do girls have periods') ||
-      q.includes('why do only girls get periods') ||
-      q.includes('why do women get periods') ||
-      q.includes('why do i have periods') ||
-      q.includes('why do i bleed every month') ||
-      q.includes('why do i have to bleed') ||
-      q.includes('why bleeding every month') ||
-      q.includes('why does my body do this') ||
-      q.includes('why is this happening to me') ||
+      q.includes('hate getting my period') ||
       q.includes('dont want my period') ||
       q.includes("don't want my period") ||
       q.includes('dont want to have periods') ||
@@ -998,16 +984,16 @@ export function buildSensitiveTopicResponse(
     };
   }
 
-  // 6. VULNERABLE PERIOD FRUSTRATION & "WHY DO I HAVE TO GET PERIODS?"
+  // 6. VULNERABLE PERIOD FRUSTRATION & EMOTIONAL DISCOMFORT
   return {
-    opener: 'It really can feel so frustrating, and honestly? Your feelings are 100% valid 🌸',
-    explanation: 'Having to bleed every single month, wear pads, deal with cramps, and feel bloated or tired really can be such a hassle. You\'re not being dramatic at all—almost everyone who menstruates feels annoyed, exhausted, or overwhelmed by it at times!\n\nHere is what is actually going on inside: Every month, your uterus quietly prepares a soft, cozy cushion of blood and tissue. It does this naturally in case you ever decide to grow a baby in the future. When your body sees that there is no baby to nurture right now, it gently lets that soft cushion go so everything stays fresh and healthy inside. That gentle clearing out is what we experience as a period.\n\nSo while it feels super messy and inconvenient on the outside, it is actually your body’s silent superpower of renewing and caring for itself.',
+    opener: 'Feeling frustrated or uncomfortable with periods is completely natural and widely experienced 🌸',
+    explanation: 'Having to bleed every month, manage pads, and deal with cramps or fatigue can feel exhausting. You are not alone—almost everyone who menstruates feels annoyed or overwhelmed by it at times.\n\nInside your body, hormones prepare a soft cushion of blood and tissue each month, and when there is no pregnancy, it clears this lining away to keep your reproductive system healthy and fresh.\n\nWhile it feels messy and inconvenient on the outside, gentle self-care and warmth can make a huge difference in your day.',
     tips: [
       'Wear your softest, coziest clothes: Pick loose track pants, soft cotton underwear, and pads that feel gentle against your skin.',
       'Soothe the ache with gentle warmth: A warm water bottle (garam paani ki thaili) or heating pad across your lower tummy relaxes muscles and melts away the tension.',
       'Give yourself permission to slow down: You don\'t have to be at 100% energy right now. Resting, reading, listening to music, or taking a nap is healthy self-care.',
       'Enjoy a soothing comfort treat: A warm cup of herbal tea, turmeric milk with jaggery, or a piece of dark chocolate can feel so comforting.',
-      'What part of having your period is feeling the most irritating or difficult for you right now? Is it cramps, feeling low on energy, worrying about leaks at school, or just how annoying it feels? Tell me, and we can find simple ways to make it much easier for you 💖'
+      'If you have severe pain or heavy bleeding, talking with a parent, trusted adult, or doctor is always a safe next step.'
     ]
   };
 }
@@ -1022,8 +1008,8 @@ export function buildSafeFallback(stage: NormalizedStage, userQuery?: string): S
 
   if (stage === 'puberty') {
     return {
-      opener: 'Thank you for asking! We are right here with you 🌸',
-      explanation: 'Every body develops on its own biological timeline, and we want to give you reliable, gentle guidance. We may not have understood your exact wording, but no question about your body is silly or awkward.',
+      opener: "I'm not sure I understood that. Could you tell me a bit more? 🌸",
+      explanation: 'I want to make sure I give you reliable, clear guidance. Every body develops on its own timeline, and no question about your body is silly or awkward.',
       tips: [
         'Could you try asking with simpler words? For example: "Why do periods happen?", "Is period pain normal?", or "How do I use a pad?".',
         'If something is hurting or making you feel worried, speaking with a parent, school nurse, or doctor is always a safe choice.',
