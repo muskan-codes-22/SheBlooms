@@ -51,6 +51,8 @@ export interface SafetyCheckResult {
   sourceArticleId?: string;
   doctorRecommendation?: string;
   message?: string;
+  isFallback?: boolean;
+  isWeirdOrUnrelated?: boolean;
 }
 
 /**
@@ -176,6 +178,64 @@ export function detectAbuseOrSafetyThreat(query: string): boolean {
 }
 
 /**
+ * Detects whether a query is weird, bizarre, surreal, nonsensical, or about non-human entities.
+ * Prevents giving unrelated or unuseful clinical answers to questions about aliens, cars, computers, or gibberish.
+ */
+export function isWeirdOrUnrelatedQuery(query: string): boolean {
+  const q = sanitizeQuery(query);
+
+  // Inanimate, mechanical, or non-human entities that make a health query weird/unrelated
+  const NON_HUMAN_ENTITIES = [
+    'alien', 'spaceship', 'ufo', 'robot', 'cyborg', 'zombie', 'vampire', 'ghost', 'dinosaur', 'monster', 'dragon',
+    'car', 'engine', 'vehicle', 'tire', 'motor', 'truck', 'airplane', 'rocket', 'mars',
+    'computer', 'laptop', 'screen', 'keyboard', 'server', 'software', 'code',
+    'dog', 'cat', 'puppy', 'kitten', 'horse', 'cow', 'pet',
+    'table', 'chair', 'furniture', 'building', 'wall', 'roof',
+    'crypto', 'bitcoin', 'stock market',
+    'minecraft', 'fortnite', 'roblox'
+  ];
+
+  const hasNonHumanEntity = NON_HUMAN_ENTITIES.some(entity => {
+    const regex = new RegExp(`\\b${entity}s?\\b`, 'i');
+    return regex.test(q);
+  });
+
+  if (hasNonHumanEntity) {
+    return true;
+  }
+
+  // Check for random gibberish or keyboard mashing (e.g. "asdfghjk", "qwertyuiop", "zxcvbnm", or words with no vowels > 6 letters)
+  const tokens = q.split(' ').filter(t => t.length > 0);
+  const hasGibberish = tokens.some(t => {
+    if (t.length > 6 && !/[aeiouy]/.test(t)) return true;
+    if (/asdf|qwerty|zxcv|ghjk|jkl;/.test(t)) return true;
+    return false;
+  });
+
+  if (hasGibberish) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Builds a clear, honest fallback when a user asks a weird or unrelated question.
+ * Simply and respectfully admits SheBloom cannot understand, rather than giving unrelated medical lectures.
+ */
+export function buildWeirdQuestionFallback(): StructuredAnswer {
+  return {
+    opener: "I didn't quite understand that question 🌸",
+    explanation: "SheBloom is an educational platform dedicated to menstrual and reproductive health. I want to make sure I only give you safe, relevant, and verified guidance, and I couldn't understand how your question relates to your body or cycle.",
+    tips: [
+      "Could you try asking your question using clear, everyday words about your body or period?",
+      "For example, try asking: 'How do I know if my period is too heavy?', 'Is period pain normal?', or 'What does discharge look like?'.",
+      "If you or someone else is experiencing an actual physical emergency or sudden severe illness, please contact local emergency medical services or consult a doctor immediately."
+    ]
+  };
+}
+
+/**
  * Red Flag / Urgent Symptom Detection
  */
 export function detectUrgentSymptoms(query: string): UrgentSymptomType | null {
@@ -191,28 +251,33 @@ export function detectUrgentSymptoms(query: string): UrgentSymptomType | null {
     return 'ABUSE_COERCION_DISCLOSURE';
   }
 
-  // 3. Toxic Shock Syndrome / Tampon fever
+  // 3. Weird / Non-Human Queries should NOT trigger human medical red flags!
+  if (isWeirdOrUnrelatedQuery(query)) {
+    return null;
+  }
+
+  // 4. Toxic Shock Syndrome / Tampon fever
   const hasTampon = q.includes('tampon') || q.includes('cup');
   const hasTssSymptom = q.includes('fever') || q.includes('vomit') || q.includes('rash') || q.includes('shiver') || q.includes('toxic shock') || q.includes('chills');
   if (hasTampon && hasTssSymptom) {
     return 'FEVER_TAMPON_TSS';
   }
 
-  // 4. Post-menopausal bleeding
+  // 5. Post-menopausal bleeding
   const isPostMeno = q.includes('after menopause') || q.includes('postmenopause') || q.includes('post menopausal') || q.includes('stopped 1 year') || q.includes('stopped a year') || q.includes('12 months no period') || q.includes('menopause for a year');
   const hasBleeding = q.includes('bleed') || q.includes('blood') || q.includes('spotting') || q.includes('period returned');
   if (isPostMeno && hasBleeding) {
     return 'POSTMENOPAUSAL_BLEEDING';
   }
 
-  // 5. Pregnancy with bleeding / severe pain
+  // 6. Pregnancy with bleeding / severe pain
   const isPreg = q.includes('pregnant') || q.includes('pregnancy');
   const pregRisk = q.includes('bleed') || q.includes('blood') || q.includes('severe pain') || q.includes('miscarriage') || q.includes('cramping severely');
   if (isPreg && pregRisk) {
     return 'PREGNANCY_BLEEDING';
   }
 
-  // 6. Heavy Bleeding combined with Fainting / Dizziness
+  // 7. Heavy / Severe Bleeding combined with Fainting / Dizziness or Standalone Severe Bleeding
   const hasHeavyFlow = (
     q.includes('bleeding heavily') || 
     q.includes('heavy bleeding') || 
@@ -220,6 +285,8 @@ export function detectUrgentSymptoms(query: string): UrgentSymptomType | null {
     q.includes('period is very heavy') ||
     q.includes('bleed so much') || 
     q.includes('bleeding so much') || 
+    q.includes('severe bleeding') ||
+    q.includes('bleeding severely') ||
     q.includes('soak pad') || 
     q.includes('soaking pad') || 
     q.includes('soaked through') || 
@@ -250,13 +317,15 @@ export function detectUrgentSymptoms(query: string): UrgentSymptomType | null {
     return 'HEAVY_BLEEDING_FAINTING';
   }
 
-  // Standalone rapid soak rate or fainting from period
+  // Standalone rapid soak rate, severe bleeding, or fainting from period
   if (
     q.includes('soaking a pad every hour') ||
     q.includes('soaking pad every hour') ||
     q.includes('soaking pads very quickly') ||
     q.includes('soak pad hourly') ||
     q.includes('soak a pad hourly') ||
+    q.includes('severe bleeding') ||
+    q.includes('bleeding severely') ||
     q.includes('bleed non stop') ||
     (q.includes('passed out') && (q.includes('period') || q.includes('cramp') || q.includes('bleed'))) ||
     (q.includes('fainted') && (q.includes('period') || q.includes('cramp') || q.includes('bleed')))
@@ -264,7 +333,7 @@ export function detectUrgentSymptoms(query: string): UrgentSymptomType | null {
     return 'HEAVY_BLEEDING_FAINTING';
   }
 
-  // 7. Severe or sudden abdominal / pelvic pain
+  // 8. Severe or sudden abdominal / pelvic pain
   if (
     q.includes('cramps are unbearable') ||
     q.includes('unbearable cramps') ||
@@ -558,30 +627,44 @@ export function buildUrgentResponse(
     };
   }
 
-  // Heavy bleeding with fainting / dizziness
+  // Heavy bleeding with fainting / dizziness / severe flow concerns
   if (urgentType === 'HEAVY_BLEEDING_FAINTING') {
     if (stage === 'puberty') {
       return {
-        opener: 'Please tell a parent, guardian, or trusted adult right now.',
-        explanation: 'Feeling dizzy, faint, or very weak while bleeding heavily means your body is losing fluids and iron too quickly. This needs prompt medical care.',
+        opener: "Let's check in on your symptoms together 🌸 Period bleeding can look like a lot when you're a beginner!",
+        explanation: "Because period bleeding is new to you, it is very common to feel worried or wonder if it's 'too much.' A young girl can easily mistake normal flow for severe bleeding because blood spreads out quickly on a cotton pad.\n\nBefore worrying, ask yourself these 3 check-in questions:\n1. Pad change speed: Are you completely soaking front-to-back through a full regular pad every hour for 2 hours in a row? Or does your pad last 3 to 5 hours?\n2. Blood clots: Are you seeing dark clots larger than a coin (like a 5-rupee coin) or a lemon? (Tiny jelly-like specks are completely normal).\n3. How your body feels: Do you feel dizzy, lightheaded, pale, or too weak to stand? Or do you feel generally fine aside from seeing the blood?",
         tips: [
-          'Tell an adult immediately: "I am bleeding very heavily and feeling dizzy, and I need a doctor."',
-          'Lie down flat with your legs elevated on pillows to keep blood circulating to your brain.',
-          'Drink small sips of water or an electrolyte drink while someone arranges to take you to a clinic.',
-          'Do NOT take extra pain medicine on your own.'
+          "Why it looks like so much: Blood spreads out quickly on cotton pads and can look like a huge puddle, but most people only lose about 2 to 3 tablespoons (30–45 ml) of blood during their entire 4–7 day period.",
+          "Day 1 and Day 2 are naturally the heaviest: It is completely normal to have stronger flow on the first two days and much lighter flow by Days 4, 5, and 6.",
+          "When to tell an adult or doctor right away: If you answered YES to soaking a pad completely every hour for 2 hours, seeing large coin-sized clots, or feeling dizzy and faint, tell a parent, guardian, or school nurse immediately: 'I am bleeding very heavily and feeling dizzy, and I need a doctor.' They will help you get checked safely.",
+          "Lie down and rest: Lie down flat with your legs elevated on pillows to keep blood circulating to your brain, and sip water or an electrolyte drink while someone arranges to take you to a clinic. Do NOT take extra pain medicine on your own."
         ],
-        doctorAlert: 'Medical Priority: Seek prompt clinical evaluation today at a nearby clinic or hospital.'
+        doctorAlert: 'Medical Priority: If you are bleeding heavily and feeling dizzy, or soaking a full pad every hour for 2 hours, tell a parent, trusted adult, or doctor right away.'
+      };
+    }
+
+    if (stage === 'menopause') {
+      return {
+        opener: 'Evaluating Bleeding Changes in Midlife and Menopause 🌾',
+        explanation: 'Bleeding patterns change significantly during perimenopause and menopause. To determine the right next steps, consider these essential diagnostic check-in questions:\n\n1. Stage of transition: Are your periods becoming irregular with skipped months (perimenopause), or have you had 12 full continuous months without any periods (postmenopause)?\n2. Flow pattern: Is this a sudden heavy "flooding" episode during an irregular cycle, or continuous prolonged bleeding exceeding 7 days?\n3. Systemic symptoms: Are you feeling lightheaded, short of breath, or unusually weak?',
+        tips: [
+          'Perimenopausal flow shifts: Fluctuating estrogen levels without regular ovulation can cause the uterine lining to build up thicker, resulting in occasional very heavy flow.',
+          'Postmenopausal bleeding rule: Any bleeding, spotting, or pinkish discharge occurring after 12 full months without a period is NOT a normal period returning and must be evaluated.',
+          'When to see a doctor: All postmenopausal bleeding requires prompt gynaecological assessment and pelvic ultrasound. For perimenopausal flooding, consult a doctor if bleeding lasts over 7 days or soaks a pad hourly.',
+          'Lie down with legs elevated if feeling faint, and keep a log of pad changes to report to your doctor.'
+        ],
+        doctorAlert: 'Clinical Alert: Any bleeding after 12 months without a period, or heavy bleeding with dizziness, warrants prompt clinical evaluation.'
       };
     }
 
     return {
-      opener: 'Prompt Clinical Evaluation Needed for Heavy Bleeding and Dizziness',
-      explanation: 'Soaking through pads or tampons rapidly combined with dizziness, fainting, or severe weakness suggests significant acute blood volume loss. This warrants prompt medical evaluation.',
+      opener: 'Evaluating Menstrual Flow: Clinical Check-in Questions 🩺',
+      explanation: 'Menstrual volume varies from cycle to cycle, but true clinical menorrhagia (abnormally heavy bleeding) has clear criteria. Let\'s evaluate your symptoms with these diagnostic check-in questions:\n\n1. Product saturation: Are you soaking through 1 or more full regular pads or tampons every hour for 2 or more consecutive hours?\n2. Clot size: Are you passing blood clots larger than a coin (1 inch / 2.5 cm)?\n3. Bleeding duration: Has your bleeding lasted continuously for more than 7 full days?\n4. Systemic symptoms: Are you experiencing dizziness, shortness of breath, sudden paleness, or extreme fatigue?',
       tips: [
-        'Go to your nearest primary health centre (PHC), urgent care clinic, or emergency department today.',
-        'Lie down with your legs raised above heart level to prevent fainting and maintain blood pressure.',
-        'Track your pad change frequency (e.g. soaking 1+ regular pad hourly for 2 consecutive hours) and clot size to report to the doctor.',
-        'Have a family member or friend accompany you so you do not drive or travel alone.'
+        'Peak flow vs. excessive loss: Days 1 and 2 often represent 70% of total menstrual loss. However, bleeding should never interfere with routine activities or leave you feeling faint.',
+        'Track pad changes and clot sizes: Logging exact pad counts and duration gives your physician essential diagnostic information.',
+        'When to see a doctor: If you meet any of the criteria above, consult a gynaecologist for a complete blood count (CBC) and pelvic ultrasound to check for iron deficiency, fibroids, or hormonal imbalances.',
+        'Emergency red flag: Seek immediate clinical or emergency medical care if heavy bleeding is accompanied by fainting, severe shortness of breath, or uncontrollable flooding.'
       ],
       doctorAlert: 'Clinical Alert: Rapid blood loss combined with dizziness or fainting requires prompt physician assessment.'
     };
@@ -591,13 +674,14 @@ export function buildUrgentResponse(
   if (urgentType === 'SEVERE_PELVIC_PAIN') {
     if (stage === 'puberty') {
       return {
-        opener: 'Severe, unbearable pain should not be endured alone.',
-        explanation: 'Mild cramps can happen, but severe pain that makes you vomit, cry, or unable to stand is not normal. It is an important sign that your body needs medical care.',
+        opener: "Let's check in on your pain together 🌸 Severe cramps should not be endured alone.",
+        explanation: "Mild or moderate cramps can happen when you are growing up, but severe, debilitating pain is an important sign that your body needs medical care.\n\nLet's check your symptoms:\n1. Pain severity: Does the pain stop you from walking, going to school, or sleeping?\n2. Accompanying signs: Are you experiencing vomiting, severe nausea, fever, or dizziness along with cramps?\n3. Warmth relief: Does gentle warmth (a warm water bottle or heating pad) help at all?",
         tips: [
+          'Mild cramping is common on Days 1 and 2, but vomiting or crying from pain is NOT normal.',
           'Tell a parent, guardian, or school nurse right now so they can take you to a doctor.',
           'Do not take extra or unprescribed pain tablets without adult or doctor approval.',
-          'Lie down with your knees bent and place a warm water bottle on your lower belly while getting ready to see a doctor.',
-          'Doctors can provide safe, effective relief.'
+          'Lie down with your knees bent and place a warm water bottle (garam paani ki thaili) on your lower belly while getting ready to see a doctor.',
+          'Doctors can provide safe, effective relief suited to your age.'
         ],
         doctorAlert: 'Medical Care Needed: Severe debilitating cramps require evaluation by a doctor or paediatrician.'
       };
@@ -998,7 +1082,65 @@ export function buildSafeFallback(stage: NormalizedStage, userQuery?: string): S
 export function checkSafety(query: string, rawStage?: string | null): SafetyCheckResult {
   const { stage: normalizedStage, explicitYoungAge } = normalizeStage(rawStage, query);
 
-  // 1. Check Urgent Symptoms / Crisis / Safety Threat (Highest Priority)
+  // 1. Check Crisis & Abuse First (Highest Priority)
+  if (detectCrisis(query)) {
+    const overrideAnswer = buildUrgentResponse('CRISIS_SELF_HARM', normalizedStage);
+    return {
+      isCrisis: true,
+      isRedFlag: true,
+      isMedicalIntervention: false,
+      isSensitiveTopic: false,
+      urgentType: 'CRISIS_SELF_HARM',
+      normalizedStage,
+      explicitYoungAgeDetected: explicitYoungAge,
+      overrideAnswer,
+      followUps: ['How do I talk to my family?', 'What are healthy coping strategies?'],
+      sourceArticleId: 'warning-signs-doctor',
+      doctorRecommendation: overrideAnswer.doctorAlert
+    };
+  }
+
+  if (detectAbuseOrSafetyThreat(query)) {
+    const overrideAnswer = buildUrgentResponse('ABUSE_COERCION_DISCLOSURE', normalizedStage);
+    return {
+      isCrisis: false,
+      isRedFlag: true,
+      isMedicalIntervention: false,
+      isSensitiveTopic: false,
+      urgentType: 'ABUSE_COERCION_DISCLOSURE',
+      normalizedStage,
+      explicitYoungAgeDetected: explicitYoungAge,
+      overrideAnswer,
+      followUps: ['What questions should I ask my doctor?', 'When is period pain an emergency?'],
+      sourceArticleId: 'warning-signs-doctor',
+      doctorRecommendation: overrideAnswer.doctorAlert
+    };
+  }
+
+  // 2. Weird, Incoherent, or Non-Human Query Guardrail
+  // For weird queries containing red flag or symptom words, DO NOT give unrelated or unuseful answers.
+  // Simply and honestly admit you cannot understand.
+  if (isWeirdOrUnrelatedQuery(query)) {
+    const overrideAnswer = buildWeirdQuestionFallback();
+    return {
+      isCrisis: false,
+      isRedFlag: false,
+      isMedicalIntervention: false,
+      isSensitiveTopic: false,
+      normalizedStage,
+      explicitYoungAgeDetected: explicitYoungAge,
+      overrideAnswer,
+      followUps: [
+        'How do I know if my period is too heavy?',
+        'Is period pain normal?',
+        'What is a normal cycle length?'
+      ],
+      isFallback: true,
+      isWeirdOrUnrelated: true
+    };
+  }
+
+  // 3. Check Urgent Symptoms / Red Flags (with stage-aware questions, guidance, and doctor advice)
   const urgentType = detectUrgentSymptoms(query);
   if (urgentType) {
     const isCrisis = urgentType === 'CRISIS_SELF_HARM';
@@ -1012,9 +1154,11 @@ export function checkSafety(query: string, rawStage?: string | null): SafetyChec
       normalizedStage,
       explicitYoungAgeDetected: explicitYoungAge,
       overrideAnswer,
-      followUps: isCrisis 
-        ? ['How do I talk to my family?', 'What are healthy coping strategies?']
-        : ['What questions should I ask my doctor?', 'When is period pain an emergency?', 'How much bleeding is too much?'],
+      followUps: [
+        'What questions should I ask my doctor?',
+        'When is period pain an emergency?',
+        'How much bleeding is too much?'
+      ],
       sourceArticleId: 'warning-signs-doctor',
       doctorRecommendation: overrideAnswer.doctorAlert
     };

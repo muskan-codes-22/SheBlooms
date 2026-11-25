@@ -250,18 +250,31 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'heavy-bleeding-alert',
-    keywords: ['heavy', 'bleeding', 'clots', 'soaking', 'flooding', 'too much blood', 'menorrhagia', 'soak pad'],
-    question: 'How do I know if my period is too heavy?',
+    keywords: [
+      'heavy',
+      'bleeding',
+      'severe bleeding',
+      'clots',
+      'soaking',
+      'flooding',
+      'too much blood',
+      'menorrhagia',
+      'soak pad',
+      'is my bleeding normal',
+      'bleeding so much',
+      'heavy period'
+    ],
+    question: 'How do I know if my period bleeding is too heavy or severe?',
     answer: {
-      opener: 'Understanding your flow levels is an important part of cycle awareness 🩺',
-      explanation: 'Menstrual flow is usually heaviest on Days 1 and 2. However, bleeding should never leave you feeling breathless or completely soaked through multiple products in an hour.',
+      opener: 'Checking your flow: Symptoms, questions, and guidance 🩺',
+      explanation: 'Because period blood spreads out quickly on a pad, it is common to wonder if you have "too much bleeding." A young beginner can easily mistake normal flow for severe bleeding.\n\nAsk yourself these 3 check-in questions first:\n1. Pad change speed: Are you completely soaking front-to-back through 1 full pad every hour for 2 hours in a row? Or does a pad last 3 to 6 hours?\n2. Clot size: Are you seeing dark clots larger than a coin (1 inch / 2.5 cm)? (Small jelly-like bits are normal).\n3. How your body feels: Do you feel dizzy, lightheaded, pale, or unusually weak?',
       tips: [
-        'Soaking through one or more regular pads or tampons completely every hour for 2 consecutive hours is medically heavy.',
-        'Passing blood clots larger than a coin (approximately 2.5 cm) is an important sign to track.',
-        'Needing to wake multiple times overnight to change protection, or bleeding through bedding/clothing.',
-        'Feeling unusually fatigued, pale, breathless, or dizzy.'
+        'Guidance on flow: An entire normal period is only about 2 to 3 tablespoons (30–45 ml) of total fluid across 4 to 7 days, even though it spreads and looks like a cupful on cotton.',
+        'Day 1 and Day 2 are naturally the heaviest: A stronger flow on the first two days is completely normal before tapering off.',
+        'When to see a doctor or tell an adult: If you are soaking through a full pad every hour for 2 consecutive hours, passing large coin-sized clots, or feeling dizzy/faint, tell a parent or doctor right away.',
+        'Keep a flow log: Noting how many pads you change each day and showing your notes to a doctor helps them give you personalized care.'
       ],
-      doctorAlert: 'If you are soaking a pad every hour or passing large clots, consult a doctor or visit a clinic. Healthcare professionals can evaluate iron levels and provide safe medical treatment.'
+      doctorAlert: 'If you are soaking a pad every hour for 2 hours, seeing large coin-sized clots, or feeling dizzy/faint, consult a doctor or speak with a trusted adult immediately.'
     },
     category: 'medical',
     allowedStages: ['puberty', 'cycle', 'menopause', 'educator'],

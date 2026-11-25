@@ -508,6 +508,73 @@ console.log('======================================================\n');
   );
 }
 
+// 37. Young Bloomers - Beginner severe bleeding question asks check-in questions first
+{
+  const res = findBestMatch('I have severe bleeding and I feel scared', 'puberty');
+  assert(
+    res.safety.isRedFlag === true,
+    'Young Bloomers - "severe bleeding" triggers medical evaluation'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('check-in questions') || text.includes('check in on your symptoms'),
+    'Young Bloomers - Asks calibrating check-in questions first before diagnosing'
+  );
+  assert(
+    text.includes('beginner') || text.includes('tablespoons') || text.includes('spreads out'),
+    'Young Bloomers - Gives reassuring beginner guidance on normal flow vs excessive flow'
+  );
+  assert(
+    text.includes('doctor') && (text.includes('parent') || text.includes('school nurse')),
+    'Young Bloomers - Gives clear advice on when to tell a parent or doctor'
+  );
+}
+
+// 38. Weird Red Flag Question - Non-human alien spaceship
+{
+  const res = findBestMatch('my alien spaceship is bleeding heavily', 'puberty');
+  assert(
+    res.safety.isRedFlag === false,
+    'Weird Query - Alien spaceship query does NOT trigger human medical red flag'
+  );
+  assert(
+    res.isFallback === true,
+    'Weird Query - Correctly classified as fallback'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('understand') && text.includes('educational platform'),
+    'Weird Query - Simply and honestly admits lack of understanding without unrelated clinical advice'
+  );
+  assert(
+    !text.includes('elevated on pillows') && !text.includes('electrolyte drink'),
+    'Weird Query - Strictly avoids giving unrelated human medical advice for an alien'
+  );
+}
+
+// 39. Weird Red Flag Question - Mechanical car engine
+{
+  const res = findBestMatch('my car engine is bleeding oil severely and feels faint', 'cycle');
+  assert(
+    res.safety.isRedFlag === false && res.isFallback === true,
+    'Weird Query - Car engine does not receive human gynaecological emergency response'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('understand'),
+    'Weird Query - Car engine safely admits SheBloom cannot understand'
+  );
+}
+
+// 40. Weird Red Flag Question - Keyboard mash gibberish
+{
+  const res = findBestMatch('asdfghjk severe bleeding qwerty', 'puberty');
+  assert(
+    res.safety.isRedFlag === false && res.isFallback === true,
+    'Weird Query - Keyboard mashing with red flag word safely admits uncertainty'
+  );
+}
+
 console.log('\n======================================================');
 console.log(`TEST SUMMARY: ${passedCount} PASSED, ${failedCount} FAILED`);
 console.log('======================================================\n');

@@ -55,7 +55,7 @@ export function findBestMatch(userQuery: string, currentStage?: string | null): 
   const safety = checkSafety(userQuery, currentStage);
   const normalizedStage = safety.normalizedStage;
 
-  // 2. Strict Safety Override (Crisis, Emergency Red Flags, Sensitive Medical Interventions)
+  // 2. Strict Safety Override (Crisis, Emergency Red Flags, Sensitive Medical Interventions, Weird Questions)
   if (safety.overrideAnswer) {
     return {
       answer: safety.overrideAnswer,
@@ -66,8 +66,8 @@ export function findBestMatch(userQuery: string, currentStage?: string | null): 
         'What is a normal cycle length?'
       ],
       safety,
-      isFallback: false,
-      confidenceScore: 100
+      isFallback: safety.isFallback || false,
+      confidenceScore: safety.isFallback ? 0 : 100
     };
   }
 
