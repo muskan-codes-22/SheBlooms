@@ -10,6 +10,8 @@ export interface QAEntry {
   };
   category: 'basics' | 'myths' | 'hygiene' | 'medical';
   stage?: 'puberty' | 'cycle' | 'menopause' | 'educator';
+  allowedStages?: ('puberty' | 'cycle' | 'menopause' | 'educator')[];
+  minAgeTier?: 'all' | '13+' | 'adult';
   sourceArticleId: string;
   followUps: string[];
 }
@@ -106,8 +108,10 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'perimenopause-definition',
-    keywords: ['perimenopause', 'menopause', 'hot flush', 'flashes', 'night sweats', '40s'],
-    question: 'What is perimenopause and what are the early signs?',
+    keywords: ['perimenopause', 'menopause', 'hot flush', 'flashes', 'night sweats', '40s', 'irregular', 'periods becoming irregular', 'irregular periods', 'why are my periods becoming irregular', 'periods irregular'],
+    question: 'What is perimenopause and why do periods become irregular?',
+    stage: 'menopause',
+    allowedStages: ['cycle', 'menopause', 'educator'],
     answer: {
       opener: 'Warm greetings! Navigating your 40s comes with natural body wisdom 🌾',
       explanation: 'Perimenopause is the natural bridge leading to menopause. It usually begins in your early-to-mid 40s as hormones naturally rise and fall irregularly.',
@@ -144,8 +148,9 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'discharge-normal',
-    keywords: ['discharge', 'white', 'clear', 'fluid', 'wet', 'cervical mucus', 'safed paani'],
-    question: 'Is vaginal discharge normal?',
+    keywords: ['discharge', 'white', 'clear', 'fluid', 'wet', 'cervical mucus', 'safed paani', 'white discharge', 'why do i have white discharge', 'leukorrhea'],
+    question: 'Is vaginal discharge normal and why do I have white discharge?',
+    allowedStages: ['puberty', 'cycle', 'menopause', 'educator'],
     answer: {
       opener: 'Yes, absolutely! Natural discharge is your body’s self-cleaning fluid 🫧',
       explanation: 'The cervix and vaginal walls constantly produce clear or whitish fluid. It carries away old cells and keeps your intimate area healthy and clean.',
@@ -254,8 +259,10 @@ export const QA_DATABASE: QAEntry[] = [
   },
   {
     id: 'talking-to-kids',
-    keywords: ['talk to daughter', 'teach students', 'educator', 'parent', 'period talk', 'first talk'],
+    keywords: ['talk to daughter', 'teach students', 'educator', 'parent', 'period talk', 'first talk', 'explain menstruation to', 'explain to a 12-year-old', 'explain to a 12 year old', '12-year-old', '12 year old', 'explain menstruation'],
     question: 'How can I comfortably talk to my daughter or students about periods?',
+    stage: 'educator',
+    allowedStages: ['cycle', 'menopause', 'educator'],
     answer: {
       opener: 'Thank you for guiding young bloomers with kindness and openness 🤝',
       explanation: 'Children learn attitudes before words. Presenting menstruation as a healthy, normal body milestone removes fear and shame for life.',
@@ -328,6 +335,8 @@ export const QA_DATABASE: QAEntry[] = [
     id: 'contraceptive-pills-how',
     keywords: ['pill', 'birth control', 'oral contraceptive', 'contraceptive pills', 'mala d', 'chhaya', 'garbhnirodhak'],
     question: 'How do birth control pills work and how are they taken?',
+    allowedStages: ['cycle', 'menopause', 'educator'],
+    minAgeTier: 'adult',
     answer: {
       opener: 'Contraceptive pills are a common, scientifically proven way to plan pregnancy 💊',
       explanation: 'Daily pills stop your ovaries from releasing an egg each month (ovulation). They also thicken cervical mucus so sperm cannot enter the womb.',
@@ -346,6 +355,8 @@ export const QA_DATABASE: QAEntry[] = [
     id: 'emergency-pill-guide',
     keywords: ['emergency pill', 'morning after', 'i-pill', '72 hours', 'unprotected', 'e-pill'],
     question: 'What is an emergency contraceptive pill and when should it be used?',
+    allowedStages: ['cycle', 'menopause', 'educator'],
+    minAgeTier: 'adult',
     answer: {
       opener: 'Emergency pills are an occasional safety net, not regular birth control ⚡',
       explanation: 'An emergency contraceptive pill delays egg release when taken within 72 hours of unprotected intercourse or a broken condom.',
