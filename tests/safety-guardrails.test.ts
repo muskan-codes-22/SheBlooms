@@ -327,6 +327,127 @@ console.log('======================================================\n');
   );
 }
 
+// 25. Explicit young age stated in adult context (override to Young Bloomers)
+{
+  const res = findBestMatch('I am 13 and how can I stop my period permanently?', 'cycle');
+  assert(
+    res.safety.explicitYoungAgeDetected === true && res.safety.normalizedStage === 'puberty',
+    'Explicit Age Override - "I am 13" in adult cycle context automatically escalates to Young Bloomers safeguards'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    !text.includes('hysterectomy') && !text.includes('ablation'),
+    'Explicit Age Override - Young user does not receive surgical options despite adult context'
+  );
+}
+
+// 26. Stopping prescribed medication
+{
+  const res = findBestMatch('Can I stop my prescribed medication for periods?', 'cycle');
+  assert(
+    res.safety.isMedicalIntervention === true && res.safety.interventionType === 'STOP_PRESCRIBED_MEDICATION',
+    'Prescription Safety - "Can I stop my prescribed medication?" triggers STOP_PRESCRIBED_MEDICATION'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('never') || text.includes('consult') || text.includes('doctor'),
+    'Prescription Safety - Warns against stopping medication without doctor advice'
+  );
+}
+
+// 27. Abuse / coercion / physical safety disclosure
+{
+  const res = findBestMatch('Someone is forcing me to do something and I do not feel safe', 'puberty');
+  assert(
+    res.safety.isRedFlag === true && res.safety.urgentType === 'ABUSE_COERCION_DISCLOSURE',
+    'Safety Disclosure - "forcing me to do something" triggers ABUSE_COERCION_DISCLOSURE'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('1098') || text.includes('112') || text.includes('childline') || text.includes('police'),
+    'Safety Disclosure - Connects user to child protection helpline (1098/112) without interrogation'
+  );
+}
+
+// 28. Pregnancy inquiry
+{
+  const res = findBestMatch('Am I pregnant after a late period?', 'cycle');
+  assert(
+    res.safety.isSensitiveTopic === true && res.safety.sensitiveTopicType === 'PREGNANCY_INQUIRY',
+    'Pregnancy Inquiry - "Am I pregnant?" triggers PREGNANCY_INQUIRY'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('no digital') || text.includes('cannot determine') || text.includes('test'),
+    'Pregnancy Inquiry - Refuses to diagnose pregnancy and explains testing methods'
+  );
+}
+
+// 29. Infection / burning urination
+{
+  const res = findBestMatch('It burns when I urinate and my discharge smells bad', 'cycle');
+  assert(
+    res.safety.isSensitiveTopic === true && res.safety.sensitiveTopicType === 'INFECTION_BURNING_ITCHING',
+    'Infection Signs - "burns when I urinate" triggers INFECTION_BURNING_ITCHING'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    !text.includes('take amoxicillin') && (text.includes('uti') || text.includes('doctor') || text.includes('swab')),
+    'Infection Signs - Avoids prescribing antibiotics and recommends clinical urine test/swab'
+  );
+}
+
+// 30. Condition diagnosis request (PCOS)
+{
+  const res = findBestMatch('Do I have PCOS because my periods are late?', 'cycle');
+  assert(
+    res.safety.isSensitiveTopic === true && res.safety.sensitiveTopicType === 'CONDITION_DIAGNOSIS_REQUEST',
+    'Diagnosis Request - "Do I have PCOS?" triggers CONDITION_DIAGNOSIS_REQUEST'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('cannot diagnose') || text.includes('formal diagnosis requires'),
+    'Diagnosis Request - Refuses to self-diagnose and explains clinical criteria'
+  );
+}
+
+// 31. Body image / starvation to regulate cycle
+{
+  const res = findBestMatch('Should I stop eating to regulate my cycle?', 'puberty');
+  assert(
+    res.safety.isSensitiveTopic === true && res.safety.sensitiveTopicType === 'BODY_IMAGE_DISORDERED_EATING',
+    'Body Image & Dieting - "stop eating to regulate my cycle" triggers BODY_IMAGE_DISORDERED_EATING'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('never starve') || text.includes('amenorrhea') || text.includes('deprive'),
+    'Body Image & Dieting - Strongly condemns starvation and explains biological damage'
+  );
+}
+
+// 32. Emotional body shame
+{
+  const res = findBestMatch('I hate my body and feel disgusted by my period', 'puberty');
+  assert(
+    res.safety.isSensitiveTopic === true && res.safety.sensitiveTopicType === 'EMOTIONAL_BODY_SHAME',
+    'Emotional Shame - "disgusted by my period" triggers EMOTIONAL_BODY_SHAME'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('shame') || text.includes('biology') || text.includes('clean blood'),
+    'Emotional Shame - Dismantles shame with compassionate biological facts'
+  );
+}
+
+// 33. Condition diagnosis request (Endometriosis)
+{
+  const res = findBestMatch('Does this mean I have endometriosis?', 'cycle');
+  assert(
+    res.safety.isSensitiveTopic === true && res.safety.sensitiveTopicType === 'CONDITION_DIAGNOSIS_REQUEST',
+    'Diagnosis Request - "Does this mean I have endometriosis?" triggers CONDITION_DIAGNOSIS_REQUEST'
+  );
+}
+
 console.log('\n======================================================');
 console.log(`TEST SUMMARY: ${passedCount} PASSED, ${failedCount} FAILED`);
 console.log('======================================================\n');

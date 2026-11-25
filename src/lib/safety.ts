@@ -1,23 +1,32 @@
-// SheBlooms Central Medical Safety & Guardrails Layer
-// Privacy-first, local, deterministic health safety governance across life stages.
+// SheBlooms Central Medical Safety & Response Guardrails Layer
+// Privacy-conscious, local, deterministic health safety governance across life stages.
 
 export type NormalizedStage = 'puberty' | 'cycle' | 'menopause' | 'educator' | 'unknown';
 
 export type UrgentSymptomType = 
+  | 'CRISIS_SELF_HARM'
+  | 'ABUSE_COERCION_DISCLOSURE'
   | 'HEAVY_BLEEDING_FAINTING'
   | 'SEVERE_PELVIC_PAIN'
   | 'FEVER_TAMPON_TSS'
   | 'POSTMENOPAUSAL_BLEEDING'
-  | 'PREGNANCY_BLEEDING'
-  | 'CRISIS_SELF_HARM';
+  | 'PREGNANCY_BLEEDING';
 
 export type MedicalInterventionType = 
   | 'PERMANENT_PERIOD_STOPPAGE'
   | 'MEDICATION_DOSAGE_OVERDOSE'
+  | 'STOP_PRESCRIBED_MEDICATION'
   | 'PERIOD_DELAY_OR_INDUCTION'
   | 'SURGICAL_INTERVENTION'
   | 'HORMONE_THERAPY_REQUEST'
   | 'CONTRACEPTION_INSTRUCTION_YOUTH';
+
+export type SensitiveHealthTopicType =
+  | 'PREGNANCY_INQUIRY'
+  | 'INFECTION_BURNING_ITCHING'
+  | 'CONDITION_DIAGNOSIS_REQUEST'
+  | 'BODY_IMAGE_DISORDERED_EATING'
+  | 'EMOTIONAL_BODY_SHAME';
 
 export interface StructuredAnswer {
   opener: string;
@@ -30,9 +39,12 @@ export interface SafetyCheckResult {
   isCrisis: boolean;
   isRedFlag: boolean;
   isMedicalIntervention: boolean;
+  isSensitiveTopic: boolean;
   urgentType?: UrgentSymptomType;
   interventionType?: MedicalInterventionType;
+  sensitiveTopicType?: SensitiveHealthTopicType;
   normalizedStage: NormalizedStage;
+  explicitYoungAgeDetected?: boolean;
   overrideAnswer?: StructuredAnswer;
   followUps?: string[];
   sourceArticleId?: string;
@@ -41,29 +53,71 @@ export interface SafetyCheckResult {
 }
 
 /**
- * Normalizes user-selected life stage into one of the 4 strict categories or 'unknown'.
- * The selected life stage is contextual information, NOT proof of exact age.
+ * Detects whether the user explicitly stated they are younger (<= 16 years old)
+ * or if a young child/daughter/student is the subject.
  */
-export function normalizeStage(stage?: string | null): NormalizedStage {
-  if (!stage) return 'unknown';
-  const s = stage.trim().toLowerCase();
-  if (['puberty', 'bloomer', 'young-bloomers', 'young bloomers', 'teens', 'teen', 'adolescent'].includes(s)) {
-    return 'puberty';
+export function detectExplicitYoungAge(query: string): boolean {
+  const q = query.toLowerCase();
+
+  // "i am 12", "i'm 13", "im 14", "am 11", "age 13", "12yo", "14 yo", "13 yr old"
+  const selfAgeMatch = q.match(/\b(?:i(?:'m|\s+am)?|age|aged|am)\s+(\d{1,2})\b|\b(\d{1,2})\s*(?:years?\s*old|yo|yr|yrs?\s*old)\b/);
+  if (selfAgeMatch) {
+    const age = parseInt(selfAgeMatch[1] || selfAgeMatch[2], 10);
+    if (!isNaN(age) && age >= 5 && age <= 16) {
+      return true;
+    }
   }
-  if (['cycle', 'adult', 'period-care', 'cycle-care', 'reproductive'].includes(s)) {
-    return 'cycle';
+
+  // "for a 12 year old", "my 11 year old daughter", "student is 13"
+  const thirdPartyMatch = q.match(/\b(?:daughter|sister|student|niece|girl|child)\s+(?:is\s+)?(\d{1,2})\b|\bfor\s+(?:a\s+)?(\d{1,2})\s*(?:year\s*old|yo|yr)/);
+  if (thirdPartyMatch) {
+    const age = parseInt(thirdPartyMatch[1] || thirdPartyMatch[2], 10);
+    if (!isNaN(age) && age >= 5 && age <= 16) {
+      return true;
+    }
   }
-  if (['menopause', 'perimenopause', 'postmenopause', 'midlife'].includes(s)) {
-    return 'menopause';
+
+  if (q.includes('in middle school') || q.includes('class 6') || q.includes('class 7') || q.includes('class 8')) {
+    return true;
   }
-  if (['educator', 'caregiver', 'parent', 'teacher', 'mentor', 'counselor'].includes(s)) {
-    return 'educator';
-  }
-  return 'unknown';
+
+  return false;
 }
 
 /**
- * Pre-cleans text for robust typo-tolerant pattern matching.
+ * Normalizes user-selected life stage into one of the 4 strict categories or 'unknown'.
+ * If the user explicitly states they are 16 or younger, downgrades to 'puberty' (Young Bloomers).
+ */
+export function normalizeStage(stage?: string | null, query?: string): { stage: NormalizedStage; explicitYoungAge: boolean } {
+  let explicitYoungAge = false;
+  if (query && detectExplicitYoungAge(query)) {
+    explicitYoungAge = true;
+    return { stage: 'puberty', explicitYoungAge: true };
+  }
+
+  if (!stage) {
+    return { stage: 'unknown', explicitYoungAge: false };
+  }
+
+  const s = stage.trim().toLowerCase();
+  if (['puberty', 'bloomer', 'young-bloomers', 'young bloomers', 'teens', 'teen', 'adolescent'].includes(s)) {
+    return { stage: 'puberty', explicitYoungAge: false };
+  }
+  if (['cycle', 'adult', 'period-care', 'cycle-care', 'reproductive'].includes(s)) {
+    return { stage: 'cycle', explicitYoungAge: false };
+  }
+  if (['menopause', 'perimenopause', 'postmenopause', 'midlife'].includes(s)) {
+    return { stage: 'menopause', explicitYoungAge: false };
+  }
+  if (['educator', 'caregiver', 'parent', 'teacher', 'mentor', 'counselor'].includes(s)) {
+    return { stage: 'educator', explicitYoungAge: false };
+  }
+
+  return { stage: 'unknown', explicitYoungAge: false };
+}
+
+/**
+ * Pre-cleans text for robust, typo-tolerant pattern matching.
  */
 export function sanitizeQuery(text: string): string {
   let cleaned = text.toLowerCase()
@@ -74,7 +128,7 @@ export function sanitizeQuery(text: string): string {
   // Normalize character repeats (e.g. "dizzzzy" -> "dizzy", "bleeeed" -> "bleed")
   cleaned = cleaned.replace(/([a-z])\1{2,}/g, '$1$1');
 
-  // Normalize common phonetic typos and Indian colloquial terms
+  // Normalize common phonetic typos and colloquial terms
   cleaned = cleaned
     .replace(/\bunberable\b|\bunbearble\b|\bunbarable\b/g, 'unbearable')
     .replace(/\bdizy\b|\bdizzi\b|\bdizzey\b|\blightheaded\b/g, 'dizzy')
@@ -102,8 +156,26 @@ export function detectCrisis(query: string): boolean {
 }
 
 /**
+ * Abuse, Coercion, or Child Safety Threat Disclosure Detection
+ */
+export function detectAbuseOrSafetyThreat(query: string): boolean {
+  const q = sanitizeQuery(query);
+  return (
+    q.includes('forcing me to') ||
+    q.includes('forced me to') ||
+    q.includes('dont feel safe') ||
+    q.includes('do not feel safe') ||
+    q.includes('not feeling safe') ||
+    q.includes('scared to tell anyone') ||
+    q.includes('afraid to tell anyone') ||
+    q.includes('someone touched me') ||
+    q.includes('touching my private') ||
+    q.includes('threatened me')
+  );
+}
+
+/**
  * Red Flag / Urgent Symptom Detection
- * Detects severe, dangerous, or emergency presentations resiliently.
  */
 export function detectUrgentSymptoms(query: string): UrgentSymptomType | null {
   const q = sanitizeQuery(query);
@@ -113,28 +185,33 @@ export function detectUrgentSymptoms(query: string): UrgentSymptomType | null {
     return 'CRISIS_SELF_HARM';
   }
 
-  // 2. Toxic Shock Syndrome / Tampon fever
+  // 2. Abuse / Physical Safety Threat
+  if (detectAbuseOrSafetyThreat(query)) {
+    return 'ABUSE_COERCION_DISCLOSURE';
+  }
+
+  // 3. Toxic Shock Syndrome / Tampon fever
   const hasTampon = q.includes('tampon') || q.includes('cup');
   const hasTssSymptom = q.includes('fever') || q.includes('vomit') || q.includes('rash') || q.includes('shiver') || q.includes('toxic shock') || q.includes('chills');
   if (hasTampon && hasTssSymptom) {
     return 'FEVER_TAMPON_TSS';
   }
 
-  // 3. Post-menopausal bleeding
+  // 4. Post-menopausal bleeding
   const isPostMeno = q.includes('after menopause') || q.includes('postmenopause') || q.includes('post menopausal') || q.includes('stopped 1 year') || q.includes('stopped a year') || q.includes('12 months no period') || q.includes('menopause for a year');
   const hasBleeding = q.includes('bleed') || q.includes('blood') || q.includes('spotting') || q.includes('period returned');
   if (isPostMeno && hasBleeding) {
     return 'POSTMENOPAUSAL_BLEEDING';
   }
 
-  // 4. Pregnancy with bleeding / severe pain
+  // 5. Pregnancy with bleeding / severe pain
   const isPreg = q.includes('pregnant') || q.includes('pregnancy');
   const pregRisk = q.includes('bleed') || q.includes('blood') || q.includes('severe pain') || q.includes('miscarriage') || q.includes('cramping severely');
   if (isPreg && pregRisk) {
     return 'PREGNANCY_BLEEDING';
   }
 
-  // 5. Heavy Bleeding combined with Fainting / Dizziness
+  // 6. Heavy Bleeding combined with Fainting / Dizziness
   const hasHeavyFlow = (
     q.includes('bleeding heavily') || 
     q.includes('heavy bleeding') || 
@@ -186,7 +263,7 @@ export function detectUrgentSymptoms(query: string): UrgentSymptomType | null {
     return 'HEAVY_BLEEDING_FAINTING';
   }
 
-  // 6. Severe or sudden abdominal / pelvic pain
+  // 7. Severe or sudden abdominal / pelvic pain
   if (
     q.includes('cramps are unbearable') ||
     q.includes('unbearable cramps') ||
@@ -226,7 +303,6 @@ export function detectMedicalIntervention(query: string): MedicalInterventionTyp
     return 'PERMANENT_PERIOD_STOPPAGE';
   }
 
-  // Direct phrasing checks for permanent stoppage
   if (
     q.includes('stop my period forever') ||
     q.includes('stop my period permanently') ||
@@ -239,7 +315,15 @@ export function detectMedicalIntervention(query: string): MedicalInterventionTyp
     return 'PERMANENT_PERIOD_STOPPAGE';
   }
 
-  // 2. Medication dosage alterations, doubling dose, or overdose
+  // 2. Stopping prescribed medication
+  if (
+    (q.includes('stop') || q.includes('quit') || q.includes('discontinue')) &&
+    (q.includes('prescribed medication') || q.includes('prescription') || q.includes('my medicine') || q.includes('my pills') || q.includes('thyroid pill') || q.includes('blood pressure'))
+  ) {
+    return 'STOP_PRESCRIBED_MEDICATION';
+  }
+
+  // 3. Medication dosage alterations, doubling dose, or overdose
   const doseKeywords = ['extra', 'double', '2 ', 'two ', 'triple', '3 ', 'more', 'too much', 'too many', 'overdose', 'increase'];
   const medKeywords = ['pill', 'pills', 'tablet', 'tablets', 'birth control', 'medicine', 'medication', 'dose', 'paracetamol', 'meftal', 'ibuprofen', 'painkiller'];
 
@@ -255,12 +339,14 @@ export function detectMedicalIntervention(query: string): MedicalInterventionTyp
     q.includes('double dose') ||
     q.includes('take extra pills') ||
     q.includes('take extra medicine') ||
+    q.includes('what dose should i take') ||
+    q.includes('how many pills should i take') ||
     (hasDoseAction && hasMed && (q.includes('take') || q.includes('swallow') || q.includes('drink') || q.includes('have')))
   ) {
     return 'MEDICATION_DOSAGE_OVERDOSE';
   }
 
-  // 3. Period delay or artificial induction
+  // 4. Period delay or artificial induction
   if (
     q.includes('delay my period') ||
     q.includes('delay period') ||
@@ -271,12 +357,14 @@ export function detectMedicalIntervention(query: string): MedicalInterventionTyp
     q.includes('induce my period') ||
     q.includes('prepone period') ||
     q.includes('make my period come early') ||
-    q.includes('make period come early')
+    q.includes('make period come early') ||
+    q.includes('medicine to start my period') ||
+    q.includes('pills to start period')
   ) {
     return 'PERIOD_DELAY_OR_INDUCTION';
   }
 
-  // 4. Surgical interventions (Hysterectomy, Ablation)
+  // 5. Surgical interventions (Hysterectomy, Ablation)
   if (
     q.includes('hysterectomy') ||
     q.includes('remove my uterus') ||
@@ -290,15 +378,88 @@ export function detectMedicalIntervention(query: string): MedicalInterventionTyp
     return 'SURGICAL_INTERVENTION';
   }
 
-  // 5. Hormone therapy self-administration
+  // 6. Hormone therapy self-administration
   if (
     q.includes('hrt') ||
     q.includes('hormone replacement therapy') ||
     q.includes('take estrogen pills') ||
     q.includes('prescribe estrogen') ||
+    q.includes('should i take hormone medication') ||
     q.includes('self prescribe')
   ) {
     return 'HORMONE_THERAPY_REQUEST';
+  }
+
+  return null;
+}
+
+/**
+ * Detects sensitive medical questions that require careful, non-diagnostic guardrails.
+ */
+export function detectSensitiveHealthTopic(query: string): SensitiveHealthTopicType | null {
+  const q = sanitizeQuery(query);
+
+  // 1. Pregnancy inquiries ("Am I pregnant?", "Can I get pregnant on period?")
+  if (
+    q.includes('am i pregnant') ||
+    q.includes('could i be pregnant') ||
+    q.includes('can pregnancy happen during a period') ||
+    q.includes('can i get pregnant during my period') ||
+    q.includes('can you get pregnant on period') ||
+    q.includes('positive pregnancy test mean') ||
+    q.includes('what does positive test mean')
+  ) {
+    return 'PREGNANCY_INQUIRY';
+  }
+
+  // 2. Burning urination, infection, unusual odor, itching
+  if (
+    q.includes('burns when i urinate') ||
+    q.includes('burns when i pee') ||
+    q.includes('burning when peeing') ||
+    q.includes('discharge smells unusual') ||
+    q.includes('discharge smells bad') ||
+    q.includes('itching and irritation') ||
+    q.includes('itchy vagina') ||
+    q.includes('do i have an infection') ||
+    q.includes('do i have yeast infection') ||
+    q.includes('do i have uti')
+  ) {
+    return 'INFECTION_BURNING_ITCHING';
+  }
+
+  // 3. Condition diagnosis requests (PCOS, Endometriosis)
+  if (
+    q.includes('do i have pcos') ||
+    q.includes('could i have pcos') ||
+    q.includes('does this mean i have endometriosis') ||
+    q.includes('do i have endometriosis') ||
+    q.includes('diagnose my period') ||
+    q.includes('why am i missing periods')
+  ) {
+    return 'CONDITION_DIAGNOSIS_REQUEST';
+  }
+
+  // 4. Body image, starvation, weight loss to fix periods
+  if (
+    q.includes('lose weight to fix my periods') ||
+    q.includes('stop eating to regulate my cycle') ||
+    q.includes('stop eating to fix my period') ||
+    q.includes('need to be thinner') ||
+    q.includes('starve myself') ||
+    q.includes('is my body abnormal')
+  ) {
+    return 'BODY_IMAGE_DISORDERED_EATING';
+  }
+
+  // 5. Emotional body shame
+  if (
+    q.includes('i hate my body') ||
+    q.includes('ashamed of my period') ||
+    q.includes('disgusted by my period') ||
+    q.includes('feel dirty on my period')
+  ) {
+    return 'EMOTIONAL_BODY_SHAME';
   }
 
   return null;
@@ -315,15 +476,30 @@ export function buildUrgentResponse(
   // Crisis / Self-harm
   if (urgentType === 'CRISIS_SELF_HARM') {
     return {
-      opener: 'Dear bloom, please take a gentle, deep breath 🌸',
-      explanation: 'You are deeply valued, and whatever pain or distress you are carrying right now, you do not have to carry it alone. Caring support is available immediately.',
+      opener: 'You are valued, and caring support is available right now 🌸',
+      explanation: 'Whatever emotional weight or distress you are experiencing, please know that you do not have to carry this alone. There are free, confidential support services ready to listen and help.',
       tips: [
-        'Speak right now with a parent, trusted family member, teacher, or doctor.',
-        'Call a free, confidential 24/7 helpline: In India, call 14416 (Tele-MANAS) or 1098 (Childline); in the US call/text 988; in the UK call 111.',
-        'If you are in immediate physical danger, please call your local emergency medical service right away.',
-        'Your health, feelings, and life truly matter.'
+        'Reach out to a trusted family member, close friend, school counselor, or doctor immediately.',
+        'In India: Call 14416 (Tele-MANAS, 24/7 mental health helpline) or 9152987821 (iCall).',
+        'In the US: Call or text 988 (Suicide & Crisis Lifeline). In the UK: Call 111 or 999 in an emergency.',
+        'If you feel in immediate danger of hurting yourself, go to your nearest hospital emergency room.'
       ],
-      doctorAlert: 'Crisis Support: Please reach out for caring, professional help immediately.'
+      doctorAlert: 'Immediate Support: Please connect with a trusted person or free crisis helpline right away.'
+    };
+  }
+
+  // Abuse / Coercion / Safety Threat
+  if (urgentType === 'ABUSE_COERCION_DISCLOSURE') {
+    return {
+      opener: 'Your safety is the absolute priority, and you did nothing wrong 🛡️',
+      explanation: 'No one has the right to force you into any physical action, touch your body without your consent, or threaten you to keep secrets. You deserve to be protected and supported.',
+      tips: [
+        'In India: Call 1098 (Childline / Mission Vatsalya) for free, 24/7 emergency child safety support, or call 112 (National Emergency Number).',
+        'Tell an adult you trust completely: a parent, school counselor, favorite teacher, or doctor.',
+        'Do not stay alone with someone who makes you feel unsafe or uncomfortable.',
+        'You have the full right to say "No" and seek protection.'
+      ],
+      doctorAlert: 'Safety Priority: Please contact child protection authorities (1098 in India) or emergency services (112) immediately.'
     };
   }
 
@@ -331,28 +507,28 @@ export function buildUrgentResponse(
   if (urgentType === 'HEAVY_BLEEDING_FAINTING') {
     if (stage === 'puberty') {
       return {
-        opener: '⚠️ Important Safety Notice: Please tell a trusted adult right now.',
-        explanation: 'Feeling dizzy, faint, or unusually weak while bleeding heavily means your body is losing fluids and iron too quickly. This is not something you should try to manage alone in your room or at school.',
+        opener: 'Please tell a parent, guardian, or trusted adult right now.',
+        explanation: 'Feeling dizzy, faint, or very weak while bleeding heavily means your body is losing fluids and iron too quickly. This needs prompt medical care.',
         tips: [
-          'Tell a parent, guardian, school nurse, or teacher immediately: "I am bleeding very heavily and feeling dizzy, and I need a doctor."',
-          'Lie down flat with your legs elevated on a pillow to help blood flow to your brain and avoid fainting.',
-          'Drink water or an electrolyte drink (like ORS, nimbu pani, or coconut water) in small sips.',
-          'Do NOT take extra pain pills on your own. A doctor needs to check your blood count and give you safe medicine.'
+          'Tell an adult immediately: "I am bleeding very heavily and feeling dizzy, and I need a doctor."',
+          'Lie down flat with your legs elevated on pillows to keep blood circulating to your brain.',
+          'Drink small sips of water or an electrolyte drink while someone arranges to take you to a clinic.',
+          'Do NOT take extra pain medicine on your own.'
         ],
-        doctorAlert: '⚠️ Medical Priority: Seek prompt medical attention today at a nearby clinic or hospital.'
+        doctorAlert: 'Medical Priority: Seek prompt clinical evaluation today at a nearby clinic or hospital.'
       };
     }
 
     return {
-      opener: '⚠️ Urgent Clinical Guidance: Medical Evaluation Needed',
-      explanation: 'Soaking through pads or tampons rapidly combined with dizziness, fainting, or severe weakness suggests significant acute blood volume loss and possible anemia. This requires prompt clinical evaluation.',
+      opener: 'Prompt Clinical Evaluation Needed for Heavy Bleeding and Dizziness',
+      explanation: 'Soaking through pads or tampons rapidly combined with dizziness, fainting, or severe weakness suggests significant acute blood volume loss. This warrants prompt medical evaluation.',
       tips: [
-        'Go to your nearest urgent care centre, primary health centre (PHC), or emergency department today.',
-        'Lie down with your legs raised above heart level to prevent passing out and maintain blood pressure.',
-        'Keep track of pad count (e.g. soaking 1+ pad per hour for 2 consecutive hours) and clot size to report to the doctor.',
-        'Have someone accompany you to the clinic so you do not drive or travel alone while feeling faint.'
+        'Go to your nearest primary health centre (PHC), urgent care clinic, or emergency department today.',
+        'Lie down with your legs raised above heart level to prevent fainting and maintain blood pressure.',
+        'Track your pad change frequency (e.g. soaking 1+ regular pad hourly for 2 consecutive hours) and clot size to report to the doctor.',
+        'Have a family member or friend accompany you so you do not drive or travel alone.'
       ],
-      doctorAlert: '⚠️ Clinical Red Flag: Rapid blood loss with dizziness or fainting requires prompt physician assessment.'
+      doctorAlert: 'Clinical Alert: Rapid blood loss combined with dizziness or fainting requires prompt physician assessment.'
     };
   }
 
@@ -360,78 +536,77 @@ export function buildUrgentResponse(
   if (urgentType === 'SEVERE_PELVIC_PAIN') {
     if (stage === 'puberty') {
       return {
-        opener: '⚠️ We hear you, and intense pain should never be suffered in silence.',
-        explanation: 'Mild cramps are common, but severe, unbearable pain that makes you vomit, cry, or unable to stand is NOT normal and is your body telling you it needs medical care.',
+        opener: 'Severe, unbearable pain should not be endured alone.',
+        explanation: 'Mild cramps can happen, but severe pain that makes you vomit, cry, or unable to stand is not normal. It is an important sign that your body needs medical care.',
         tips: [
-          'Tell a parent, school nurse, or trusted adult right away so they can take you to a doctor.',
-          'Do NOT take extra or unprescribed pain tablets without adult or medical guidance.',
-          'Lie down with your knees curled to your chest or place a warm water bag on your lower tummy while you get ready to see a doctor.',
-          'Doctors have safe, gentle medications that relieve severe cramps quickly.'
+          'Tell a parent, guardian, or school nurse right now so they can take you to a doctor.',
+          'Do not take extra or unprescribed pain tablets without adult or doctor approval.',
+          'Lie down with your knees bent and place a warm water bottle on your lower belly while getting ready to see a doctor.',
+          'Doctors can provide safe, effective relief.'
         ],
-        doctorAlert: '⚠️ Medical Care Needed: Severe debilitating pain requires evaluation by a doctor or paediatrician.'
+        doctorAlert: 'Medical Care Needed: Severe debilitating cramps require evaluation by a doctor or paediatrician.'
       };
     }
 
     return {
-      opener: '⚠️ Severe Pelvic Pain Notice: Clinical Assessment Recommended',
-      explanation: 'Sudden, severe, or agonizing pelvic pain—especially accompanied by vomiting, fever, or inability to perform daily tasks—can indicate conditions such as ovarian torsion, ruptured cyst, severe endometriosis, or pelvic infection.',
+      opener: 'Severe Pelvic Pain: Clinical Evaluation Recommended',
+      explanation: 'Sudden, severe, or agonizing pelvic pain—especially accompanied by vomiting, fever, or inability to walk—can indicate conditions such as ovarian torsion, ruptured ovarian cyst, or severe endometriosis.',
       tips: [
-        'Seek urgent medical care if pain is sudden, sharply escalating, or accompanied by vomiting or fever.',
-        'Avoid taking excessive doses of over-the-counter painkillers, as this can irritate the stomach or mask critical diagnostic signs.',
-        'Rest in a comfortable position and apply moderate heat to the lower abdomen while arranging care.',
-        'Consult a gynaecologist for a thorough pelvic ultrasound and pain management plan.'
+        'Seek urgent medical care if pain is sudden, escalating sharply, or accompanied by vomiting or fever.',
+        'Avoid taking excessive doses of painkillers, which can irritate the stomach lining or mask clinical signs.',
+        'Rest in a comfortable position with moderate heat on the lower abdomen while arranging care.',
+        'Consult a gynaecologist for pelvic ultrasound imaging and clinical examination.'
       ],
-      doctorAlert: '⚠️ Seek Prompt Medical Care: Severe agonizing pain requires clinical examination.'
+      doctorAlert: 'Clinical Alert: Severe, agonizing pelvic pain warrants prompt clinical examination.'
     };
   }
 
   // Toxic Shock Syndrome / Tampon fever
   if (urgentType === 'FEVER_TAMPON_TSS') {
     return {
-      opener: '🚨 Urgent Warning: Possible Toxic Shock Syndrome (TSS)',
-      explanation: 'Developing a sudden high fever, vomiting, diarrhea, dizziness, or a sunburn-like rash while using a tampon or menstrual cup is a potential medical emergency.',
+      opener: 'Urgent Notice: Possible Toxic Shock Syndrome (TSS)',
+      explanation: 'Developing a sudden high fever, vomiting, dizziness, diarrhea, or a sunburn-like rash while using a tampon or menstrual cup requires immediate medical attention.',
       tips: [
-        'Remove your tampon or menstrual cup IMMEDIATELY and switch to a pad.',
-        'Seek emergency medical care right away at the nearest hospital or emergency room.',
-        'Tell the medical staff immediately: "I was using a tampon/cup and developed a sudden fever and symptoms."',
-        'Do NOT wait to see if symptoms improve on their own.'
+        'Remove your tampon or menstrual cup immediately and switch to a pad.',
+        'Go to the nearest hospital emergency room or urgent clinic right now.',
+        'Tell the medical staff: "I was using a tampon/cup and developed a sudden fever and symptoms."',
+        'Do not wait to see if symptoms improve on their own.'
       ],
-      doctorAlert: '🚨 EMERGENCY: Remove tampon/cup immediately and go to the nearest emergency clinic.'
+      doctorAlert: 'Emergency: Remove tampon/cup immediately and proceed to the nearest emergency medical centre.'
     };
   }
 
   // Post-menopausal bleeding
   if (urgentType === 'POSTMENOPAUSAL_BLEEDING') {
     return {
-      opener: '⚠️ Important Health Guideline: Post-Menopausal Bleeding',
-      explanation: 'Any vaginal bleeding, spotting, or pinkish discharge that occurs after 12 full continuous months without a period is medically considered post-menopausal bleeding. While frequently caused by benign conditions like vaginal atrophy or polyps, it must always be clinically checked to rule out endometrial abnormalities.',
+      opener: 'Important Health Guideline: Bleeding After Menopause',
+      explanation: 'Any vaginal bleeding, spotting, or pinkish discharge occurring after 12 full months without a period is medically considered post-menopausal bleeding. While frequently caused by benign changes like tissue thinning (atrophy) or polyps, it must always be evaluated by a gynaecologist to rule out endometrial abnormalities.',
       tips: [
-        'Schedule an appointment with a gynaecologist promptly for an ultrasound and evaluation.',
-        'Do NOT assume it is "just a period returning" or an accidental cycle.',
-        'Note the date, duration, color, and whether bleeding followed intimacy or occurred spontaneously.',
-        'Never take herbal or hormonal remedies to stop or manage the bleeding without an examination.'
+        'Schedule an evaluation with a gynaecologist promptly for pelvic ultrasound imaging.',
+        'Do not assume this is an accidental period returning.',
+        'Note the date, duration, color, and whether bleeding occurred spontaneously or after intercourse.',
+        'Never take herbal or hormonal remedies without clinical examination.'
       ],
-      doctorAlert: '⚠️ Gynaecological Priority: Any bleeding after 12 months without periods requires clinical assessment.'
+      doctorAlert: 'Gynaecological Assessment Needed: Any bleeding after 12 months without periods requires clinical evaluation.'
     };
   }
 
   // Pregnancy with bleeding
   return {
-    opener: '⚠️ Urgent Pregnancy Notice: Medical Check Needed',
-    explanation: 'Any bleeding or severe cramping during pregnancy warrants immediate medical evaluation by your obstetrician or nearest maternity emergency ward.',
+    opener: 'Medical Alert: Pregnancy with Bleeding',
+    explanation: 'Any bleeding or severe cramping during pregnancy warrants prompt clinical evaluation by an obstetrician or emergency maternity service.',
     tips: [
-      'Contact your obstetrician, midwife, or local hospital maternity unit right now.',
-      'Rest comfortably and avoid using tampons or inserting anything into the vagina.',
-      'Wear a clean pad to monitor the color, amount, and consistency of the bleeding.',
-      'Seek emergency hospital care immediately if bleeding is heavy or accompanied by severe pain, chills, or fainting.'
+      'Contact your obstetrician, maternity clinic, or local emergency hospital right away.',
+      'Rest comfortably and do not insert tampons or any internal products.',
+      'Wear a clean pad to monitor the color and amount of bleeding.',
+      'Seek immediate hospital emergency care if bleeding is heavy, clotting, or accompanied by severe pain.'
     ],
-    doctorAlert: '⚠️ Immediate Clinical Attention: Pregnancy with bleeding requires urgent obstetric assessment.'
+    doctorAlert: 'Immediate Assessment: Pregnancy with bleeding requires clinical evaluation by an obstetrician.'
   };
 }
 
 /**
  * Builds dedicated stage-tailored responses for sensitive medical intervention questions.
- * Strictly prevents irresponsible drug dosage instructions, surgical promotion, or youth hormonal manipulation.
  */
 export function buildInterventionResponse(
   intervention: MedicalInterventionType,
@@ -441,49 +616,49 @@ export function buildInterventionResponse(
   if (intervention === 'PERMANENT_PERIOD_STOPPAGE') {
     if (stage === 'puberty') {
       return {
-        opener: 'Hello bloom, please take a gentle breath. We hear you, and your feelings are completely valid 🌸',
-        explanation: 'Periods can feel overwhelming, messy, or worrying when you are growing up, but having a period is a normal, healthy part of puberty and reproductive development. There is no safe, healthy way to turn off periods permanently on your own, and irreversible surgical procedures are not done for healthy growing bodies.',
+        opener: 'Periods are a natural part of growing up, and your feelings are completely valid 🌸',
+        explanation: 'Starting periods can feel messy, stressful, or uncomfortable, but having a period is a healthy part of puberty. There is no safe, healthy way to turn off periods permanently on your own, and major surgeries are not done for healthy growing bodies.',
         tips: [
-          'Are your periods causing severe pain, heavy leaks, or fear? Those specific issues can be treated and made much easier with a doctor’s help.',
-          'Talk openly with a parent, school nurse, older sister, or doctor you trust. You never have to handle distressing feelings alone.',
-          'Doctors have safe, gentle treatments (like heating pads, iron support, and mild medications) to make periods comfortable and predictable.',
-          'Always remember: growing up happens at your own pace, and your body is doing natural, healthy work.'
+          'Are your periods causing severe pain, heavy leaking, or fear? Those specific issues can be treated and made much better with a doctor’s help.',
+          'Talk openly with a parent, guardian, school nurse, or doctor. You do not have to manage uncomfortable feelings alone.',
+          'Doctors can help make periods light, manageable, and comfortable using gentle, safe steps.',
+          'Growing up takes time, and your body is doing natural, healthy work.'
         ],
-        doctorAlert: 'If your period is causing you intense pain, distress, or worry, please talk to a parent or doctor today so they can help you feel better.',
+        doctorAlert: 'If your period is causing intense pain, distress, or worry, talk to a parent or healthcare professional so they can help you feel comfortable.'
       };
     }
 
     if (stage === 'cycle') {
       return {
-        opener: 'Thank you for asking. It is helpful to understand the difference between temporary cycle management and permanent changes 🌿',
-        explanation: 'There is a major medical difference between menstrual suppression (temporarily lightening or pausing bleeding under medical supervision) and permanent cessation (which naturally happens at menopause or through major surgical procedures like a hysterectomy). Permanent surgical options are major, irreversible operations reserved for serious clinical conditions (such as severe fibroids or cancer), not routine convenience.',
+        opener: 'Understanding Menstrual Suppression vs. Permanent Cessation 🌿',
+        explanation: 'There is a major medical difference between menstrual suppression (safely reducing or pausing bleeds under medical supervision) and permanent cessation (which naturally happens at menopause or via major surgeries like a hysterectomy). Permanent surgery is an irreversible procedure reserved for serious clinical conditions (such as severe fibroids or cancer), not routine convenience.',
         tips: [
-          'Menstrual suppression options: Gynaecologists can safely prescribe continuous hormonal methods (like low-dose pills, hormonal IUDs, or injections) to reduce or skip bleeds.',
-          'Clinical assessment is essential: Every hormonal option has unique contraindications, side effects, and benefits that require individual medical history review.',
-          'Never self-medicate: Altering pill schedules or attempting unverified methods without physician oversight can trigger unpredictable breakthrough bleeding and health risks.',
-          'Discuss your goals openly with a gynaecologist: they can design a safe, reversible management plan suited to your lifestyle.'
+          'Menstrual suppression options: Gynaecologists can safely prescribe continuous hormonal methods (like low-dose pills, hormonal IUDs, or injections) to manage difficult bleeding.',
+          'Individual assessment is essential: Every hormonal option has unique contraindications and side effects that require medical history review.',
+          'Never self-medicate: Altering pill schedules or attempting unverified methods without doctor oversight can trigger irregular bleeding and health risks.',
+          'Discuss your goals openly with a gynaecologist to design a safe, reversible management plan suited to your health history.'
         ],
-        doctorAlert: 'Consult a qualified gynaecologist to discuss safe, evidence-based cycle management tailored to your health history.'
+        doctorAlert: 'Consult a qualified gynaecologist to discuss safe, evidence-based cycle management tailored to your needs.'
       };
     }
 
     if (stage === 'menopause') {
       return {
-        opener: 'Warm greetings. Menstrual changes are a natural part of this life transition 🌾',
-        explanation: 'During perimenopause, periods naturally become irregular, lighter or heavier, and eventually cease permanently on their own as ovarian hormone production declines. Full menopause is medically confirmed only after 12 consecutive months with zero bleeding. We cannot assume every irregular or missed period is normal menopause without considering your full health picture.',
+        opener: 'Menstrual Changes During the Menopause Transition 🌾',
+        explanation: 'During perimenopause, periods naturally become irregular and eventually stop permanently as ovarian hormone production declines. Full menopause is medically confirmed only after 12 consecutive months with zero bleeding. We cannot assume every irregular or missed period is normal menopause without considering your full health picture.',
         tips: [
           'Natural timeline: In India, natural menopause typically occurs between ages 45 and 50 (median ~46.2 years).',
           'Monitor your pattern: Keep a brief record of cycle gaps, flow intensity, and any spotting between periods.',
           'Never take unprescribed hormonal drugs: Hormone therapy requires individual clinical evaluation for cardiovascular, breast, and uterine suitability.',
           'Discuss bothersome symptoms (like hot flushes or sleep disruption) with your gynaecologist for safe relief options.'
         ],
-        doctorAlert: '⚠️ Important: Any sudden flooding, or ANY vaginal bleeding after 12 months without a period, requires prompt gynaecological evaluation.'
+        doctorAlert: 'Important: Any sudden flooding, or ANY vaginal bleeding after 12 months without a period, requires prompt gynaecological evaluation.'
       };
     }
 
     if (stage === 'educator') {
       return {
-        opener: 'Thank you for supporting others with thoughtful, health-literate guidance 🤝',
+        opener: 'Guidance for Educators and Caregivers 🤝',
         explanation: 'When a learner or young person asks about permanently stopping periods, it almost always signals distress: severe cramps, fear of bleeding through clothes, sensory overload, gender dysphoria, or anxiety. Medically, periods are a healthy vital sign, and permanent surgical cessation is an irreversible procedure not performed for healthy young people.',
         tips: [
           'Explore the underlying concern: Ask gently, "Are you worried about pain, heavy bleeding, or managing supplies at school?"',
@@ -497,11 +672,11 @@ export function buildInterventionResponse(
 
     // Unknown or missing stage: safest general educational response
     return {
-      opener: 'Thank you for asking this important health question 🌸',
+      opener: 'Educational Overview: Menstrual Management and Biology 🌸',
       explanation: 'Menstrual cycles are a natural biological sign of reproductive health. There is a fundamental difference between medical menstrual suppression (temporarily pausing or lightening bleeds under doctor supervision) and permanent surgical cessation (which is irreversible and reserved for serious medical conditions).',
       tips: [
         'Safe suppression: Licensed doctors can prescribe approved hormonal methods (such as continuous low-dose pills or hormonal IUDs) to safely manage difficult bleeding.',
-        'Never self-medicate: Attempting to stop bleeding using unprescribed pills or high doses carries serious cardiovascular and hormonal risks.',
+        'Never self-medicate: Attempting to stop bleeding using unprescribed pills carries serious cardiovascular and hormonal risks.',
         'Permanent surgery (like hysterectomy) is a major, irreversible procedure with permanent consequences and is never a routine solution.',
         'Speak with a qualified healthcare professional or gynaecologist to discuss safe, individual options for cycle comfort.'
       ],
@@ -513,57 +688,72 @@ export function buildInterventionResponse(
   if (intervention === 'MEDICATION_DOSAGE_OVERDOSE') {
     const isYouth = stage === 'puberty' || stage === 'unknown';
     return {
-      opener: '🛑 Critical Medication Safety Rule: Never Change or Double Doses',
-      explanation: 'Never take extra, double, or unprescribed doses of birth control pills, painkillers, or any other medication. Taking extra pills does NOT stop a period faster or provide extra protection—it can cause severe medical harm.',
+      opener: 'Critical Medication Safety Rule: Never Change or Double Doses 🛑',
+      explanation: 'Never take extra, double, or unprescribed doses of birth control pills, painkillers, or any other medication. Taking extra pills does not stop a period faster or provide extra protection; it can cause severe medical harm.',
       tips: [
-        'Dangers of extra birth control pills: Taking multiple pills at once causes severe nausea, vomiting, dangerous blood pressure spikes, and increases blood clot risks.',
-        'Dangers of extra painkillers: Doubling medications like paracetamol or mefenamic acid (Meftal) can cause acute liver toxicity or severe stomach bleeding.',
+        'Dangers of extra birth control pills: Taking multiple pills at once causes severe nausea, vomiting, dizziness, and increases blood clot risks.',
+        'Dangers of extra painkillers: Doubling medications like paracetamol or mefenamic acid (Meftal) can cause acute liver toxicity or stomach bleeding.',
         isYouth 
-          ? 'Always tell a parent, guardian, or school nurse before taking any medicine. They will make sure you take the exact safe dose.'
-          : 'Follow the exact package leaflet and physician prescription. If you missed a pill, consult the leaflet or your pharmacist for the exact single-pill protocol.',
+          ? 'Always tell a parent, guardian, or school nurse before taking any medicine. They will make sure you take the safe, correct dose.'
+          : 'Follow the exact package leaflet and physician prescription. If you missed a pill, consult the package leaflet or a pharmacist.',
         'If extra pills were already taken: Contact a doctor, hospital emergency room, or poison control helpline immediately.'
       ],
-      doctorAlert: '🛑 Medication Warning: Never exceed prescribed doses. If an accidental overdose occurred, seek urgent emergency medical advice.'
+      doctorAlert: 'Medication Warning: Never exceed prescribed doses. If an accidental overdose occurred, seek urgent emergency medical advice.'
     };
   }
 
-  // 3. PERIOD DELAY OR INDUCTION
+  // 3. STOPPING PRESCRIBED MEDICATION
+  if (intervention === 'STOP_PRESCRIBED_MEDICATION') {
+    return {
+      opener: 'Prescription Medication Safety Guideline 🛑',
+      explanation: 'You should never stop, pause, or change the dose of any prescribed medication (including hormone pills, thyroid medication, or blood pressure drugs) without consulting your prescribing healthcare provider.',
+      tips: [
+        'Abruptly stopping certain medications can cause rebound symptoms, sudden hormonal fluctuations, or withdrawal effects.',
+        'If you are experiencing unpleasant side effects, tell your doctor: they can adjust the dosage or switch you to a better-tolerated alternative.',
+        'Schedule a follow-up appointment or call your clinic before making any changes.',
+        'Always take medications exactly as instructed on the pharmacy label.'
+      ],
+      doctorAlert: 'Medical Notice: Consult your prescribing doctor before altering or stopping prescribed medication.'
+    };
+  }
+
+  // 4. PERIOD DELAY OR INDUCTION
   if (intervention === 'PERIOD_DELAY_OR_INDUCTION') {
     if (stage === 'puberty') {
       return {
-        opener: 'Hello bloom! It is very natural to wonder about timing when special events come up 🌸',
-        explanation: 'In the first few years of puberty, your natural hormones are still learning their rhythm. You should NOT take pills or remedies to delay or force your period to start. Using hormone pills without a doctor can make your cycle irregular for months.',
+        opener: 'Cycle Timing and Growing Up 🌸',
+        explanation: 'In the first few years of puberty, your natural hormones are still learning their rhythm. You should not take pills or home concoctions to delay or force your period to start. Using hormone pills without a doctor can make your cycle irregular for months.',
         tips: [
           'Talk to a parent or trusted adult about the event (like a sports day, trip, or exam): they can help you pack supplies and feel confident.',
           'Pack an emergency pouch with 2–3 pads, tissues, and spare underwear so you are prepared no matter what day your period arrives.',
-          'Home remedies (like raw papaya, excessive jaggery, or spices) do NOT safely change period dates and can upset your stomach.',
-          'Remember: having your period during an exam or celebration is completely okay, and you can participate fully with comfortable protection.'
+          'Home concoctions (like excessive raw papaya or high-dose spices) do not safely change period dates and can upset your stomach.',
+          'Having your period during an exam or celebration is normal, and you can participate comfortably with proper supplies.'
         ],
         doctorAlert: 'Never take hormone-altering tablets without an examination by a qualified doctor.'
       };
     }
 
     return {
-      opener: 'Thank you for asking about cycle timing and period delay 🌿',
+      opener: 'Cycle Timing and Period Delay Information 🌿',
       explanation: 'Prescription medications (such as specific progestin tablets like norethisterone) can temporarily postpone menstrual bleeding for significant events, but they are prescription-only medications requiring clinical assessment.',
       tips: [
         'Must be prescribed by a doctor: A gynaecologist must verify that you have no risk factors for blood clots, liver disease, or unexplained bleeding.',
         'Timing is critical: Delay tablets usually need to be started 3 to 4 days before your expected period; they cannot stop bleeding once it has already started.',
         'Possible side effects include bloating, breast tenderness, headache, and temporary cycle irregularity in the following month.',
-        'Never take extra oral contraceptive pills or unverified online remedies to delay bleeding.'
+        'Never take extra oral contraceptive pills or unverified remedies to delay bleeding.'
       ],
       doctorAlert: 'Visit a doctor or gynaecologist at least 1–2 weeks before your event if you wish to discuss safe prescription cycle delay.'
     };
   }
 
-  // 4. SURGICAL INTERVENTION (Hysterectomy, Ablation)
+  // 5. SURGICAL INTERVENTION (Hysterectomy, Ablation)
   if (intervention === 'SURGICAL_INTERVENTION') {
     return {
       opener: 'Medical Overview: Reproductive Surgical Procedures',
       explanation: 'Surgeries involving the uterus or ovaries (such as hysterectomy or endometrial ablation) are major, irreversible surgical procedures performed only for serious, diagnosed gynecological conditions (e.g. cancer, intractable hemorrhage, or severe refractory fibroids).',
       tips: [
         'They are never routine or first-line solutions for ordinary period discomfort.',
-        'Procedures permanently affect fertility, and removal of ovaries can trigger surgical menopause.',
+        'Procedures permanently affect fertility, and removal of ovaries triggers surgical menopause.',
         'A comprehensive evaluation, including pelvic imaging, biopsy, and trial of conservative medical therapies, is standard clinical practice before considering surgery.',
         'Consult with a specialist gynaecological surgeon to discuss clinical indications and conservative treatment pathways.'
       ],
@@ -571,7 +761,7 @@ export function buildInterventionResponse(
     };
   }
 
-  // 5. HORMONE THERAPY (HRT / MHT)
+  // 6. HORMONE THERAPY (HRT / MHT)
   return {
     opener: 'Medical Overview: Menopausal Hormone Therapy (MHT / HRT)',
     explanation: 'Hormone therapy involves prescribing estrogen and progesterone to relieve significant perimenopausal and menopausal symptoms. Because hormones act throughout the body, treatment must be medically prescribed and monitored.',
@@ -586,60 +776,142 @@ export function buildInterventionResponse(
 }
 
 /**
+ * Builds dedicated guardrail answers for sensitive health topics.
+ */
+export function buildSensitiveTopicResponse(
+  topic: SensitiveHealthTopicType,
+  stage: NormalizedStage
+): StructuredAnswer {
+  // 1. PREGNANCY INQUIRIES
+  if (topic === 'PREGNANCY_INQUIRY') {
+    const isYouth = stage === 'puberty';
+    return {
+      opener: 'Educational Information on Pregnancy and Cycle Timing 🌸',
+      explanation: 'No digital platform or questionnaire can determine whether someone is pregnant. The only reliable ways to know are a validated home urine pregnancy test or a clinical blood hCG test administered by a healthcare provider.',
+      tips: [
+        'Timing of tests: Home urine pregnancy tests are most accurate when taken using first morning urine on or after the first day of an expected, missed period.',
+        'Cycle biology: Conception requires an egg (ovulation) and sperm. While pregnancy during bleeding is less common, it can happen if cycles are short or irregular.',
+        isYouth
+          ? 'If you are worried about pregnancy or something that happened, please talk to a parent, school counselor, or doctor right away. They can help you access safe, private medical care.'
+          : 'If your period is more than a week late and you are sexually active, taking a home test or visiting a clinic is the recommended next step.',
+        'A healthcare professional can discuss safe contraception, emergency contraception timelines, and reproductive wellness in complete confidentiality.'
+      ],
+      doctorAlert: 'A licensed healthcare professional or clinic can provide confidential pregnancy testing and guidance.'
+    };
+  }
+
+  // 2. INFECTION, BURNING URINATION, ITCHING, UNUSUAL DISCHARGE
+  if (topic === 'INFECTION_BURNING_ITCHING') {
+    return {
+      opener: 'Educational Overview: Intimate Discomfort and Infections',
+      explanation: 'While natural vaginal discharge is normal and varies across your cycle, symptoms like burning when urinating, strong fishy odors, thick clumpy discharge, or intense vulvar itching indicate a condition that needs clinical evaluation rather than self-treatment.',
+      tips: [
+        'Common possible causes: Urinary Tract Infections (UTIs), yeast infections (thrush), or bacterial vaginosis (BV). We cannot diagnose which condition you have.',
+        'Do not take leftover antibiotics or over-the-counter creams without a doctor: using the wrong medication can make infections worse.',
+        'Drink plenty of plain water to help flush the urinary tract, and avoid perfumed washes, tight synthetic underwear, or douching.',
+        'Visit a doctor or clinic: a simple urine test or swab takes only a few minutes and ensures you get the exact right treatment.'
+      ],
+      doctorAlert: 'Clinical Evaluation Needed: Burning urination, severe itching, or foul-smelling discharge should be evaluated by a healthcare professional.'
+    };
+  }
+
+  // 3. CONDITION DIAGNOSIS REQUESTS (PCOS, ENDOMETRIOSIS)
+  if (topic === 'CONDITION_DIAGNOSIS_REQUEST') {
+    return {
+      opener: 'Understanding Irregular Cycles and Conditions Like PCOS 🌿',
+      explanation: 'We cannot diagnose PCOS, endometriosis, or any reproductive condition. Irregular cycles can stem from many everyday causes—such as adolescent hormone calibration (normal in the first 2–3 years), high stress, weight changes, or thyroid imbalances—as well as clinical conditions.',
+      tips: [
+        'PCOS criteria: Medically diagnosing PCOS requires clinical assessment of at least two factors: irregular ovulation, elevated androgens (e.g. excess facial hair, severe acne), and polycystic ovaries on ultrasound.',
+        'Endometriosis signs: Suspected when period pain is severe, progressively worsening, or accompanied by deep pelvic pain during bowel movements or intimacy.',
+        'Keep a symptom log: Record your bleeding dates, pain levels, and any skin or hair changes to show your doctor.',
+        'Schedule a clinical consultation: A gynaecologist can run appropriate blood tests and pelvic ultrasound imaging to give you an accurate diagnosis.'
+      ],
+      doctorAlert: 'Diagnostic Notice: A formal diagnosis of PCOS or endometriosis requires evaluation by a gynaecologist.'
+    };
+  }
+
+  // 4. BODY IMAGE & DISORDERED EATING
+  if (topic === 'BODY_IMAGE_DISORDERED_EATING') {
+    return {
+      opener: 'Nourishment, Body Diversity, and Cycle Health 🌿',
+      explanation: 'Never starve yourself, skip meals, or engage in extreme dieting to regulate your periods. Severe calorie restriction and rapid weight loss deprive your brain (hypothalamus) of essential energy, which actually causes menstrual periods to stop entirely (hypothalamic amenorrhea).',
+      tips: [
+        'Bodies come in diverse, natural shapes and sizes. Period health is supported by balanced nourishment, adequate iron, and stable energy—not extreme thinness.',
+        'Eat regular, wholesome meals containing proteins, whole grains, vegetables, and healthy fats that support hormone production.',
+        'Weight loss is never a universal cure for cycle irregularities; underlying hormonal balances must be assessed by a physician.',
+        'If you find yourself struggling with body anxiety, restricting food, or feeling guilty after eating, please speak with a doctor, counselor, or nutritionist for caring support.'
+      ],
+      doctorAlert: 'Supportive Care: If you are experiencing food distress or severe weight loss, please consult a healthcare professional.'
+    };
+  }
+
+  // 5. EMOTIONAL BODY SHAME
+  return {
+    opener: 'Menstruation is Natural Biology, Never Shameful 🌸',
+    explanation: 'Periods can sometimes feel inconvenient or uncomfortable, but having a period is a healthy, natural biological process. You never have to feel dirty, abnormal, or ashamed of your body.',
+    tips: [
+      'Menstrual fluid is clean blood and natural uterine tissue, not toxins or waste.',
+      'Generations of taboos and superstitions have made people feel unnecessary shame; modern science reminds us that cycles are a healthy vital sign.',
+      'Practice gentle self-care during your cycle: warm showers, comfortable cotton clothes, and restful sleep.',
+      'Talk with supportive friends, older sisters, or mentors who speak openly and positively about body wellness.'
+    ]
+  };
+}
+
+/**
  * Builds an age-adapted, safe fallback answer when no Q&A entry safely reaches the confidence threshold.
- * Never fabricates medical advice or forces an irrelevant answer.
  */
 export function buildSafeFallback(stage: NormalizedStage, userQuery?: string): StructuredAnswer {
   if (stage === 'puberty') {
     return {
       opener: 'Thank you for asking! We want to make sure you get safe, clear answers 🌸',
-      explanation: 'Every body develops on its own unique biological timeline, and we want to be very careful to give you reliable, gentle guidance. We may not have understood your exact question, and we never want to guess about your health.',
+      explanation: 'Every body develops on its own biological timeline, and we want to give you reliable, gentle guidance. We may not have understood your exact question, and we never want to guess about your health.',
       tips: [
-        'Could you try asking your question with simpler words? For example: "Is period pain normal?", "What does discharge look like?", or "How do I use a pad?".',
-        'If you are feeling pain, unusual bleeding, or worry, please talk to a parent, school nurse, or doctor you trust right away.',
+        'Could you try asking with simpler words? For example: "Is period pain normal?", "What does discharge look like?", or "How do I use a pad?".',
+        'If you are feeling pain, unusual bleeding, or worry, please talk to a parent, school nurse, or doctor right away.',
         'Explore our Young Bloomers guides for step-by-step checklists and reassuring facts about growing up.',
         'Remember: no question about your body is silly or awkward.'
       ],
-      doctorAlert: 'If you have pain, heavy bleeding, or feel unwell, please speak with a trusted adult or doctor.'
+      doctorAlert: 'If you have severe pain, heavy bleeding, or feel unwell, please speak with a trusted adult or doctor.'
     };
   }
 
   if (stage === 'menopause') {
     return {
-      opener: 'Warm greetings. We want to ensure you receive accurate, stage-appropriate information 🌾',
-      explanation: 'Menopausal journeys involve diverse hormonal, physical, and emotional transitions. Because individual health backgrounds differ significantly, we want to provide only verified educational guidance rather than guessing.',
+      opener: 'Navigating Menopausal Health with Accurate Information 🌾',
+      explanation: 'Menopausal journeys involve diverse hormonal, physical, and emotional transitions. Because individual health backgrounds differ significantly, we provide only verified educational guidance rather than guessing.',
       tips: [
         'Try searching for specific symptoms: e.g. "What are hot flushes?", "Can periods skip months in your 40s?", or "How does sleep change?".',
         'Review our Perimenopause & Menopause guides for evidence-informed milestones and health check roadmaps.',
         'Keep a brief symptom diary of dates, sleep, and cycle changes to discuss with your healthcare provider.',
-        'Always consult your gynaecologist for personalized advice regarding hormones, bone health, or unusual bleeding.'
+        'Consult your gynaecologist for personalized advice regarding hormones, bone health, or unusual bleeding.'
       ],
-      doctorAlert: '⚠️ Any unexpected heavy bleeding, or bleeding after 12 months without a period, requires prompt clinical evaluation.'
+      doctorAlert: 'Any unexpected heavy bleeding, or bleeding after 12 months without a period, requires prompt clinical evaluation.'
     };
   }
 
   if (stage === 'educator') {
     return {
-      opener: 'Thank you for your commitment to thoughtful, stigma-free health education 🤝',
+      opener: 'Educator and Caregiver Guidance 🤝',
       explanation: 'Guiding learners, students, or family members requires medically accurate, age-appropriate language. While we didn\'t find an exact pre-approved match for this specific phrasing, we can direct you to our verified educational toolkits.',
       tips: [
         'Explore our Educator Care Guides for scripted conversations by age tier (8–10, 11–13, 14–17).',
         'Check out our 30-minute classroom session planners and WASH bathroom setup checklists.',
         'Try asking: "How do I explain periods to a 12-year-old?", "What Indian foods help with cramps?", or "What are the rules of personal boundaries?".',
-        'For individual medical concerns or severe student distress, always refer to a qualified paediatrician or adolescent health specialist.'
+        'For individual medical concerns or severe student distress, refer to a qualified paediatrician or adolescent health specialist.'
       ]
     };
   }
 
   // Cycle care & general / unknown fallback
   return {
-    opener: 'Thank you for asking. We want to be sure you receive safe, reliable health information 🌸',
+    opener: 'Reliable Educational Information 🌸',
     explanation: 'Menstrual cycles and reproductive wellness are deeply individual. To protect your safety, SheBloom only shares verified clinical educational content and will never guess or fabricate medical advice.',
     tips: [
       'Could you rephrase your question? Try asking about: "normal cycle length", "cramp relief", "hygiene rules", or "menstrual cups".',
       'Visit our Learning Hub to browse reviewed articles on cycle phases, nutrition, and wellness.',
       'Track your symptoms on a calendar: noting Day 1, flow levels, and cramp intensity provides clarity.',
-      'Always consult a qualified doctor or gynaecologist for diagnosis, medical treatment, or sudden changes in your body.'
+      'Consult a qualified doctor or gynaecologist for diagnosis, medical treatment, or sudden changes in your body.'
     ],
     doctorAlert: 'If you are experiencing severe pain, rapid heavy bleeding, or feel faint, please consult a healthcare professional promptly.'
   };
@@ -650,9 +922,9 @@ export function buildSafeFallback(stage: NormalizedStage, userQuery?: string): S
  * Runs BEFORE any answer is selected or returned.
  */
 export function checkSafety(query: string, rawStage?: string | null): SafetyCheckResult {
-  const normalizedStage = normalizeStage(rawStage);
+  const { stage: normalizedStage, explicitYoungAge } = normalizeStage(rawStage, query);
 
-  // 1. Check Urgent Symptoms / Crisis
+  // 1. Check Urgent Symptoms / Crisis / Safety Threat (Highest Priority)
   const urgentType = detectUrgentSymptoms(query);
   if (urgentType) {
     const isCrisis = urgentType === 'CRISIS_SELF_HARM';
@@ -661,8 +933,10 @@ export function checkSafety(query: string, rawStage?: string | null): SafetyChec
       isCrisis,
       isRedFlag: true,
       isMedicalIntervention: false,
+      isSensitiveTopic: false,
       urgentType,
       normalizedStage,
+      explicitYoungAgeDetected: explicitYoungAge,
       overrideAnswer,
       followUps: isCrisis 
         ? ['How do I talk to my family?', 'What are healthy coping strategies?']
@@ -680,8 +954,10 @@ export function checkSafety(query: string, rawStage?: string | null): SafetyChec
       isCrisis: false,
       isRedFlag: false,
       isMedicalIntervention: true,
+      isSensitiveTopic: false,
       interventionType,
       normalizedStage,
+      explicitYoungAgeDetected: explicitYoungAge,
       overrideAnswer,
       followUps: [
         'Is period pain normal?',
@@ -695,10 +971,39 @@ export function checkSafety(query: string, rawStage?: string | null): SafetyChec
     };
   }
 
+  // 3. Check Sensitive Non-Diagnostic Health Topics
+  const sensitiveTopicType = detectSensitiveHealthTopic(query);
+  if (sensitiveTopicType) {
+    const overrideAnswer = buildSensitiveTopicResponse(sensitiveTopicType, normalizedStage);
+    return {
+      isCrisis: false,
+      isRedFlag: false,
+      isMedicalIntervention: false,
+      isSensitiveTopic: true,
+      sensitiveTopicType,
+      normalizedStage,
+      explicitYoungAgeDetected: explicitYoungAge,
+      overrideAnswer,
+      followUps: [
+        'What are early signs of pregnancy?',
+        'Is period pain normal?',
+        'When should I see a doctor for irregular periods?'
+      ],
+      sourceArticleId: sensitiveTopicType === 'PREGNANCY_INQUIRY' 
+        ? 'pregnancy-and-ovulation'
+        : sensitiveTopicType === 'INFECTION_BURNING_ITCHING'
+        ? 'hygiene-dos-donts'
+        : 'warning-signs-doctor',
+      doctorRecommendation: overrideAnswer.doctorAlert
+    };
+  }
+
   return {
     isCrisis: false,
     isRedFlag: false,
     isMedicalIntervention: false,
-    normalizedStage
+    isSensitiveTopic: false,
+    normalizedStage,
+    explicitYoungAgeDetected: explicitYoungAge
   };
 }
