@@ -21,6 +21,92 @@ export interface QAEntry {
 
 export const QA_DATABASE: QAEntry[] = [
   {
+    id: 'why-periods-exist',
+    keywords: [
+      'why do i have to go through periods',
+      'why do i have to get periods',
+      'why periods',
+      'why do girls get periods',
+      'why do women get periods',
+      'why do we get periods',
+      'why bleeding every month',
+      'purpose of period',
+      'why do i have periods',
+      'why menstruate',
+      'why only girls bleed',
+      'why does my body do this'
+    ],
+    question: 'Why do I have to get periods, and why does my body do this?',
+    answer: {
+      opener: 'It really can feel so frustrating, and honestly? Your feelings are 100% valid 🌸',
+      explanation: 'Having to bleed every single month, wear pads, and deal with cramps or fatigue really can feel like such a hassle. You are not being dramatic at all—almost everyone who menstruates feels annoyed or overwhelmed by it at times!\n\nHere is what is actually going on inside: Every month, your uterus quietly prepares a soft, cozy cushion of blood and tissue. It does this naturally in case you ever decide to grow a baby in the future. When your body sees that there is no baby right now, it gently lets that soft cushion go so everything stays fresh and healthy inside. That gentle clearing out is what we experience as a period.\n\nSo while it feels super messy and inconvenient on the outside, it is actually your body’s silent superpower of renewing and caring for itself.',
+      tips: [
+        'Wear your softest, coziest clothes: Pick loose track pants, soft cotton underwear, and pads that feel gentle against your skin.',
+        'Soothe the ache with gentle warmth: A warm water bottle (garam paani ki thaili) or heating pad across your lower tummy relaxes muscles and melts away the tension.',
+        'Give yourself permission to slow down: You don\'t have to be at 100% energy right now. Resting, reading, listening to music, or taking a nap is healthy self-care.',
+        'Enjoy a soothing comfort treat: A warm cup of herbal tea, turmeric milk with jaggery, or a piece of dark chocolate can feel so comforting.',
+        'What part of having your period is feeling the most irritating or difficult for you right now? Is it cramps, feeling low on energy, worrying about leaks at school, or just how annoying it feels? Tell me, and we can find simple ways to make it much easier for you 💖'
+      ]
+    },
+    category: 'basics',
+    stage: 'puberty',
+    allowedStages: ['puberty', 'cycle', 'menopause', 'educator'],
+    minAgeTier: 'all',
+    sourceArticleId: 'what-is-a-period',
+    sourceReference: 'WHO / ACOG Committee Opinion No. 651 (Menstruation in Adolescents)',
+    lastReviewed: '2026-11-25',
+    safetyClassification: 'general-educational',
+    followUps: [
+      'How can I make cramps less painful?',
+      'Tips for managing periods at school',
+      'Why do I feel so tired during my period?',
+      'What comfort foods help during periods?'
+    ]
+  },
+  {
+    id: 'periods-irritating-comfort',
+    keywords: [
+      'irritating',
+      'annoying',
+      'its irritating',
+      'periods are irritating',
+      'hate periods',
+      'hate having periods',
+      'tired of periods',
+      'why is it so annoying',
+      'why is it irritating',
+      'frustrated with periods',
+      'sick of periods',
+      'why do i have to suffer every month'
+    ],
+    question: 'Why are periods so irritating, and how can I feel more comfortable?',
+    answer: {
+      opener: 'It really can feel so frustrating, and honestly? Your feelings are 100% valid 🌸',
+      explanation: 'Having to bleed every single month, wear pads, deal with cramps, and feel bloated or tired really can be such a hassle. You\'re not being dramatic at all—almost everyone who menstruates feels annoyed, exhausted, or overwhelmed by it at times!\n\nHere is what is actually going on inside: Every month, your uterus quietly prepares a soft, cozy cushion of blood and tissue. It does this naturally in case you ever decide to grow a baby in the future. When your body sees that there is no baby to nurture right now, it gently lets that soft cushion go so everything stays fresh and healthy inside. That gentle clearing out is what we experience as a period.\n\nSo while it feels super messy and inconvenient on the outside, it is actually your body’s silent superpower of renewing and caring for itself.',
+      tips: [
+        'Wear your softest, coziest clothes: Pick loose track pants, soft cotton underwear, and pads that feel gentle against your skin.',
+        'Soothe the ache with gentle warmth: A warm water bottle (garam paani ki thaili) or heating pad across your lower tummy relaxes muscles and melts away the tension.',
+        'Give yourself permission to slow down: You don\'t have to be at 100% energy right now. Resting, reading, listening to music, or taking a nap is healthy self-care.',
+        'Enjoy a soothing comfort treat: A warm cup of herbal tea, turmeric milk with jaggery, or a piece of dark chocolate can feel so comforting.',
+        'What part of having your period is feeling the most irritating or difficult for you right now? Is it cramps, feeling low on energy, worrying about leaks at school, or just how annoying it feels? Tell me, and we can find simple ways to make it much easier for you 💖'
+      ]
+    },
+    category: 'basics',
+    stage: 'puberty',
+    allowedStages: ['puberty', 'cycle', 'menopause', 'educator'],
+    minAgeTier: 'all',
+    sourceArticleId: 'what-is-a-period',
+    sourceReference: 'ACOG Menstrual Health Clinical Reference',
+    lastReviewed: '2026-11-25',
+    safetyClassification: 'general-educational',
+    followUps: [
+      'How can I make cramps less painful?',
+      'Tips for managing periods at school',
+      'Why do I feel so tired during my period?',
+      'What comfort foods help during periods?'
+    ]
+  },
+  {
     id: 'pain-normal',
     keywords: ['pain', 'cramps', 'hurts', 'cramping', 'ache', 'dysmenorrhea', 'pet dard', 'mild cramps'],
     question: 'Is period pain normal?',

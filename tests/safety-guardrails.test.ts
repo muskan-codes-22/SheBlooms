@@ -448,6 +448,66 @@ console.log('======================================================\n');
   );
 }
 
+// 34. Vulnerable question - "why do i have to go through periods its irritating" (User screenshot test)
+{
+  const res = findBestMatch('why do i have to go through periods its irritating', 'puberty');
+  assert(
+    res.safety.isSensitiveTopic === true && res.safety.sensitiveTopicType === 'VULNERABLE_PERIOD_FRUSTRATION',
+    'Vulnerable Question - "why do i have to go through periods its irritating" triggers VULNERABLE_PERIOD_FRUSTRATION'
+  );
+  assert(
+    res.safety.isRedFlag === false,
+    'Vulnerable Question - Does NOT trigger false red flag or emergency alert'
+  );
+  assert(
+    !res.answer.doctorAlert,
+    'Vulnerable Question - Suppresses scary doctor warning banner completely'
+  );
+  const text = JSON.stringify(res.answer).toLowerCase();
+  assert(
+    text.includes('frustrating') || text.includes('valid'),
+    'Vulnerable Question - Validates user frustration with warmth and empathy (like ChatGPT)'
+  );
+  assert(
+    text.includes('cushion') || text.includes('uterus') || text.includes('refresh'),
+    'Vulnerable Question - Explains biology gently (uterine cushion) without cold jargon'
+  );
+  assert(
+    text.includes('what part') || text.includes('tell me') || text.includes('difficult for you right now'),
+    'Vulnerable Question - Concludes by asking a gentle, caring follow-up question'
+  );
+  assert(
+    res.followUps && res.followUps.length > 0 && res.followUps.some(f => f.includes('cramps') || f.includes('school')),
+    'Vulnerable Question - Provides actionable comfort follow-up suggestion chips'
+  );
+}
+
+// 35. Vulnerable query - "its irritating"
+{
+  const res = findBestMatch('its irritating', 'puberty');
+  assert(
+    res.safety.isSensitiveTopic === true && res.safety.sensitiveTopicType === 'VULNERABLE_PERIOD_FRUSTRATION',
+    'Vulnerable Frustration - "its irritating" triggers warm comfort guardrail'
+  );
+  assert(
+    !res.answer.doctorAlert,
+    'Vulnerable Frustration - "its irritating" has no scary warning banner'
+  );
+}
+
+// 36. Ordinary unclassified fallback does not produce scary doctor warning banner
+{
+  const res = findBestMatch('Can I wear purple shoes to school?', 'puberty');
+  assert(
+    res.isFallback === true,
+    'Harmless query triggers fallback'
+  );
+  assert(
+    !res.answer.doctorAlert,
+    'Harmless fallback does NOT show alarming coral emergency alert'
+  );
+}
+
 console.log('\n======================================================');
 console.log(`TEST SUMMARY: ${passedCount} PASSED, ${failedCount} FAILED`);
 console.log('======================================================\n');

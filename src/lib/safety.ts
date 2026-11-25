@@ -26,7 +26,8 @@ export type SensitiveHealthTopicType =
   | 'INFECTION_BURNING_ITCHING'
   | 'CONDITION_DIAGNOSIS_REQUEST'
   | 'BODY_IMAGE_DISORDERED_EATING'
-  | 'EMOTIONAL_BODY_SHAME';
+  | 'EMOTIONAL_BODY_SHAME'
+  | 'VULNERABLE_PERIOD_FRUSTRATION';
 
 export interface StructuredAnswer {
   opener: string;
@@ -457,9 +458,63 @@ export function detectSensitiveHealthTopic(query: string): SensitiveHealthTopicT
     q.includes('i hate my body') ||
     q.includes('ashamed of my period') ||
     q.includes('disgusted by my period') ||
-    q.includes('feel dirty on my period')
+    q.includes('feel dirty on my period') ||
+    q.includes('ashamed of bleeding') ||
+    q.includes('embarrassed of my period') ||
+    q.includes('embarrassed about my period')
   ) {
     return 'EMOTIONAL_BODY_SHAME';
+  }
+
+  // 6. Vulnerable period frustration, annoyance, or "why do I have to have periods?"
+  // Exclude queries that clearly ask about physical genital itching or infection
+  const hasInfectionKeywords = q.includes('burn') || q.includes('itch') || q.includes('smell') || q.includes('odor') || q.includes('yeast') || q.includes('uti');
+  if (!hasInfectionKeywords) {
+    if (
+      q.includes('irritating') ||
+      q.includes('irritated') ||
+      q.includes('annoying') ||
+      q.includes('annoyed') ||
+      q.includes('hate my period') ||
+      q.includes('hate periods') ||
+      q.includes('hate having periods') ||
+      q.includes('why do i have to go through periods') ||
+      q.includes('why do i have to go through this') ||
+      q.includes('why do i have to get periods') ||
+      q.includes('why do i have to have periods') ||
+      q.includes('why do we have to get periods') ||
+      q.includes('why do we get periods') ||
+      q.includes('why do girls have periods') ||
+      q.includes('why do only girls get periods') ||
+      q.includes('why do women get periods') ||
+      q.includes('why do i have periods') ||
+      q.includes('why do i bleed every month') ||
+      q.includes('why do i have to bleed') ||
+      q.includes('why bleeding every month') ||
+      q.includes('why does my body do this') ||
+      q.includes('why is this happening to me') ||
+      q.includes('dont want my period') ||
+      q.includes("don't want my period") ||
+      q.includes('dont want to have periods') ||
+      q.includes("don't want to have periods") ||
+      q.includes('dont want periods') ||
+      q.includes('tired of having periods') ||
+      q.includes('tired of bleeding') ||
+      q.includes('tired of my period') ||
+      q.includes('sick of periods') ||
+      q.includes('sick of having periods') ||
+      q.includes('why is it so unfair') ||
+      q.includes('why is period so annoying') ||
+      q.includes('why do i suffer every month') ||
+      q.includes('suffer every month') ||
+      q.includes('periods are irritating') ||
+      q.includes('period is irritating') ||
+      q.includes('its irritating') ||
+      q.includes('it is irritating') ||
+      q.includes('so irritating')
+    ) {
+      return 'VULNERABLE_PERIOD_FRUSTRATION';
+    }
   }
 
   return null;
@@ -846,14 +901,29 @@ export function buildSensitiveTopicResponse(
   }
 
   // 5. EMOTIONAL BODY SHAME
+  if (topic === 'EMOTIONAL_BODY_SHAME') {
+    return {
+      opener: 'You are never alone, and your body is completely normal, clean, and worthy of care 🌸',
+      explanation: 'It is completely understandable if you feel overwhelmed, self-conscious, or down about your body right now. Many young girls and women go through moments of feeling uncomfortable or frustrated with physical changes.\n\nMenstrual blood is not dirty, impure, or full of toxins—it is simply clean blood and a natural tissue lining that your body prepared. There is zero reason to feel ashamed, dirty, or embarrassed about a healthy biological process that billions of people experience.',
+      tips: [
+        'Your body is doing natural, healthy work: Every person grows at their own pace, and having a period is a sign of your body\'s strength and vitality, never a flaw.',
+        'Stay fresh and comfortable: A warm shower, changing your pad regularly (every 4–6 hours), and wearing loose cotton clothes can help you feel refreshed and relaxed.',
+        'Speak to someone who cares: Sharing how you feel with an older sister, mom, teacher, or counselor often shows you that almost everyone has had these exact same feelings.',
+        'What is making you feel the most down or uncomfortable right now? Is it changes in your body, worrying about what others think, or feeling uncomfortable in your clothes? Let\'s talk through it together 💖'
+      ]
+    };
+  }
+
+  // 6. VULNERABLE PERIOD FRUSTRATION & "WHY DO I HAVE TO GET PERIODS?"
   return {
-    opener: 'Menstruation is Natural Biology, Never Shameful 🌸',
-    explanation: 'Periods can sometimes feel inconvenient or uncomfortable, but having a period is a healthy, natural biological process. You never have to feel dirty, abnormal, or ashamed of your body.',
+    opener: 'It really can feel so frustrating, and honestly? Your feelings are 100% valid 🌸',
+    explanation: 'Having to bleed every single month, wear pads, deal with cramps, and feel bloated or tired really can be such a hassle. You\'re not being dramatic at all—almost everyone who menstruates feels annoyed, exhausted, or overwhelmed by it at times!\n\nHere is what is actually going on inside: Every month, your uterus quietly prepares a soft, cozy cushion of blood and tissue. It does this naturally in case you ever decide to grow a baby in the future. When your body sees that there is no baby to nurture right now, it gently lets that soft cushion go so everything stays fresh and healthy inside. That gentle clearing out is what we experience as a period.\n\nSo while it feels super messy and inconvenient on the outside, it is actually your body’s silent superpower of renewing and caring for itself.',
     tips: [
-      'Menstrual fluid is clean blood and natural uterine tissue, not toxins or waste.',
-      'Generations of taboos and superstitions have made people feel unnecessary shame; modern science reminds us that cycles are a healthy vital sign.',
-      'Practice gentle self-care during your cycle: warm showers, comfortable cotton clothes, and restful sleep.',
-      'Talk with supportive friends, older sisters, or mentors who speak openly and positively about body wellness.'
+      'Wear your softest, coziest clothes: Pick loose track pants, soft cotton underwear, and pads that feel gentle against your skin.',
+      'Soothe the ache with gentle warmth: A warm water bottle (garam paani ki thaili) or heating pad across your lower tummy relaxes muscles and melts away the tension.',
+      'Give yourself permission to slow down: You don\'t have to be at 100% energy right now. Resting, reading, listening to music, or taking a nap is healthy self-care.',
+      'Enjoy a soothing comfort treat: A warm cup of herbal tea, turmeric milk with jaggery, or a piece of dark chocolate can feel so comforting.',
+      'What part of having your period is feeling the most irritating or difficult for you right now? Is it cramps, feeling low on energy, worrying about leaks at school, or just how annoying it feels? Tell me, and we can find simple ways to make it much easier for you 💖'
     ]
   };
 }
@@ -862,17 +932,21 @@ export function buildSensitiveTopicResponse(
  * Builds an age-adapted, safe fallback answer when no Q&A entry safely reaches the confidence threshold.
  */
 export function buildSafeFallback(stage: NormalizedStage, userQuery?: string): StructuredAnswer {
+  // Check if user specifically mentioned severe physical warning signs in fallback query
+  const cleanQ = userQuery ? sanitizeQuery(userQuery) : '';
+  const mentionsPhysicalAlarm = cleanQ.includes('faint') || cleanQ.includes('vomit') || cleanQ.includes('unbearable') || cleanQ.includes('soak');
+
   if (stage === 'puberty') {
     return {
-      opener: 'Thank you for asking! We want to make sure you get safe, clear answers 🌸',
-      explanation: 'Every body develops on its own biological timeline, and we want to give you reliable, gentle guidance. We may not have understood your exact question, and we never want to guess about your health.',
+      opener: 'Thank you for asking! We are right here with you 🌸',
+      explanation: 'Every body develops on its own biological timeline, and we want to give you reliable, gentle guidance. We may not have understood your exact wording, but no question about your body is silly or awkward.',
       tips: [
-        'Could you try asking with simpler words? For example: "Is period pain normal?", "What does discharge look like?", or "How do I use a pad?".',
-        'If you are feeling pain, unusual bleeding, or worry, please talk to a parent, school nurse, or doctor right away.',
+        'Could you try asking with simpler words? For example: "Why do periods happen?", "Is period pain normal?", or "How do I use a pad?".',
+        'If something is hurting or making you feel worried, speaking with a parent, school nurse, or doctor is always a safe choice.',
         'Explore our Young Bloomers guides for step-by-step checklists and reassuring facts about growing up.',
-        'Remember: no question about your body is silly or awkward.'
+        'What would you like to know more about? You can ask about pads, cramps, mood changes, or what to expect!'
       ],
-      doctorAlert: 'If you have severe pain, heavy bleeding, or feel unwell, please speak with a trusted adult or doctor.'
+      ...(mentionsPhysicalAlarm ? { doctorAlert: 'If you have severe pain, heavy bleeding, or feel unwell, please speak with a trusted adult or doctor.' } : {})
     };
   }
 
@@ -886,7 +960,7 @@ export function buildSafeFallback(stage: NormalizedStage, userQuery?: string): S
         'Keep a brief symptom diary of dates, sleep, and cycle changes to discuss with your healthcare provider.',
         'Consult your gynaecologist for personalized advice regarding hormones, bone health, or unusual bleeding.'
       ],
-      doctorAlert: 'Any unexpected heavy bleeding, or bleeding after 12 months without a period, requires prompt clinical evaluation.'
+      ...(mentionsPhysicalAlarm ? { doctorAlert: 'Any unexpected heavy bleeding, or bleeding after 12 months without a period, requires prompt clinical evaluation.' } : {})
     };
   }
 
@@ -913,7 +987,7 @@ export function buildSafeFallback(stage: NormalizedStage, userQuery?: string): S
       'Track your symptoms on a calendar: noting Day 1, flow levels, and cramp intensity provides clarity.',
       'Consult a qualified doctor or gynaecologist for diagnosis, medical treatment, or sudden changes in your body.'
     ],
-    doctorAlert: 'If you are experiencing severe pain, rapid heavy bleeding, or feel faint, please consult a healthcare professional promptly.'
+    ...(mentionsPhysicalAlarm ? { doctorAlert: 'If you are experiencing severe pain, rapid heavy bleeding, or feel faint, please consult a healthcare professional promptly.' } : {})
   };
 }
 
@@ -975,6 +1049,39 @@ export function checkSafety(query: string, rawStage?: string | null): SafetyChec
   const sensitiveTopicType = detectSensitiveHealthTopic(query);
   if (sensitiveTopicType) {
     const overrideAnswer = buildSensitiveTopicResponse(sensitiveTopicType, normalizedStage);
+    const followUps = sensitiveTopicType === 'VULNERABLE_PERIOD_FRUSTRATION'
+      ? [
+          'How can I make cramps less painful?',
+          'Tips for managing periods at school',
+          'Why do I feel so tired during my period?',
+          'What comfort foods help during periods?'
+        ]
+      : sensitiveTopicType === 'EMOTIONAL_BODY_SHAME'
+      ? [
+          'Is period blood dirty or bad?',
+          'How do I talk to my mom or sister about my period?',
+          'How do I feel more confident during my period?'
+        ]
+      : sensitiveTopicType === 'PREGNANCY_INQUIRY'
+      ? [
+          'What are early signs of pregnancy?',
+          'When can a pregnancy test show accurate results?',
+          'Can you get pregnant on your period?'
+        ]
+      : [
+          'What are early signs of pregnancy?',
+          'Is period pain normal?',
+          'When should I see a doctor for irregular periods?'
+        ];
+
+    const sourceArticleId = sensitiveTopicType === 'PREGNANCY_INQUIRY'
+      ? 'pregnancy-and-ovulation'
+      : sensitiveTopicType === 'INFECTION_BURNING_ITCHING'
+      ? 'hygiene-dos-donts'
+      : sensitiveTopicType === 'VULNERABLE_PERIOD_FRUSTRATION' || sensitiveTopicType === 'EMOTIONAL_BODY_SHAME'
+      ? 'what-is-a-period'
+      : 'warning-signs-doctor';
+
     return {
       isCrisis: false,
       isRedFlag: false,
@@ -984,16 +1091,8 @@ export function checkSafety(query: string, rawStage?: string | null): SafetyChec
       normalizedStage,
       explicitYoungAgeDetected: explicitYoungAge,
       overrideAnswer,
-      followUps: [
-        'What are early signs of pregnancy?',
-        'Is period pain normal?',
-        'When should I see a doctor for irregular periods?'
-      ],
-      sourceArticleId: sensitiveTopicType === 'PREGNANCY_INQUIRY' 
-        ? 'pregnancy-and-ovulation'
-        : sensitiveTopicType === 'INFECTION_BURNING_ITCHING'
-        ? 'hygiene-dos-donts'
-        : 'warning-signs-doctor',
+      followUps,
+      sourceArticleId,
       doctorRecommendation: overrideAnswer.doctorAlert
     };
   }
